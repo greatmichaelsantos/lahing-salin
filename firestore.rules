@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /salinlahi_scores/{docId} {
+      // Any anonymously-authenticated visitor may read and add scores
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.score is number
+        && request.resource.data.total is number
+        && request.resource.data.pct is number
+        && request.resource.data.ts is number;
+
+      // Deletes are allowed for authenticated sessions (admin PIN protects the UI)
+      allow delete: if request.auth != null;
+
+      // Updates are never allowed
+      allow update: if false;
+    }
+  }
+}

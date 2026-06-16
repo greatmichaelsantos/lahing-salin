@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>SALIN-LAHI — Olongapo City Heritage</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,900&family=Bricolage+Grotesque:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="track">
+        <!-- PAGE 0: IDLE -->
+        <div class="page" id="idle">
+          <!-- fullscreen bg images — injected by JS -->
+          <div class="idle-overlay"></div>
+          <div class="idle-center">
+            <div class="idle-wordmark">SALIN-LAHI</div>
+            <div class="idle-tap">Tap to begin</div>
+          </div>
+        </div>
+
+        <!-- PAGE 1: DASHBOARD -->
+        <div class="page" id="dashboard">
+          <div class="greeting-title">Mabuhay!</div>
+          <div class="greeting-sub">
+            Explore the culture and heritage of Olongapo City.
+          </div>
+
+          <div class="bento-grid">
+            <!-- CITY OVERVIEW 8×4 -->
+            <div class="tile t-city" id="btn-city">
+              <div
+                class="tile-deco"
+                style="
+                  width: 380px;
+                  height: 380px;
+                  background: rgba(189, 0, 26, 0.1);
+                  right: -60px;
+                  bottom: -60px;
+                "
+              ></div>
+              <div class="tile-inner">
+                <div>
+                  <span class="tile-tag">Explore</span>
+                  <div
+                    class="tile-title"
+                    style="
+                      font-size: clamp(36px, 4.5vw, 54px);
+                      color: #1b1c1b;
+                      margin-top: 12px;
+                    "
+                  >
+                    City Overview
+                  </div>
+                  <div
+                    class="tile-desc"
+                    style="
+                      font-size: 18px;
+                      color: #5d3f3c;
+                      opacity: 0.85;
+                      margin-top: 8px;
+                      max-width: 380px;
+                      line-height: 1.55;
+                    "
+                    id="city-preview"
+                  >
+                    Facts, map &amp; history of Olongapo City.
+                  </div>
+                </div>
+                <button
+                  class="tile-btn"
+                  style="
+                    background: #bd001a;
+                    color: #fff;
+                    box-shadow: 0 4px 0 #930011;
+                  "
+                >
+                  Open Explorer
+                </button>
+              </div>
+            </div>
+
+            <!-- HERITAGE GUIDE 4×3 -->
+            <div class="tile t-guide" id="btn-guide">
+              <div class="tile-inner">
+                <div
+                  style="
+                    width: 52px;
+                    height: 52px;
+                    border-radius: 14px;
+                    background: rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.35);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span
+                    class="material-symbols-outlined fill-icon"
+                    style="color: #fff; font-size: 28px"
+                    >menu_book</span
+                  >
+                </div>
+                <div>
+                  <div
+                    class="tile-title"
+                    style="font-size: 30px; color: #fff; margin-bottom: 6px"
+                  >
+                    Heritage Guide
+                  </div>
+                  <div
+                    class="tile-desc"
+                    style="
+                      font-size: 17px;
+                      color: rgba(255, 255, 255, 0.8);
+                      line-height: 1.5;
+                    "
+                    id="guide-preview"
+                  >
+                    9 cultural topics — from the Aeta to the Smart City era.
+                  </div>
+                </div>
+                <button
+                  class="tile-btn"
+                  style="
+                    background: #fff;
+                    color: #bd001a;
+                    width: 100%;
+                    text-align: center;
+                    display: block;
+                  "
+                >
+                  Start Learning
+                </button>
+              </div>
+            </div>
+
+            <!-- TAKE QUIZ 4×3 -->
+            <div class="tile t-quiz" id="btn-quiz">
+              <div class="tile-inner">
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                  "
+                >
+                  <div
+                    style="
+                      width: 52px;
+                      height: 52px;
+                      border-radius: 14px;
+                      background: rgba(255, 255, 255, 0.2);
+                      border: 1px solid rgba(255, 255, 255, 0.35);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    "
+                  >
+                    <span
+                      class="material-symbols-outlined fill-icon"
+                      style="color: #fff; font-size: 28px"
+                      >quiz</span
+                    >
+                  </div>
+                  <div style="display: flex">
+                    <div
+                      style="
+                        width: 26px;
+                        height: 26px;
+                        border-radius: 50%;
+                        background: #dbdad8;
+                        border: 2px solid #4b6edd;
+                      "
+                    ></div>
+                    <div
+                      style="
+                        width: 26px;
+                        height: 26px;
+                        border-radius: 50%;
+                        background: #dbdad8;
+                        border: 2px solid #4b6edd;
+                        margin-left: -8px;
+                      "
+                    ></div>
+                    <div
+                      style="
+                        width: 26px;
+                        height: 26px;
+                        border-radius: 50%;
+                        background: #fff;
+                        border: 2px solid #4b6edd;
+                        margin-left: -8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: &quot;Space Grotesk&quot;, sans-serif;
+                        font-weight: 700;
+                        font-size: 9px;
+                        color: #4b6edd;
+                      "
+                      id="quiz-player-count"
+                    >
+                      +0
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="tile-title"
+                    style="font-size: 30px; color: #fff; margin-bottom: 6px"
+                  >
+                    Take Quiz
+                  </div>
+                  <div
+                    class="tile-desc"
+                    style="
+                      font-size: 17px;
+                      color: rgba(255, 255, 255, 0.8);
+                      line-height: 1.5;
+                    "
+                  >
+                    Test your knowledge on Olongapo's history and culture.
+                  </div>
+                </div>
+                <button
+                  class="tile-btn"
+                  style="
+                    background: #fcd400;
+                    color: #6e5c00;
+                    width: 100%;
+                    text-align: center;
+                    display: block;
+                    box-shadow: 0 4px 0 #b29400;
+                  "
+                >
+                  Play Now
+                </button>
+              </div>
+            </div>
+
+            <!-- TIMELINE 4×2 -->
+            <div class="tile t-timeline" id="btn-timeline">
+              <img
+                src="assets/timeline/timeline-1.png"
+                style="
+                  position: absolute;
+                  inset: 0;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  opacity: 0.45;
+                "
+                alt=""
+              />
+              <div
+                style="
+                  position: absolute;
+                  inset: 0;
+                  background: linear-gradient(to top, #2d7d9a 30%, transparent);
+                "
+              ></div>
+              <div
+                style="
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  padding: 20px;
+                "
+              >
+                <div class="tile-title" style="font-size: 26px; color: #fff">
+                  Timeline
+                </div>
+                <div
+                  style="
+                    font-family: &quot;Space Grotesk&quot;, sans-serif;
+                    font-weight: 700;
+                    font-size: 14px;
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: rgba(255, 255, 255, 0.7);
+                    margin-top: 3px;
+                  "
+                >
+                  Photo History
+                </div>
+              </div>
+            </div>
+
+            <!-- LEADERBOARD 4×2 -->
+            <div class="tile t-lb" id="btn-lb">
+              <div
+                class="tile-inner"
+                style="flex-direction: row; align-items: center; gap: 16px"
+              >
+                <div
+                  style="
+                    width: 54px;
+                    height: 54px;
+                    border-radius: 14px;
+                    background: #fff;
+                    border: 1px solid #a8a9ad;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                  "
+                >
+                  <span
+                    class="material-symbols-outlined fill-icon"
+                    style="color: #705d00; font-size: 30px"
+                    >trophy</span
+                  >
+                </div>
+                <div style="flex: 1">
+                  <div
+                    class="tile-title"
+                    style="font-size: 26px; color: #1b1c1b"
+                  >
+                    Leaderboard
+                  </div>
+                  <div
+                    class="tile-desc"
+                    style="font-size: 16px; color: #5d3f3c; margin-top: 3px"
+                    id="lb-preview"
+                  >
+                    Top scores
+                  </div>
+                </div>
+                <span
+                  class="material-symbols-outlined"
+                  style="color: #926e6b; font-size: 24px"
+                  >chevron_right</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom bar: Admin (left) | QR + Sleep (right) -->
+          <div
+            style="
+              flex-shrink: 0;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 10px;
+              padding: 6px 0 0;
+            "
+          >
+            <!-- Admin button — muted so it doesn't draw casual visitor attention -->
+            <button
+              id="btn-admin"
+              style="
+                background: #fff;
+                border: 1px solid #a8a9ad;
+                color: #5d3f3c;
+                border-radius: 9999px;
+                padding: 10px 22px;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
+                font-weight: 700;
+                font-size: 13px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                cursor: pointer;
+                box-shadow: 0 4px 0 #d4d4d4;
+                transition: all 0.15s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              "
+            >
+              <span
+                class="material-symbols-outlined"
+                style="font-size: 16px"
+                >lock</span
+              >
+              Admin
+            </button>
+
+            <div style="display: flex; align-items: center; gap: 10px">
+              <!-- Scan QR button -->
+              <button
+                id="btn-qr"
+                style="
+                  background: #fff;
+                  border: 1px solid #a8a9ad;
+                  color: #0038a8;
+                  border-radius: 9999px;
+                  padding: 10px 22px;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
+                  font-weight: 700;
+                  font-size: 13px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                  box-shadow: 0 4px 0 #d4d4d4;
+                  transition: all 0.15s;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+                onclick="
+                  document
+                    .getElementById('qr-modal-backdrop')
+                    .classList.add('open')
+                "
+              >
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 18px; color: #0038a8"
+                  >qr_code_scanner</span
+                >
+                Scan QR
+              </button>
+
+              <button
+                id="btn-go-idle"
+                style="
+                  background: #fff;
+                  border: 1px solid #a8a9ad;
+                  color: #926e6b;
+                  border-radius: 9999px;
+                  padding: 10px 22px;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
+                  font-weight: 700;
+                  font-size: 13px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                  box-shadow: 0 4px 0 #d4d4d4;
+                  transition: all 0.15s;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <span style="font-size: 16px">⏻</span> Sleep / Idle
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR CODE MODAL -->
+    <div
+      id="qr-modal-backdrop"
+      onclick="if (event.target === this) this.classList.remove('open');"
+    >
+      <div id="qr-modal">
+        <div class="qr-modal-title">Scan to Visit Website</div>
+        <div class="qr-modal-sub">
+          Point your camera at the QR code<br />to access the SALIN-LAHI
+          website.
+        </div>
+        <div class="qr-img-wrap">
+          <img src="assets/qr-code.png" alt="QR Code for SALIN-LAHI website" />
+        </div>
+        <button
+          class="qr-close-btn"
+          onclick="
+            document
+              .getElementById('qr-modal-backdrop')
+              .classList.remove('open')
+          "
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- CITY OVERVIEW OVERLAY -->
+    <div class="overlay" id="ov-city">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #fcd400">🏙️</div>
+          <span class="ov-topbar-title">City Overview</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-city')">
+          ← Back
+        </button>
+      </div>
+      <div class="ov-scrollable" id="city-body"></div>
+    </div>
+
+    <!-- HERITAGE GUIDE OVERLAY -->
+    <div class="overlay" id="ov-guide">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #e61e2a">🏛️</div>
+          <span class="ov-topbar-title">Heritage Guide</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-guide')">
+          ← Back
+        </button>
+      </div>
+      <div class="guide-intro">
+        Tap any topic to read &amp; listen. The
+        <strong
+          style="
+            color: #bd001a;
+            font-family: &quot;Bricolage Grotesque&quot;, sans-serif;
+          "
+          >SALIN-LAHI Rover</strong
+        >
+        will navigate to that station.
+      </div>
+      <div class="ov-scrollable">
+        <div class="guide-grid" id="guide-body"></div>
+      </div>
+    </div>
+
+    <!-- DETAIL OVERLAY -->
+    <div class="overlay" id="ov-detail">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #4b6edd">📖</div>
+          <span class="ov-topbar-title" id="detail-topbar-title"></span>
+        </div>
+        <button class="back-btn" onclick="goBack()">← Guide</button>
+      </div>
+      <div class="ov-scrollable">
+        <div class="detail-hero" id="detail-hero">
+          <img id="detail-img" src="" alt="" />
+          <div class="detail-hero-grad"></div>
+          <div class="detail-hero-text">
+            <div class="detail-station" id="detail-station"></div>
+            <div class="detail-title" id="detail-title"></div>
+            <div class="detail-caption" id="detail-caption"></div>
+          </div>
+        </div>
+        <div class="detail-pad">
+          <div class="tts-row">
+            <button class="tts-play" id="tts-play">▶ Listen</button>
+            <button class="tts-stop" id="tts-stop" style="display: none">
+              ■ Stop
+            </button>
+            <span class="tts-stat" id="tts-status"></span>
+          </div>
+          <div class="detail-text" id="detail-text"></div>
+          <div class="quiz-cta">
+            <div class="quiz-cta-left">
+              <div class="quiz-cta-emoji">🧠</div>
+              <div>
+                <div class="quiz-cta-title">Ready to be quizzed?</div>
+                <div class="quiz-cta-sub">Test what you just learned</div>
+              </div>
+            </div>
+            <button class="quiz-cta-btn" id="detail-quiz-btn">
+              Start Quiz →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ OVERLAY -->
+    <div class="overlay" id="ov-quiz">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #bd001a">🧠</div>
+          <span class="ov-topbar-title">Cultural Quiz</span>
+        </div>
+        <button class="back-btn" id="quiz-back-btn">← Back</button>
+      </div>
+      <div class="ov-scrollable">
+        <div id="quiz-select" class="quiz-sel-pad">
+          <div class="quiz-sel-title">Choose a Topic</div>
+          <div class="quiz-topics-grid" id="quiz-select-btns"></div>
+        </div>
+        <div class="quiz-game" id="quiz-active">
+          <div class="q-prog-row">
+            <div class="q-prog-track">
+              <div class="q-prog-fill" id="q-fill"></div>
+            </div>
+            <div class="q-prog-txt" id="q-num">Q1 of 5</div>
+          </div>
+          <div class="q-chip" id="q-topic"></div>
+          <div class="q-question" id="q-text"></div>
+          <div class="q-opts-grid" id="q-opts"></div>
+          <div class="q-fb" id="q-fb"></div>
+          <button class="q-next-btn" id="q-next" style="display: none">
+            Next Question →
+          </button>
+        </div>
+        <div class="q-result" id="q-result">
+          <div class="result-emoji" id="r-emoji">🎉</div>
+          <div class="result-score" id="r-score"></div>
+          <div class="result-of">
+            out of <span id="r-total"></span> questions
+          </div>
+          <div class="result-msg" id="r-msg"></div>
+          <div class="result-form">
+            <span class="result-label">Your Name (optional)</span>
+            <input
+              class="result-input"
+              type="text"
+              id="v-name"
+              placeholder="e.g. Maria Santos"
+              maxlength="40"
+            />
+            <span class="result-label">Grade &amp; School</span>
+            <input
+              class="result-input"
+              type="text"
+              id="v-grade"
+              placeholder="e.g. Grade 8 — Olongapo NHS"
+              maxlength="50"
+            />
+            <button class="result-save" id="save-btn">🏆 Save My Score</button>
+            <button class="result-skip" id="skip-btn">
+              Skip &amp; go home
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD OVERLAY -->
+    <div class="overlay" id="ov-lb">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #fcd400">🏆</div>
+          <span class="ov-topbar-title">Leaderboard</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-lb')">← Back</button>
+      </div>
+      <div class="lb-head">
+        <h2>🏆 Top Visitors</h2>
+        <p>Quiz scores across all heritage topics</p>
+      </div>
+      <div class="lb-filters" id="lb-filters"></div>
+      <div class="ov-scrollable">
+        <table class="lb-tbl">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Grade</th>
+              <th>Topic</th>
+              <th>Score</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="lb-rows"></tbody>
+        </table>
+        <div class="lb-empty" id="lb-empty" style="display: none">
+          <div style="font-size: 48px; margin-bottom: 12px">🏺</div>
+          No scores yet. Take the quiz!
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELINE OVERLAY -->
+    <div class="overlay" id="ov-timeline">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #2e54c2">📜</div>
+          <span class="ov-topbar-title">History Timeline</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-timeline')">
+          ← Back
+        </button>
+      </div>
+      <div class="tl-hero">
+        <div class="tl-hero-title">Olongapo City</div>
+        <div class="tl-hero-sub">From Gently Sloping Shore to Smart City</div>
+        <span class="tl-years-badge">PRE-COLONIAL → PRESENT</span>
+      </div>
+      <div class="ov-scrollable tl-carousel-shell">
+        <button
+          class="tl-nav tl-nav-prev"
+          id="tl-prev"
+          type="button"
+          aria-label="Previous timeline photo"
+        >
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <div class="tl-carousel" id="tl-carousel" aria-live="polite"></div>
+        <button
+          class="tl-nav tl-nav-next"
+          id="tl-next"
+          type="button"
+          aria-label="Next timeline photo"
+        >
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+        <div class="tl-dots" id="tl-dots" aria-label="Timeline slides"></div>
+        <div id="tl-tts-row">
+          <button class="tts-play" id="tl-tts-play">▶ Listen</button>
+          <button class="tts-stop" id="tl-tts-stop" style="display:none">■ Stop</button>
+          <span id="tl-tts-status"></span>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" style="color: #fff"></div>
+
+    <!-- ── Admin PIN Modal ── -->
+    <div id="admin-pin-modal">
+      <div class="pin-box">
+        <div class="pin-icon-lg">🔒</div>
+        <div class="pin-title">Admin Access</div>
+        <div class="pin-dots" id="pin-dots">
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+          <span class="pin-dot"></span>
+        </div>
+        <div class="pin-error" id="pin-error"></div>
+        <div class="pin-numpad">
+          <button class="pin-key" data-d="1">1</button>
+          <button class="pin-key" data-d="2">2</button>
+          <button class="pin-key" data-d="3">3</button>
+          <button class="pin-key" data-d="4">4</button>
+          <button class="pin-key" data-d="5">5</button>
+          <button class="pin-key" data-d="6">6</button>
+          <button class="pin-key" data-d="7">7</button>
+          <button class="pin-key" data-d="8">8</button>
+          <button class="pin-key" data-d="9">9</button>
+          <button class="pin-key pin-clear" id="pin-key-clear">Clear</button>
+          <button class="pin-key" data-d="0">0</button>
+          <button class="pin-key pin-del" id="pin-key-del">⌫</button>
+        </div>
+        <button class="pin-cancel" id="pin-cancel">✕ Cancel</button>
+      </div>
+    </div>
+
+    <!-- ── Admin Dashboard Overlay ── -->
+    <div class="overlay" id="ov-admin">
+      <!-- Top bar -->
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div
+            class="ov-icon"
+            style="background: #1b1c1b; font-size: 20px"
+          >🛡️</div>
+          <span class="ov-topbar-title">Admin Dashboard</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-admin')">
+          ← Close
+        </button>
+      </div>
+
+      <!-- AI Insights Hero (always visible) -->
+      <div id="admin-ai-hero">
+        <div id="admin-ai-hero-header">
+          <div>
+            <div id="admin-ai-hero-title">🤖 AI Insights</div>
+            <div id="admin-ai-hero-sub">Groq-powered analysis of student quiz performance</div>
+          </div>
+          <div id="admin-ai-hero-controls">
+            <!-- Topic scope dropdown -->
+            <div class="groq-dd" id="groq-scope-dd">
+              <div class="groq-dd-trigger">
+                <span class="groq-dd-label">All Topics</span>
+                <span class="groq-dd-arrow"></span>
+              </div>
+              <div class="groq-dd-menu">
+                <div class="groq-dd-item selected" data-value="all">All Topics</div>
+                <div class="groq-dd-item" data-value="aeta">The Aeta</div>
+                <div class="groq-dd-item" data-value="history">Colonial History</div>
+                <div class="groq-dd-item" data-value="navy">American Era</div>
+                <div class="groq-dd-item" data-value="independence">SBMA</div>
+                <div class="groq-dd-item" data-value="culture">Traditions &amp; Festivals</div>
+                <div class="groq-dd-item" data-value="demographics">People &amp; Demographics</div>
+                <div class="groq-dd-item" data-value="tourism">Tourism &amp; Landmarks</div>
+                <div class="groq-dd-item" data-value="smartcity">Smart City</div>
+                <div class="groq-dd-item" data-value="location">Where is Olongapo?</div>
+              </div>
+            </div>
+            <!-- Analysis type dropdown -->
+            <div class="groq-dd" id="groq-type-dd">
+              <div class="groq-dd-trigger">
+                <span class="groq-dd-label">General Overview</span>
+                <span class="groq-dd-arrow"></span>
+              </div>
+              <div class="groq-dd-menu">
+                <div class="groq-dd-item selected" data-value="general">General Overview</div>
+                <div class="groq-dd-item" data-value="struggling">Where Students Struggle</div>
+                <div class="groq-dd-item" data-value="grade">By Grade Level</div>
+                <div class="groq-dd-item" data-value="trends">Score Trends</div>
+                <div class="groq-dd-item" data-value="recommendations">Teaching Recommendations</div>
+              </div>
+            </div>
+            <button id="groq-analyze-btn" onclick="generateInsights()">✨ Generate</button>
+          </div>
+        </div>
+        <div id="groq-output">
+          <div id="groq-placeholder">Click ✨ Generate to analyze student scores with AI.</div>
+          <div id="groq-loading" style="display:none;">🤖 Analyzing scores… <span class="groq-spinner"></span></div>
+          <div id="groq-cards" style="display:none;">
+            <div class="groq-card groq-card-strengths">
+              <div class="groq-card-header">
+                <span class="groq-card-icon">💪</span>
+                <span class="groq-card-title">Strengths</span>
+              </div>
+              <div class="groq-card-body" id="groq-card-strengths"></div>
+            </div>
+            <div class="groq-card groq-card-weaknesses">
+              <div class="groq-card-header">
+                <span class="groq-card-icon">⚠️</span>
+                <span class="groq-card-title">Weaknesses</span>
+              </div>
+              <div class="groq-card-body" id="groq-card-weaknesses"></div>
+            </div>
+            <div class="groq-card groq-card-improve">
+              <div class="groq-card-header">
+                <span class="groq-card-icon">🎯</span>
+                <span class="groq-card-title">Areas to Improve</span>
+              </div>
+              <div class="groq-card-body" id="groq-card-improve"></div>
+            </div>
+          </div>
+          <div id="groq-error" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Tab bar -->
+      <div id="admin-tabs">
+        <button class="admin-tab-btn on" data-tab="scores">Scores</button>
+        <button class="admin-tab-btn" data-tab="stats">Stats</button>
+        <button class="admin-tab-btn" data-tab="settings">Settings</button>
+      </div>
+
+      <!-- Scrollable tab content -->
+      <div id="admin-tab-content-wrap">
+
+        <!-- ══ SCORES TAB ══ -->
+        <div class="admin-tab-content" id="admin-tab-scores">
+          <div class="admin-toolbar">
+            <input
+              class="admin-search"
+              id="admin-search"
+              type="text"
+              placeholder="Search by name or grade…"
+              autocomplete="off"
+            />
+            <select class="admin-select" id="admin-topic-filter">
+              <option value="all">All Topics</option>
+            </select>
+            <button class="admin-export-btn" id="admin-export-btn">
+              ⬇ Export CSV
+            </button>
+          </div>
+
+          <div style="overflow-x: auto">
+            <table class="admin-tbl">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Grade</th>
+                  <th>Topic</th>
+                  <th>Score</th>
+                  <th>%</th>
+                  <th>Date &amp; Time</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-scores-tbody"></tbody>
+            </table>
+          </div>
+
+          <button class="admin-clear-btn" id="admin-clear-btn">
+            🗑 Clear All Scores
+          </button>
+          <div class="clear-confirm-box" id="clear-confirm-box">
+            <div
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 14px;
+                font-weight: 700;
+                color: #bd001a;
+              "
+            >
+              Type <strong>CLEAR</strong> to permanently delete every score:
+            </div>
+            <input
+              class="clear-confirm-input"
+              id="clear-confirm-input"
+              type="text"
+              placeholder="CLEAR"
+              maxlength="5"
+              autocomplete="off"
+            />
+            <div style="display: flex; gap: 8px">
+              <button
+                id="clear-ok-btn"
+                style="
+                  flex: 1;
+                  background: #bd001a;
+                  color: #fff;
+                  border: none;
+                  border-radius: 9999px;
+                  padding: 12px;
+                  font-family: 'Space Grotesk', sans-serif;
+                  font-weight: 700;
+                  font-size: 15px;
+                  cursor: pointer;
+                "
+              >
+                Delete All
+              </button>
+              <button
+                id="clear-cancel-btn"
+                style="
+                  flex: 1;
+                  background: #fff;
+                  border: 1px solid #a8a9ad;
+                  border-radius: 9999px;
+                  padding: 12px;
+                  font-family: 'Space Grotesk', sans-serif;
+                  font-weight: 700;
+                  font-size: 15px;
+                  cursor: pointer;
+                "
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ STATS TAB ══ -->
+        <div class="admin-tab-content" id="admin-tab-stats" style="display: none">
+          <div class="stat-card-grid" id="admin-stat-cards"></div>
+          <div class="bar-chart">
+            <div class="bar-chart-title">Attempts by Topic</div>
+            <div id="admin-bar-rows"></div>
+          </div>
+        </div>
+
+        <!-- ══ SETTINGS TAB ══ -->
+        <div class="admin-tab-content" id="admin-tab-settings" style="display: none">
+
+          <!-- Change PIN -->
+          <div class="settings-section">
+            <div class="settings-section-title">🔑 Change PIN</div>
+            <label
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                color: #926e6b;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+              "
+              >New PIN</label
+            >
+            <input
+              class="settings-input"
+              type="password"
+              id="pin-new"
+              maxlength="4"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              placeholder="4 digits"
+              autocomplete="new-password"
+            />
+            <label
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                color: #926e6b;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+              "
+              >Confirm PIN</label
+            >
+            <input
+              class="settings-input"
+              type="password"
+              id="pin-confirm-input2"
+              maxlength="4"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              placeholder="4 digits"
+              autocomplete="new-password"
+            />
+            <button class="settings-btn" id="pin-save-btn">Save PIN</button>
+            <div
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 12px;
+                color: #926e6b;
+                margin-top: 8px;
+              "
+            >
+              ⚠ PIN change is in-memory only — reloading the page resets it to the
+              hardcoded default. Edit <code>ADMIN_PIN</code> in app.js to make it
+              permanent.
+            </div>
+            <div class="settings-msg" id="pin-save-msg"></div>
+          </div>
+
+          <!-- Kiosk Info -->
+          <div class="settings-section">
+            <div class="settings-section-title">ℹ Kiosk Info</div>
+            <div class="settings-row">
+              <span>App</span>
+              <span class="settings-row-val">SALIN-LAHI</span>
+            </div>
+            <div class="settings-row">
+              <span>Version</span>
+              <span class="settings-row-val">1.0.0</span>
+            </div>
+            <div class="settings-row">
+              <span>Firebase Project</span>
+              <span class="settings-row-val" id="info-project-id">—</span>
+            </div>
+            <div class="settings-row">
+              <span>Last Score Sync</span>
+              <span class="settings-row-val" id="info-last-sync">—</span>
+            </div>
+          </div>
+
+          <!-- Idle Timer -->
+          <div class="settings-section">
+            <div class="settings-section-title">⏱ Idle Timer</div>
+            <label
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                color: #926e6b;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+              "
+              >Timeout (seconds)</label
+            >
+            <input
+              class="settings-input"
+              type="number"
+              id="idle-input"
+              min="10"
+              max="600"
+              placeholder="60"
+              style="width: 140px"
+            />
+            <br />
+            <button class="settings-btn" id="idle-apply-btn">Apply</button>
+            <div class="settings-msg" id="idle-msg"></div>
+          </div>
+
+        </div><!-- end settings tab -->
+      </div><!-- end #admin-tab-content-wrap -->
+    </div><!-- end #ov-admin -->
+
+    <script type="module" src="firebase.js"></script>
+    <script src="app.js" defer></script>
+  </body>
+</html>
