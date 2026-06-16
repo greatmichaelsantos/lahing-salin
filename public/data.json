@@ -24,156 +24,227 @@
 
   "sections": [
     {
-      "id": "location",
-      "title": "Where is Olongapo?",
-      "icon": "MAP",
-      "color": "#1A5276",
-      "station": "Station A",
-      "content": "Olongapo City is located on the eastern shore of Subic Bay in Zambales, Central Luzon — approximately 82 kilometers northwest of Manila. It is bordered by the municipality of Subic to the north and east, and faces the South China Sea through Subic Bay to the west.\n\nThe city sits at the foot of the Zambales mountain range, whose forested slopes have been home to the Aeta people for thousands of years. This unique geography — mountains, bay, and lowland plains — shaped the entire history of Olongapo and its people.\n\nOlongapo is easily accessible via the Subic-Clark-Tarlac Expressway (SCTEX) and the National Highway. Its proximity to Clark International Airport in Pampanga makes it an emerging hub for tourism, logistics, and smart city development under the DOST program.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Ph_locator_zambales_olongapo.png/320px-Ph_locator_zambales_olongapo.png",
-      "photo_caption": "Olongapo City location in Zambales, Philippines",
-      "questions": [
-        { "q": "Olongapo City is located along the shore of which bay?", "opts": ["Manila Bay","Lingayen Gulf","Subic Bay","Laguna de Bay"], "ans": 2 },
-        { "q": "Which region does Olongapo City belong to?", "opts": ["Region I","Region II","Region III","Region IV"], "ans": 2 },
-        { "q": "Approximately how far is Olongapo from Manila?", "opts": ["20 km","50 km","82 km","150 km"], "ans": 2 },
-        { "q": "What mountain range borders Olongapo to the east?", "opts": ["Sierra Madre","Cordillera","Zambales Mountains","Bicol Range"], "ans": 2 },
-        { "q": "Which expressway connects Olongapo to the rest of Luzon?", "opts": ["NLEX","SLEX","SCTEX","TPLEX"], "ans": 2 }
-      ]
-    },
-    {
-      "id": "aeta",
-      "title": "The Aeta — First People of Olongapo",
+      "id": "aeta-history",
+      "title": "Aeta History",
       "icon": "AETA",
       "color": "#C8973A",
-      "station": "Station B",
-      "content": "Long before Olongapo became a city, the Aeta people were already here. As Negritos — among the earliest inhabitants of the Philippine archipelago — the Aeta lived in the forests of the Zambales mountains and the coastal lowlands of Subic Bay for over 30,000 years.\n\nThe very name 'Olongapo' is believed to trace back to Aeta language, meaning 'land of the chief' or referencing a prominent feature of the landscape visible from the bay. This etymology ties the city's identity directly to its indigenous founders.\n\nThe Aeta of Olongapo and Subic are known for their extraordinary knowledge of the forest — medicinal plants, hunting techniques, and sustainable land use practices that maintained ecological balance for millennia. Their oral traditions, music, and spiritual practices represent one of the oldest living cultures in Asia.\n\nThe 1991 eruption of Mt. Pinatubo displaced thousands of Aeta families from their ancestral lands. Despite this catastrophic disruption, Aeta communities in the Olongapo-Subic area have shown remarkable resilience — many are now active participants in the SBMA Freeport economy while preserving their cultural identity.\n\nToday, Aeta communities are recognized as an integral part of Olongapo's cultural heritage. Their traditional dances, crafts, and knowledge systems are featured in city festivals and are being documented as part of the DOST Smart City cultural preservation program.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Aeta_man.jpg/320px-Aeta_man.jpg",
-      "photo_caption": "An Aeta elder — the original stewards of the Zambales forests",
+      "station": "Station A",
+      "photo_url": "assets/stations/station-a.jpg",
+      "photo_caption": "The Aeta — first people of the Philippine archipelago",
+      "audio": "assets/stations/station-a.mp3",
+      "content": "Arriving in Luzon roughly 50,000 years ago via ancient land bridges exposed during the Pleistocene Ice Age, the ancestors of the Aeta became the first humans to settle the Philippine archipelago. Following the arrival of agricultural Austronesian migrants around 6,000 years ago, they intentionally retreated into the rugged highlands of Luzon to preserve their unique mobile lifestyle and genetic homogeneity. This deep-rooted resilience faced a modern crisis in June 1991 when the violent eruption of Mount Pinatubo permanently displaced many Aeta communities from their traditional mountain sanctuaries into new resettlement zones.",
+      "fun_facts": [
+        {
+          "title": "Ice Age Trailblazers",
+          "text": "The Aeta arrived in the Philippines during the last Ice Age when massive glaciers locked up the oceans, physically lowering sea levels to expose the walkable land pathways they traveled."
+        },
+        {
+          "title": "The Highland Retreat",
+          "text": "Instead of clashing destructively with incoming Austronesian farmers, the Aeta chose to move deep into the Zambales, Bataan, and Sierra Madre mountain ranges to deliberately shield their culture and ancestry from outside mixing."
+        }
+      ],
       "questions": [
-        { "q": "How long have the Aeta people lived in the Zambales-Subic area?", "opts": ["500 years","5,000 years","Over 30,000 years","1,000 years"], "ans": 2 },
-        { "q": "What does the name 'Olongapo' trace back to?", "opts": ["Spanish word for port","Aeta language — land of the chief","Tagalog word for mountain","Chinese trading term"], "ans": 1 },
-        { "q": "What disaster in 1991 displaced many Aeta communities?", "opts": ["Typhoon Yolanda","Mt. Pinatubo eruption","Baguio earthquake","Taal eruption"], "ans": 1 },
-        { "q": "The Aeta are classified as which type of indigenous people?", "opts": ["Austronesian","Lumad","Negrito","Igorot"], "ans": 2 },
-        { "q": "Aeta cultural contributions to Olongapo include:", "opts": ["Ballet and opera","Traditional dances, crafts, and forest knowledge","Western architecture","Industrial manufacturing"], "ans": 1 }
+        { "q": "Approximately when did the ancestors of the Aeta arrive in Luzon?", "opts": ["10,000 years ago", "20,000 years ago", "50,000 years ago", "100,000 years ago"], "ans": 2 },
+        { "q": "What geological event exposed the land bridges the Aeta used?", "opts": ["The Bronze Age", "The Pleistocene Ice Age", "The Holocene Warm Period", "The Mesozoic Era"], "ans": 1 },
+        { "q": "When did Austronesian migrants arrive in the Philippines?", "opts": ["2,000 years ago", "6,000 years ago", "10,000 years ago", "15,000 years ago"], "ans": 1 },
+        { "q": "What event in 1991 displaced many Aeta communities?", "opts": ["A major typhoon", "An earthquake", "The Mount Pinatubo eruption", "A tsunami"], "ans": 2 },
+        { "q": "Where did the Aeta retreat to after Austronesian migration?", "opts": ["Coastal fishing villages", "River lowlands", "Rugged highlands of Luzon", "Urban centers"], "ans": 2 }
       ]
     },
     {
-      "id": "history",
-      "title": "Colonial History & Spanish Era",
-      "icon": "HIST",
+      "id": "livelihood",
+      "title": "Traditional Livelihood",
+      "icon": "LIVE",
+      "color": "#2D6A4F",
+      "station": "Station B",
+      "photo_url": "assets/stations/station-b.jpg",
+      "photo_caption": "Traditional Aeta livelihood and community life",
+      "audio": "assets/stations/station-b.mp3",
+      "content": "The traditional music of the Aeta serves as a vital spiritual utility and an oral historical archive, utilizing instruments like bamboo tube zithers (kabungbung), nose flutes (bansik), and flat gongs (gassa) forged entirely from jungle materials. These sonic elements come together during the Anituan healing séance, a dramatic group ritual where a spiritual medium enters a trance to communicate with ancestral spirits (anitos). Through rhythmic dancing and hypnotic instrumental drones, the community creates a sensory environment designed to identify and cast away negative frequencies causing physical or psychological illness.",
+      "fun_facts": [
+        {
+          "title": "The Bird-Mimicking Flute",
+          "text": "The bansik is a highly specialized bamboo nose flute featuring precision-cut tonal holes designed explicitly to mirror the complex calls of forest birds."
+        },
+        {
+          "title": "Open-Palm Rhythms",
+          "text": "Unlike traditional Western or Asian gongs that require mallets, the sacred gassa gong is played entirely with the bare open palm to create steady, earth-grounding cadences."
+        }
+      ],
+      "questions": [
+        { "q": "What is a kabungbung?", "opts": ["A bamboo flute", "A bamboo tube zither", "A type of drum", "A wooden horn"], "ans": 1 },
+        { "q": "What is the Anituan?", "opts": ["A harvest festival", "A warrior ceremony", "A healing séance", "A coming-of-age ritual"], "ans": 2 },
+        { "q": "What type of flute is the bansik?", "opts": ["Lip flute", "End-blown flute", "Nose flute", "Pan flute"], "ans": 2 },
+        { "q": "What do the ancestral spirits communicate through during the Anituan?", "opts": ["Silence and meditation", "Rhythmic dancing and instrumental drones", "Chanting alone", "Feasting"], "ans": 1 },
+        { "q": "What are the ancestral spirits called in Aeta tradition?", "opts": ["Aswang", "Anitos", "Diwata", "Tikbalang"], "ans": 1 }
+      ]
+    },
+    {
+      "id": "music",
+      "title": "Indigenous Music",
+      "icon": "MUSI",
       "color": "#8B2635",
       "station": "Station C",
-      "content": "Spanish colonization reached the Subic Bay area in the 16th century. Augustinian friars established Christian settlements along the coast, bringing lowland Tagalog and Kapampangan settlers who interacted with — and gradually displaced — the Aeta from the coastal plains.\n\nThe Spanish recognized Subic Bay's exceptional natural harbor early on. In 1885, Spain established a naval arsenal at Olongapo, making it a strategic military installation. This decision would define the character of Olongapo for the next century and beyond.\n\nDuring this period, Olongapo grew from an Aeta settlement into a mixed community of indigenous people, Christian converts, and Spanish colonial administrators. The social hierarchy of the era placed Spanish friars and officials at the top, with Aeta communities marginalized to the mountain interiors.\n\nThe Philippine Revolution of 1896 and the subsequent Spanish-American War of 1898 ended Spanish rule. The Treaty of Paris transferred the Philippines to the United States, and with it — the strategic prize of Subic Bay.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Subic_Bay_1899.jpg/320px-Subic_Bay_1899.jpg",
-      "photo_caption": "Subic Bay in 1899 — transition from Spanish to American control",
+      "photo_url": "assets/stations/station-c.jpg",
+      "photo_caption": "Aeta indigenous musical traditions",
+      "audio": "assets/stations/station-c.mp3",
+      "content": "The traditional music of the Aeta serves as a vital spiritual utility and an oral historical archive, utilizing instruments like bamboo tube zithers (kabungbung), nose flutes (bansik), and flat gongs (gassa) forged entirely from jungle materials. These sonic elements come together during the Anituan healing séance, a dramatic group ritual where a spiritual medium enters a trance to communicate with ancestral spirits (anitos). Through rhythmic dancing and hypnotic instrumental drones, the community creates a sensory environment designed to identify and cast away negative frequencies causing physical or psychological illness.",
+      "fun_facts": [
+        {
+          "title": "The Bird-Mimicking Flute",
+          "text": "The bansik is a highly specialized bamboo nose flute featuring precision-cut tonal holes designed explicitly to mirror the complex calls of forest birds."
+        },
+        {
+          "title": "Open-Palm Rhythms",
+          "text": "Unlike traditional Western or Asian gongs that require mallets, the sacred gassa gong is played entirely with the bare open palm to create steady, earth-grounding cadences."
+        }
+      ],
       "questions": [
-        { "q": "Which religious order established settlements near Subic Bay during Spanish rule?", "opts": ["Jesuits","Dominicans","Augustinians","Franciscans"], "ans": 2 },
-        { "q": "When did Spain establish a naval arsenal at Olongapo?", "opts": ["1750","1810","1885","1900"], "ans": 2 },
-        { "q": "Which treaty transferred the Philippines from Spain to the United States?", "opts": ["Treaty of Manila","Treaty of Paris","Treaty of Versailles","Treaty of Madrid"], "ans": 1 },
-        { "q": "The Philippine Revolution against Spain began in:", "opts": ["1872","1886","1896","1901"], "ans": 2 },
-        { "q": "During the Spanish era, Aeta communities were pushed to:", "opts": ["The coastal areas","The mountain interiors","The city centers","The naval bases"], "ans": 1 }
+        { "q": "What is the gassa?", "opts": ["A nose flute", "A bamboo zither", "A flat gong", "A drum"], "ans": 2 },
+        { "q": "How is the gassa traditionally played?", "opts": ["With a wooden mallet", "With the bare open palm", "With bamboo sticks", "With a leather strap"], "ans": 1 },
+        { "q": "What does the bansik flute mimic?", "opts": ["River sounds", "The calls of forest birds", "Ancestral voices", "Rainfall"], "ans": 1 },
+        { "q": "What is the spiritual purpose of the Anituan?", "opts": ["Entertaining warriors", "Communicating with nature spirits only", "Identifying and casting away negative forces causing illness", "Celebrating harvests"], "ans": 2 },
+        { "q": "What materials are Aeta instruments made from?", "opts": ["Metal and stone", "Imported wood", "Jungle materials", "Clay"], "ans": 2 }
+      ]
+    },
+    {
+      "id": "tools",
+      "title": "Traditional Tools",
+      "icon": "TOOL",
+      "color": "#1565C0",
+      "station": "Station D",
+      "photo_url": "assets/stations/station-d.jpg",
+      "photo_caption": "Aeta traditional hunting tools and bow-and-arrow craft",
+      "audio": "assets/stations/station-d.mp3",
+      "content": "The Aeta engineered a highly advanced bow and arrow complex individually custom-built to match the unique biometric strength and arm span of each specific hunter. Their bows, known as pana, are crafted from dense anaw palm wood that must be continuously dipped in mountain rivers to preserve elasticity, paired with rot-resistant bowstrings woven from wild Ficus vine bark. To maximize hunting efficiency, they utilize a specialized arrow suite that includes aerodynamic feathered hunting arrows, multi-pronged fishing points, and heavy detachable arrowheads designed to snag on thick brush when tracking large wild boar.",
+      "fun_facts": [
+        {
+          "title": "River-Dipped Weaponry",
+          "text": "Aeta hunters must continuously 'humidify' their anaw palm self-bows in flowing mountain rivers to prevent the dense wood from drying out and to maintain its explosive mechanical snapping power."
+        },
+        {
+          "title": "Smart Tracking Technology",
+          "text": "The bugwan arrow features a detachable barbed metal tip connected to the main shaft by a sturdy cord, intentionally designed to separate upon impact and snag on dense jungle brush to slow down heavy game."
+        }
+      ],
+      "questions": [
+        { "q": "What is the Aeta bow called?", "opts": ["Palaso", "Pana", "Busog", "Bato"], "ans": 1 },
+        { "q": "What wood is the pana made from?", "opts": ["Bamboo", "Mahogany", "Anaw palm wood", "Narra wood"], "ans": 2 },
+        { "q": "Why must the bow be dipped in mountain rivers?", "opts": ["To make it heavier", "To preserve elasticity", "To change its color", "To sharpen the edges"], "ans": 1 },
+        { "q": "What is the bugwan arrow designed to do?", "opts": ["Fly farther", "Explode on impact", "Detach and snag on jungle brush", "Spin in the air"], "ans": 2 },
+        { "q": "Aeta bowstrings are woven from:", "opts": ["Animal sinew", "Palm fiber", "Wild Ficus vine bark", "Silk thread"], "ans": 2 }
+      ]
+    },
+    {
+      "id": "values",
+      "title": "Cultural Values",
+      "icon": "VALU",
+      "color": "#6B3FA0",
+      "station": "Station E",
+      "photo_url": "assets/stations/station-e.jpg",
+      "photo_caption": "Aeta cultural values and traditions",
+      "audio": "assets/stations/station-e.mp3",
+      "content": "The Aeta engineered a highly advanced bow and arrow complex individually custom-built to match the unique biometric strength and arm span of each specific hunter. Their bows, known as pana, are crafted from dense anaw palm wood that must be continuously dipped in mountain rivers to preserve elasticity, paired with rot-resistant bowstrings woven from wild Ficus vine bark. To maximize hunting efficiency, they utilize a specialized arrow suite that includes aerodynamic feathered hunting arrows, multi-pronged fishing points, and heavy detachable arrowheads designed to snag on thick brush when tracking large wild boar.",
+      "fun_facts": [
+        {
+          "title": "River-Dipped Weaponry",
+          "text": "Aeta hunters must continuously 'humidify' their anaw palm self-bows in flowing mountain rivers to prevent the dense wood from drying out and to maintain its explosive mechanical snapping power."
+        },
+        {
+          "title": "Smart Tracking Technology",
+          "text": "The bugwan arrow features a detachable barbed metal tip connected to the main shaft by a sturdy cord, intentionally designed to separate upon impact and snag on dense jungle brush to slow down heavy game."
+        }
+      ],
+      "questions": [
+        { "q": "How is each Aeta bow customized?", "opts": ["By tribe elders based on age", "Built to match individual biometric strength and arm span", "Randomly selected", "Based on social rank"], "ans": 1 },
+        { "q": "What type of arrows are used for fishing?", "opts": ["Feathered hunting arrows", "Heavy detachable arrowheads", "Multi-pronged fishing points", "Poison-tipped arrows"], "ans": 2 },
+        { "q": "The Aeta hunting system is best described as:", "opts": ["Basic and primitive", "Borrowed from other cultures", "Highly engineered and specialized", "Based on foreign technology"], "ans": 2 },
+        { "q": "What makes Aeta arrows unique?", "opts": ["They glow in the dark", "A specialized suite for different hunting purposes", "They are made entirely from metal", "They are thrown, not shot"], "ans": 1 },
+        { "q": "The bowstring is designed to be:", "opts": ["Flexible but weak", "Rot-resistant", "Made of animal leather", "Replaced monthly"], "ans": 1 }
+      ]
+    },
+    {
+      "id": "origins",
+      "title": "Olongapo Origins and Ancestors",
+      "icon": "ORIG",
+      "color": "#A0522D",
+      "station": "Station F",
+      "photo_url": "assets/stations/station-f.jpg",
+      "photo_caption": "The ancestral roots and origins of Olongapo City",
+      "audio": "assets/stations/station-f.mp3",
+      "content": "Originally settled by the indigenous Ambala Ayta and early Malay Sambal peoples, the land that became Olongapo derived its topographical name from the Sambal words 'olang' (gentle) and 'gapo' (shoreline). The region's ethnic ancestors maintained a fierce identity, with pre-colonial Sambal warriors wielding poison-tipped arrows and kalasag shields while communicating with their creator deity, Malayari, through microtonal singing led by bayoc shamans. This history is mirrored by the legendary oral folklore of 'Ulo ng Apo,' where the tragic sight of a beloved chieftain's severed head served as a rallying cry that forged an unyielding spirit of communal unity and radical self-reliance through centuries of foreign incursions and natural disasters.",
+      "fun_facts": [
+        {
+          "title": "The Severed Head Symbol",
+          "text": "According to the 'Ulo ng Apo' legend, the severed head of the beloved chieftain Apo was intentionally displayed by assassins on a bamboo pole to terrify the village, but the community instead used the tragic sight as an ultimate rallying cry to fiercely unite and protect their domain."
+        },
+        {
+          "title": "The Sibit-Sibit Races",
+          "text": "The centerpiece of the city's coastal cultural celebrations revolves around fast-paced sibit-sibit boat races — named after the ultra-lightweight, traditional paddle banquitas engineered by pre-colonial ancestors for deep-water net fishing."
+        }
+      ],
+      "questions": [
+        { "q": "What does 'olang' mean in the Sambal language?", "opts": ["Shore", "Gentle", "Chief", "Water"], "ans": 1 },
+        { "q": "What does 'gapo' mean in Sambal?", "opts": ["Mountain", "Village", "Shoreline", "Forest"], "ans": 2 },
+        { "q": "What is 'Ulo ng Apo'?", "opts": ["The name of a festival", "A legend about a chieftain's severed head that became a rallying cry", "A type of boat race", "A traditional weapon"], "ans": 1 },
+        { "q": "Who are the bayoc in Sambal culture?", "opts": ["Warriors", "Traders", "Shamans", "Fishermen"], "ans": 2 },
+        { "q": "What are sibit-sibit?", "opts": ["Traditional dances", "Poison-tipped arrows", "Traditional paddle boats used in races", "Shield weapons"], "ans": 2 }
       ]
     },
     {
       "id": "naval",
-      "title": "American Era & US Naval Base",
+      "title": "Naval Heritage",
       "icon": "NAVY",
-      "color": "#1565C0",
-      "station": "Station D",
-      "content": "The United States established the U.S. Naval Station Subic Bay in 1901, rapidly developing it into one of the most important American military installations in the Pacific. By the mid-20th century, it had grown into the largest U.S. naval base outside the continental United States.\n\nAt its peak during the Vietnam War era (1960s-70s), the base employed over 42,000 Filipino workers and injected billions of pesos into the local economy annually. Olongapo City developed symbiotically with the base — its commercial district, hotels, and service industries catering to the massive American military presence.\n\nOlongapo City was formally chartered on February 9, 1966, under Republic Act No. 4645, separating it from the province of Zambales. Its first mayor, Remigio Mathay, guided the young city through rapid urbanization.\n\nMayor Richard Gordon (1980-1992) transformed Olongapo into a model city — disciplined, clean, and economically vibrant. His governance philosophy of civic responsibility and urban management became a national model, earning Olongapo recognition as one of the best-managed cities in the Philippines.\n\nThe 1991 Mt. Pinatubo eruption severely damaged base facilities. Combined with the Philippine Senate's historic vote rejecting a new base treaty, the U.S. Navy formally departed on November 24, 1992 — ending 91 years of American military presence.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Subic_Bay_Naval_Base_aerial_1990.jpg/320px-Subic_Bay_Naval_Base_aerial_1990.jpg",
-      "photo_caption": "US Naval Base Subic Bay aerial view — one of America's largest overseas bases",
-      "questions": [
-        { "q": "When was the U.S. Naval Station Subic Bay established?", "opts": ["1885","1901","1920","1945"], "ans": 1 },
-        { "q": "At its peak, how many Filipino workers did the base employ?", "opts": ["5,000","15,000","42,000","100,000"], "ans": 2 },
-        { "q": "Olongapo City was formally chartered on:", "opts": ["February 9, 1945","February 9, 1955","February 9, 1966","February 9, 1972"], "ans": 2 },
-        { "q": "Which mayor transformed Olongapo into a model city in the 1980s?", "opts": ["Remigio Mathay","Richard Gordon","Jesse Robredo","James Gordon Jr."], "ans": 1 },
-        { "q": "When did the U.S. Navy formally depart Subic Bay?", "opts": ["1989","1991","1992","1995"], "ans": 2 }
-      ]
-    },
-    {
-      "id": "sbma",
-      "title": "SBMA — Subic Bay Freeport Zone",
-      "icon": "SBMA",
-      "color": "#2D6A4F",
-      "station": "Station E",
-      "content": "When the U.S. Navy left in 1992, the Philippine government faced a massive challenge: what to do with 14,000 hectares of prime real estate, world-class facilities, and a workforce of 42,000 suddenly unemployed Filipinos?\n\nThe answer was visionary. Under Republic Act 7227, the Bases Conversion and Development Authority (BCDA) created the Subic Bay Metropolitan Authority (SBMA) to transform the former naval base into a special economic and freeport zone. Richard Gordon, as the first SBMA Chairman, spearheaded this transformation.\n\nThe Subic Bay Freeport Zone (SBFZ) is now one of the most successful base conversion projects in the world. It operates as a special economic zone with its own set of laws, tax incentives, and governance — attracting billions in foreign and local investments.\n\nToday, SBMA hosts over 800 locators including manufacturing plants, logistics hubs, tourism facilities, adventure parks, hotels, casinos, and international shipping companies. It contributes significantly to Central Luzon's economy and employs tens of thousands of workers.\n\nKey SBMA attractions include: Subic Bay Yacht Club, Ocean Adventure marine theme park, Zoobic Safari wildlife park, Camayan Beach Resort, and the Subic Bay International Airport. The former naval infrastructure — piers, hangars, and warehouses — has been repurposed for commerce and tourism.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Subic_Bay_Freeport_Zone.jpg/320px-Subic_Bay_Freeport_Zone.jpg",
-      "photo_caption": "Subic Bay Freeport Zone — transformed from military base to economic powerhouse",
-      "questions": [
-        { "q": "What law created the Subic Bay Metropolitan Authority?", "opts": ["RA 7160","RA 7227","RA 7394","RA 8550"], "ans": 1 },
-        { "q": "How many hectares did the former U.S. naval base cover?", "opts": ["5,000","10,000","14,000","20,000"], "ans": 2 },
-        { "q": "Who was the first SBMA Chairman who led the base conversion?", "opts": ["Remigio Mathay","James Gordon Jr.","Richard Gordon","Fidel Ramos"], "ans": 2 },
-        { "q": "Which of these is a major tourism attraction in SBMA?", "opts": ["Burnham Park","Zoobic Safari","Chocolate Hills","Mayon Volcano"], "ans": 1 },
-        { "q": "The SBMA transformation is considered:", "opts": ["A failed government project","One of the most successful base conversions in the world","A private sector initiative","A foreign government project"], "ans": 1 }
-      ]
-    },
-    {
-      "id": "traditions",
-      "title": "Traditions & Festivals",
-      "icon": "FEST",
-      "color": "#6B3FA0",
-      "station": "Station F",
-      "content": "Olongapo City celebrates a rich calendar of festivals that reflect its layered cultural identity — from ancient Aeta traditions to Spanish Catholic heritage, American-influenced pop culture, and modern civic pride.\n\nThe Olongapo City Founding Anniversary on February 9 is the biggest civic celebration. Streets are lined with parades, cultural shows, and community events. Aeta cultural performances — traditional dances, music demonstrations, and craft exhibitions — are featured as centerpieces, honoring the city's original inhabitants.\n\nThe Subic Bay Festival celebrates the maritime heritage and international character of the bay. Boat races, seafood festivals, and cultural exchanges with visiting international ships recall the city's long relationship with the sea.\n\nHoly Week in Olongapo is observed with deep Catholic devotion inherited from the Spanish era. The Senakulo — a dramatic reenactment of the Passion of Christ — draws thousands of participants and spectators annually.\n\nThe Zambales Mangga Festival celebrates the province's famous mangoes, one of the finest in the Philippines. Local delicacies include sinigang na maya-maya (red snapper in sour broth), fresh seafood from Subic Bay, and traditional Aeta forest foods like camote tops and wild honey.\n\nTraditional Aeta crafts — woven baskets, bamboo instruments, beaded jewelry, and handmade bows — are sold at cultural markets and festivals, providing livelihood for indigenous communities while preserving ancient craftsmanship.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Olongapo_Parade.jpg/320px-Olongapo_Parade.jpg",
-      "photo_caption": "Cultural parade celebrating Olongapo City's founding anniversary",
-      "questions": [
-        { "q": "When is the Olongapo City Founding Anniversary celebrated?", "opts": ["January 1","February 9","June 12","November 30"], "ans": 1 },
-        { "q": "Which festival celebrates the maritime heritage of Subic Bay?", "opts": ["Sinulog Festival","Subic Bay Festival","Kadayawan Festival","Panagbenga Festival"], "ans": 1 },
-        { "q": "What is Senakulo?", "opts": ["A local seafood dish","A traditional Aeta dance","A dramatic reenactment of the Passion of Christ","A boat racing competition"], "ans": 2 },
-        { "q": "Which fruit is celebrated in the Zambales festival?", "opts": ["Pineapple","Banana","Mango","Durian"], "ans": 2 },
-        { "q": "Aeta crafts sold at cultural markets include:", "opts": ["Imported electronics","Woven baskets, bamboo instruments, and beaded jewelry","Foreign fashion items","Industrial products"], "ans": 1 }
-      ]
-    },
-    {
-      "id": "demographics",
-      "title": "People & Demographics",
-      "icon": "PEOPLE",
-      "color": "#A0522D",
+      "color": "#1A5276",
       "station": "Station G",
-      "content": "Olongapo City is home to over 233,000 people — called Olongapeños — representing one of the most diverse urban populations in Central Luzon. This diversity is the direct result of centuries of migration, colonial history, and the cosmopolitan influence of the former U.S. Naval Base.\n\nThe indigenous Aeta people, descendants of the city's original inhabitants, continue to maintain communities in the mountains surrounding Olongapo and Subic, particularly in upland barangays. Estimates place the Aeta population in the greater Subic-Olongapo area at around 30,000 individuals.\n\nTagalog and Kapampangan settlers form the largest lowland groups, their ancestors having arrived during the Spanish colonial period. Ilocano migrants, who came primarily during the American era and post-war period, form a significant community. Many families carry mixed heritage reflecting centuries of intermarriage between these groups.\n\nThe American naval base era (1901-1992) introduced a significant Fil-American population. Children of Filipino mothers and American servicemen, known as Amerasians, form a recognized community in Olongapo with their own cultural organizations and advocacy groups.\n\nToday, the SBMA Freeport attracts workers from across the Philippines and a resident expatriate community from South Korea, China, Japan, Australia, and the United States — making Olongapo one of the most internationally diverse cities in the Philippines outside Metro Manila.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Olongapo_City_Hall.jpg/320px-Olongapo_City_Hall.jpg",
-      "photo_caption": "Olongapo City Hall — serving a diverse population of 233,000+ Olongapeños",
+      "photo_url": "assets/stations/station-g.jpg",
+      "photo_caption": "Subic Bay naval history and the transformation to Freeport Zone",
+      "audio": "assets/stations/station-g.mp3",
+      "content": "The strategic deep-water harbor of Subic Bay was transformed from a quiet fishing village into a major Spanish naval arsenal in 1884 by royal decree, before being claimed and expanded by the United States following the Spanish-American War. During the height of the Cold War and the Vietnam War, it exploded in size to become the single largest overseas defense facility of the U.S. military, fundamentally anchoring Olongapo's economy and turning it into a high-energy metropolis. This historic era came to an abrupt end on November 24, 1992, when the American flag was lowered for the last time following the catastrophic 1991 eruption of Mount Pinatubo, prompting the city to successfully pivot the base into the modern Subic Bay Freeport Zone.",
+      "fun_facts": [
+        {
+          "title": "The JEST Connection",
+          "text": "During the Vietnam War era, the U.S. Navy contracted local Aeta elders to establish the Jungle Environmental Survival Training (JEST) school at Subic Bay to teach elite American forces vital survival skills."
+        },
+        {
+          "title": "The City of Volunteers",
+          "text": "When the U.S. Navy unexpectedly departed after the 1991 eruption of Mount Pinatubo, over 8,000 local citizens preserved and protected the billions of dollars worth of left-behind military infrastructure without pay."
+        }
+      ],
       "questions": [
-        { "q": "What is the estimated population of Olongapo City?", "opts": ["50,000","100,000","233,000+","500,000"], "ans": 2 },
-        { "q": "What are the people of Olongapo City called?", "opts": ["Zambaleños","Subicanos","Olongapeños","Kapampangans"], "ans": 2 },
-        { "q": "The Fil-American population in Olongapo traces its roots to:", "opts": ["The Spanish era","The U.S. Naval Base era","The SBMA period","The pre-colonial era"], "ans": 1 },
-        { "q": "Which group forms the largest lowland population in Olongapo?", "opts": ["Ilocano and Bicolano","Tagalog and Kapampangan","Cebuano and Waray","Maranao and Tausug"], "ans": 1 },
-        { "q": "The estimated Aeta population in the greater Subic-Olongapo area is:", "opts": ["3,000","10,000","30,000","100,000"], "ans": 2 }
+        { "q": "When was Subic Bay transformed into a Spanish naval arsenal?", "opts": ["1798", "1854", "1884", "1901"], "ans": 2 },
+        { "q": "What training school did Aeta elders help the U.S. Navy establish?", "opts": ["SEAL Training", "JEST (Jungle Environmental Survival Training)", "Ranger School", "Marine Corps Boot Camp"], "ans": 1 },
+        { "q": "On what date did the U.S. lower its flag at Subic Bay?", "opts": ["December 12, 1989", "July 4, 1991", "November 24, 1992", "January 1, 1995"], "ans": 2 },
+        { "q": "What did the former naval base become after the U.S. departure?", "opts": ["A national park", "A military museum", "Subic Bay Freeport Zone", "An international airport"], "ans": 2 },
+        { "q": "During which era was the Subic Bay base at its largest?", "opts": ["World War I and II", "The Korean War only", "The Cold War and Vietnam War", "The Gulf War"], "ans": 2 }
       ]
     },
     {
-      "id": "tourism",
-      "title": "Tourism & Landmarks",
-      "icon": "TOUR",
-      "color": "#1A7A4A",
+      "id": "culture",
+      "title": "People and Local Culture",
+      "icon": "CULT",
+      "color": "#C0152E",
       "station": "Station H",
-      "content": "Olongapo City and the Subic Bay Freeport Zone together form one of the Philippines' premier tourism destinations, offering a unique combination of natural beauty, adventure, history, and modern amenities.\n\nSBMA's Ocean Adventure is Southeast Asia's only open-water marine theme park, featuring dolphin and sea lion shows, interactive programs with marine mammals, and environmental education. Zoobic Safari offers a drive-through wildlife experience with tigers, crocodiles, and hundreds of animal species in naturalistic habitats.\n\nThe former naval base infrastructure has been transformed into tourism assets. The Subic Bay Yacht Club hosts international sailing regattas. Historic Building 229 — once the U.S. Navy's main administrative hub — now houses offices and restaurants while retaining its colonial architecture.\n\nFor nature lovers, the Subic Bay forest — one of the last remaining lowland tropical rainforests in Luzon — offers hiking, zip-lining, and wildlife encounters. The Aeta community-based ecotourism programs allow visitors to experience indigenous forest knowledge firsthand.\n\nCamayan Beach Resort offers white sand beaches within the freeport. The Boardwalk along the bay provides stunning sunset views. Barrio Barretto and Baloy Beach in nearby Olongapo offer budget-friendly beach resorts popular with local and international tourists.\n\nHistory enthusiasts visit the War Memorial sites, the old naval base landmarks, and the Olongapo City Museum which documents the city's transformation from Aeta settlement to modern smart city.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Subic_Bay_2.jpg/320px-Subic_Bay_2.jpg",
-      "photo_caption": "Subic Bay — one of the finest natural harbors in Asia and a premier tourism destination",
+      "photo_url": "assets/stations/station-h.jpg",
+      "photo_caption": "The vibrant people and culture of Olongapo City",
+      "audio": "assets/stations/station-h.mp3",
+      "content": "The cultural identity of Olongapo's diverse and exceptionally resilient community is anchored in a deep 'spirit of unity' that traces back to its origins as an ancient Aeta fishing village and its evolution into a bustling strategic naval base. This vibrant social tapestry seamlessly blends indigenous traditions with heavy American and Spanish historical influences, fostering an energetic urban culture celebrated today through a lively rock music scene and coastal events like the Sibit-Sibit Festival. By continuing these annual maritime traditions, modern locals actively preserve the legacy and traditional fishing culture of their ancestors.",
+      "fun_facts": [
+        {
+          "title": "The City of Volunteers",
+          "text": "Following the sudden exit of the U.S. Navy and the devastating eruption of Mount Pinatubo in 1991, over 8,000 local citizens successfully protected and preserved the military facilities without pay."
+        },
+        {
+          "title": "The No Left Turn Rule",
+          "text": "Olongapo pioneered a uniquely strict 'No Left Turn' traffic system across its city streets — a legacy of extreme public discipline established to transform the city's image after decades of being a rowdy, wide-open military port town."
+        }
+      ],
       "questions": [
-        { "q": "What is Ocean Adventure in SBMA?", "opts": ["A water slide park","Southeast Asia's only open-water marine theme park","A deep-sea fishing resort","A naval museum"], "ans": 1 },
-        { "q": "Zoobic Safari in SBMA is known for:", "opts": ["Deep sea diving","Drive-through wildlife experience with tigers and crocodiles","Roller coasters","Historical reenactments"], "ans": 1 },
-        { "q": "The Subic Bay forest is significant because:", "opts": ["It is the largest forest in Asia","It is one of the last lowland rainforests in Luzon","It has the most animal species in the world","It is a UNESCO World Heritage Site"], "ans": 1 },
-        { "q": "Aeta ecotourism programs in Subic allow visitors to:", "opts": ["Experience luxury resorts","Learn indigenous forest knowledge firsthand","Visit shopping malls","Watch American movies"], "ans": 1 },
-        { "q": "Which beach resort is located within the SBMA Freeport?", "opts": ["Boracay","Camayan Beach Resort","Laiya Beach","Anawangin Cove"], "ans": 1 }
-      ]
-    },
-    {
-      "id": "smartcity",
-      "title": "Smart City & Modern Olongapo",
-      "icon": "SMART",
-      "color": "#0D47A1",
-      "station": "Station I",
-      "content": "Olongapo City is at the forefront of the Philippine government's Smart City initiative under the Department of Science and Technology (DOST). As part of this program, the city is integrating technology into governance, public services, education, and cultural preservation.\n\nThe DOST Smart City program in Olongapo focuses on four pillars: Smart Governance, Smart Economy, Smart Living, and Smart Culture. Under Smart Culture, initiatives like the SALIN-LAHI project use robotics and interactive technology to preserve and transmit indigenous and local heritage knowledge to younger generations.\n\nThe Modern Library Movement transforms traditional libraries into interactive learning hubs — equipped with digital resources, maker spaces, virtual reality experiences, and cultural archives. The Olongapo City Library is being upgraded to serve as a digital gateway to the city's history, with the SALIN-LAHI platform as one of its core interactive exhibits.\n\nSBMA's digital infrastructure — fiber optic networks, smart surveillance, e-governance systems, and innovation hubs — positions Subic Bay as a model for the rest of the Philippines. International technology companies and research institutions have established presence in the freeport, attracted by its unique combination of modern infrastructure and natural assets.\n\nThe SALIN-LAHI Rover project directly supports this vision — using LEGO SPIKE Prime robotics to create a mobile cultural education platform that collects data, generates insights, and demonstrates how STEM education and cultural preservation can work together in a smart city context.",
-      "photo_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Olongapo_City_Hall.jpg/320px-Olongapo_City_Hall.jpg",
-      "photo_caption": "Olongapo City — building a smart, inclusive, and culturally-rich future",
-      "questions": [
-        { "q": "Which government agency leads the Smart City program in Olongapo?", "opts": ["DILG","DOST","DTI","DepEd"], "ans": 1 },
-        { "q": "The DOST Smart City program focuses on how many pillars?", "opts": ["Two","Three","Four","Five"], "ans": 2 },
-        { "q": "The Modern Library Movement transforms libraries into:", "opts": ["Traditional book repositories","Interactive learning hubs with digital resources","Office buildings","Shopping centers"], "ans": 1 },
-        { "q": "The SALIN-LAHI Rover uses which robotics platform?", "opts": ["Arduino Mega","Raspberry Pi","LEGO SPIKE Prime","VEX Robotics"], "ans": 2 },
-        { "q": "Smart Culture initiatives like SALIN-LAHI aim to:", "opts": ["Replace traditional education","Use technology to preserve and transmit heritage knowledge","Build more shopping malls","Attract foreign military bases"], "ans": 1 }
+        { "q": "What festival celebrates the maritime traditions of Olongapo?", "opts": ["Kadayawan Festival", "Sinulog Festival", "Sibit-Sibit Festival", "Pahiyas Festival"], "ans": 2 },
+        { "q": "What unique traffic system did Olongapo pioneer?", "opts": ["No Right Turn system", "No Left Turn system", "No U-Turn system", "One-Way system only"], "ans": 1 },
+        { "q": "Olongapo's cultural identity blends which influences?", "opts": ["Chinese and Japanese", "Indigenous, American, and Spanish", "British and French", "Malay and Indian"], "ans": 1 },
+        { "q": "The 'spirit of unity' in Olongapo traces back to:", "opts": ["The Spanish colonial era", "The American naval era", "Its origins as an Aeta fishing village", "The SBMA transformation"], "ans": 2 },
+        { "q": "What aspect of modern culture thrives in Olongapo today?", "opts": ["Classical orchestra", "Lively rock music scene", "Traditional opera", "Jazz clubs"], "ans": 1 }
       ]
     }
   ]

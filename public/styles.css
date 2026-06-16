@@ -3232,3 +3232,439 @@
       }
       .settings-msg.ok  { color: #16a34a; }
       .settings-msg.err { color: #bd001a; }
+
+      /* ══════════════════════════════════
+         HERITAGE STATION DETAIL — Mockup Layout
+         Full-screen panel with 70/30 grid
+      ══════════════════════════════════ */
+
+      #ov-detail {
+        background: #F4F2EF;
+        overflow: hidden;
+      }
+
+      /* ── Header Bar ── */
+      .hs-header {
+        flex: 0 0 auto;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        background: #FFFFFF;
+        border-bottom: 1px solid #E6E3DE;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      }
+      .hs-header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .hs-back-btn {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #E6E3DE;
+        background: #FFFFFF;
+        border-radius: 9px;
+        cursor: pointer;
+        color: #C0152E;
+        transition: background 0.15s;
+      }
+      .hs-back-btn:active { background: #FEF2F2; }
+      .hs-header-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-weight: 800;
+        font-size: 19px;
+        letter-spacing: -0.01em;
+        color: #C0152E;
+      }
+      .hs-listen-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #C0152E;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 11.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(192,21,46,0.28);
+        transition: opacity 0.15s;
+        white-space: nowrap;
+      }
+      .hs-listen-btn:active { opacity: 0.85; }
+      .hs-listen-icon {
+        display: flex;
+        width: 18px;
+        height: 18px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.18);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      /* ── Main Grid ── */
+      .hs-main {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(260px, 3fr);
+        gap: 16px;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      /* ── Left Section ── */
+      .hs-left {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      /* ── Hero Image ── */
+      .hs-hero {
+        position: relative;
+        min-height: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+        background: #103040;
+      }
+      .hs-hero-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+      }
+      .hs-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0,0,0,0.32) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,0) 58%, rgba(0,0,0,0.5) 100%);
+        pointer-events: none;
+      }
+      .hs-station-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: #C0152E;
+        color: #FFFFFF;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 7px 13px;
+        border-radius: 8px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      .hs-station-badge::before {
+        content: '';
+        display: block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #F0C419;
+        flex-shrink: 0;
+      }
+      .hs-hero-bottom {
+        position: absolute;
+        left: 18px;
+        bottom: 16px;
+        right: 18px;
+        color: #FFFFFF;
+        text-shadow: 0 1px 12px rgba(0,0,0,0.6);
+      }
+      .hs-hero-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
+      .hs-hero-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(20px, 2.4vw, 32px);
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        margin-top: 3px;
+      }
+
+      /* ── About Box ── */
+      .hs-about {
+        min-height: 0;
+        background: #FFFFFF;
+        border: 1px solid #E6E3DE;
+        border-radius: 16px;
+        padding: 18px 20px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      }
+      .hs-about-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+        min-width: 0;
+      }
+      .hs-station-tag {
+        display: inline-flex;
+        align-items: center;
+        background: #F0C419;
+        color: #5A4500;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 9.5px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        padding: 4px 9px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .hs-about-title {
+        margin: 0;
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        color: #1A1A1A;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .hs-about-subhead {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        flex: 0 0 auto;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        color: #1A1A1A;
+      }
+      .hs-about-icon {
+        display: inline-flex;
+        width: 24px;
+        height: 24px;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid #C0152E;
+        border-radius: 50%;
+        color: #C0152E;
+        flex-shrink: 0;
+      }
+      .hs-about-text {
+        margin: 9px 0 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        line-height: 1.6;
+        color: #4A4744;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+
+      /* ── Mini Audio Bar ── */
+      .hs-audio-bar {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-top: 12px;
+        padding: 9px 12px;
+        background: #F7F5F2;
+        border: 1px solid #ECE8E2;
+        border-radius: 10px;
+        flex: 0 0 auto;
+      }
+      .hs-mini-play {
+        width: 28px;
+        height: 28px;
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #C0152E;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .hs-mini-play:active { opacity: 0.8; }
+      .hs-audio-track {
+        flex: 1 1 auto;
+        height: 5px;
+        background: #E2DDD6;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .hs-audio-fill {
+        width: 0%;
+        height: 100%;
+        background: #C0152E;
+        border-radius: 3px;
+        transition: width 0.5s linear;
+      }
+      .hs-audio-time {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: #8A857E;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      /* ── Right Section ── */
+      .hs-right {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: minmax(0, 1.35fr) minmax(0, 1fr);
+        gap: 16px;
+      }
+
+      /* Fun facts stack (fills the top row) */
+      .hs-ff-stack {
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .hs-fun-fact {
+        flex: 1 1 0;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 14px;
+        padding: 14px;
+        overflow: hidden;
+      }
+      .hs-ff-yellow {
+        background: #FBF5DA;
+        border: 1px solid #EBDB95;
+      }
+      .hs-ff-blue {
+        background: #EAF0FA;
+        border: 1px solid #C4D5EE;
+      }
+      .hs-ff-icon {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9px;
+      }
+      .hs-ff-icon-yellow { background: #F0C419; color: #5A4500; }
+      .hs-ff-icon-blue   { background: #3D5A99; color: #FFFFFF; }
+      .hs-ff-body { min-width: 0; }
+      .hs-ff-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #8A6D00;
+      }
+      .hs-ff-title-blue { color: #3D5A99; }
+      .hs-ff-text {
+        margin: 4px 0 0;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 13px;
+        line-height: 1.45;
+        color: #4A4744;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+
+      /* ── Quiz CTA (bottom row of right aside) ── */
+      .hs-quiz-cta {
+        min-height: 0;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 6px;
+        background: #C0152E;
+        border-radius: 16px;
+        padding: 16px 18px;
+        color: #FFFFFF;
+        box-shadow: 0 6px 20px rgba(192,21,46,0.3);
+      }
+      .hs-quiz-cta-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 18%, rgba(255,255,255,0.14), rgba(255,255,255,0) 60%);
+        pointer-events: none;
+      }
+      .hs-quiz-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(255,255,255,0.65);
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+      .hs-quiz-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+      .hs-quiz-sub {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 12px;
+        opacity: 0.88;
+        line-height: 1.35;
+      }
+      .hs-quiz-btn {
+        margin-top: 4px;
+        width: 100%;
+        background: #FFFFFF;
+        color: #C0152E;
+        border: none;
+        border-radius: 10px;
+        padding: 11px;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 800;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .hs-quiz-btn:active { opacity: 0.85; }

@@ -64,9 +64,11 @@
       }
       function closeOverlay(id) {
         ttsStop();
+        if (id === "ov-detail") stationAudioStop();
         document.getElementById(id).classList.remove("open");
       }
       function goBack() {
+        stationAudioStop();
         ttsStop();
         closeOverlay("ov-detail");
         openOverlay("ov-guide");
@@ -175,8 +177,6 @@
           openOverlay("ov-lb");
           await buildLeaderboard();
         };
-        g("tts-play").onclick = ttsPlay;
-        g("tts-stop").onclick = ttsStop;
         g("tl-tts-play").onclick = tlTtsPlay;
         g("tl-tts-stop").onclick = ttsStop;
         g("q-next").onclick = nextQ;
@@ -319,15 +319,14 @@
 
       function sectionEmoji(id) {
         var map = {
-          location: "🗺️",
-          aeta: "🏹",
-          history: "⛪",
-          navy: "⚓",
-          independence: "🕊️",
-          culture: "🎉",
-          demographics: "👥",
-          tourism: "🏖️",
-          smartcity: "🤖",
+          "aeta-history": "🏹",
+          livelihood:     "🎋",
+          music:          "🎵",
+          tools:          "🏹",
+          values:         "❤️",
+          origins:        "🏛️",
+          naval:          "⚓",
+          culture:        "🎉",
         };
         return map[id] || "📖";
       }
@@ -337,34 +336,126 @@
           return x.id === id;
         });
         currentSection = s;
-        g("detail-topbar-title").textContent = s.title;
-        g("detail-station").textContent = s.station;
+
+        // Station badges
+        var stationLabel = s.station || "";
+        g("detail-station-badge").textContent = stationLabel;
+        g("detail-about-badge").textContent = stationLabel;
+
+        // Titles
         g("detail-title").textContent = s.title;
-        g("detail-caption").textContent = s.photo_caption || "";
+        g("detail-about-title").textContent = s.title;
+
+        // Hero image
         var img = g("detail-img");
+        img.onerror = function () { img.style.opacity = "0"; };
+        img.onload = function () { img.style.opacity = ""; };
         img.src = s.photo_url || "";
-        img.onerror = function () {
-          g("detail-hero").style.display = "none";
+
+        // Main content text (clamped preview in card)
+        g("detail-text").textContent = s.content;
+
+        // Fun facts
+        var ff = s.fun_facts || [];
+        g("detail-ff1-title").textContent = ff[0] ? ff[0].title : "";
+        g("detail-ff1-text").textContent  = ff[0] ? ff[0].text  : "";
+        g("detail-ff2-title").textContent = ff[1] ? ff[1].title : "";
+        g("detail-ff2-text").textContent  = ff[1] ? ff[1].text  : "";
+
+        // Reset audio bar
+        g("detail-audio-fill").style.width = "0%";
+        g("detail-audio-time").textContent = "0:00";
+        _setListenBtnState("paused");
+
+        // Load audio file
+        var audio = g("station-audio");
+        audio.src = s.audio || "";
+        audio.currentTime = 0;
+
+        audio.onplay = function () {
+          pauseIdleTimer();
+          _setListenBtnState("playing");
         };
-        g("detail-hero").style.display = "";
-        var paras = s.content.split("\n\n"),
-          h = "";
-        paras.forEach(function (p) {
-          if (p.trim()) h += "<p>" + p.trim() + "</p>";
-        });
-        g("detail-text").innerHTML = h;
-        g("tts-play").style.display = "inline-flex";
-        g("tts-stop").style.display = "none";
-        g("tts-status").textContent = "";
+        audio.onpause = function () {
+          resumeIdleTimer();
+          _setListenBtnState("paused");
+        };
+        audio.onended = function () {
+          resumeIdleTimer();
+          g("detail-audio-fill").style.width = "0%";
+          g("detail-audio-time").textContent = "0:00";
+          _setListenBtnState("paused");
+        };
+        audio.ontimeupdate = function () {
+          if (audio.duration) {
+            g("detail-audio-fill").style.width =
+              (audio.currentTime / audio.duration) * 100 + "%";
+            g("detail-audio-time").textContent = _fmtTime(audio.currentTime);
+          }
+        };
+
+        // Wire play/stop buttons
+        g("detail-listen-btn").onclick = stationAudioToggle;
+        g("detail-mini-play").onclick   = stationAudioToggle;
+
+        // Quiz button
         g("detail-quiz-btn").onclick = function () {
+          stationAudioStop();
           closeOverlay("ov-detail");
           resetQuizSelect();
           startQuiz(s.id);
           openOverlay("ov-quiz");
         };
+
         closeOverlay("ov-guide");
         openOverlay("ov-detail");
         showToast("Station: " + s.station);
+
+        // Auto-play audio (gracefully ignore autoplay policy blocks)
+        if (s.audio) {
+          audio.play().catch(function () {});
+        }
+      }
+
+      function stationAudioToggle() {
+        var audio = g("station-audio");
+        if (!audio) return;
+        if (audio.paused) {
+          audio.play().catch(function () {});
+        } else {
+          audio.pause();
+        }
+      }
+
+      function stationAudioStop() {
+        var audio = g("station-audio");
+        if (!audio) return;
+        audio.pause();
+        audio.currentTime = 0;
+        var fill = g("detail-audio-fill");
+        var time = g("detail-audio-time");
+        if (fill) fill.style.width = "0%";
+        if (time) time.textContent = "0:00";
+        _setListenBtnState("paused");
+      }
+
+      function _setListenBtnState(state) {
+        var playPath = '<path d="M8 5v14l11-7z"></path>';
+        var pausePath = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        var iconPath = state === "playing" ? pausePath : playPath;
+        var listenLabel = state === "playing" ? "Listening..." : "Listen to the story";
+        var iconEl = g("detail-listen-icon");
+        var labelEl = g("detail-listen-label");
+        var miniBtn = g("detail-mini-play");
+        if (iconEl)   iconEl.innerHTML  = '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">' + iconPath + "</svg>";
+        if (labelEl)  labelEl.textContent = listenLabel;
+        if (miniBtn)  miniBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">' + iconPath + "</svg>";
+      }
+
+      function _fmtTime(secs) {
+        var m = Math.floor(secs / 60);
+        var s = Math.floor(secs % 60);
+        return m + ":" + (s < 10 ? "0" + s : s);
       }
 
       // ── TTS ──
@@ -377,9 +468,10 @@
         window.speechSynthesis.cancel();
         var raw = g("detail-text").innerText || g("detail-text").textContent;
         if (!raw.trim()) return;
-        g("tts-play").style.display = "none";
-        g("tts-stop").style.display = "inline-flex";
-        g("tts-status").textContent = "Reading aloud...";
+        var _tp = g("tts-play"), _ts = g("tts-stop"), _tst = g("tts-status");
+        if (_tp)  _tp.style.display  = "none";
+        if (_ts)  _ts.style.display  = "inline-flex";
+        if (_tst) _tst.textContent   = "Reading aloud...";
         var sents = raw.match(/[^.!?\n]+[.!?\n]*/g) || [raw];
         ttsChunks = [];
         var buf = "";
