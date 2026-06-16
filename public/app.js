@@ -1491,7 +1491,7 @@
         return { system: systemMsg, user: userMsg };
       }
 
-      var GROQ_API_KEY = "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";
+      var GROQ_API_KEY = window.GROQ_API_KEY || "";
       var groqScopeVal = "all";
       var groqAnalysisTypeVal = "general";
 
