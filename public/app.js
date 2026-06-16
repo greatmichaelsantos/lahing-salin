@@ -1112,6 +1112,9 @@
               : "Keep learning! SALIN-LAHI has more to share.";
         g("v-name").value = "";
         g("v-grade").value = "";
+        var btn = g("save-btn");
+        btn.textContent = "🏆 Save My Score";
+        btn.disabled = false;
       }
 
       async function saveScore() {
