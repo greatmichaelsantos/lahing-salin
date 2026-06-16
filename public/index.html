@@ -7,6 +7,16 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <title>SALIN-LAHI — Olongapo City Heritage</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#bd001a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SALIN-LAHI" />
+    <link rel="apple-touch-icon" href="assets/icons/icon.svg" />
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,900&family=Bricolage+Grotesque:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap"
@@ -1155,5 +1165,29 @@
     <script type="module" src="firebase.js"></script>
     <script src="config.js"></script>
     <script src="app.js" defer></script>
+
+    <!-- Service Worker registration -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/sw.js")
+            .then(function (reg) {
+              /* Notify app.js when a new SW version is waiting */
+              reg.addEventListener("updatefound", function () {
+                var next = reg.installing;
+                if (!next) return;
+                next.addEventListener("statechange", function () {
+                  if (next.state === "installed" && navigator.serviceWorker.controller) {
+                    console.info("SALIN-LAHI: update available — reload to apply.");
+                  }
+                });
+              });
+            })
+            .catch(function (err) {
+              console.warn("SW registration failed:", err);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

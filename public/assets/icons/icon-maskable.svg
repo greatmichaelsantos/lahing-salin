@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full bleed background (maskable — no rounded corners) -->
+  <rect width="512" height="512" fill="#bd001a"/>
+
+  <!-- Subtle glow -->
+  <radialGradient id="g" cx="50%" cy="38%" r="54%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.16"/>
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="512" height="512" fill="url(#g)"/>
+
+  <!-- Safe zone content (fits within 80% = 204px inset ~51px each side) -->
+  <!-- Gold accent bar -->
+  <rect x="128" y="322" width="256" height="8" rx="4" fill="#fcd116" opacity="0.9"/>
+
+  <!-- "SL" logotype -->
+  <text
+    x="256" y="298"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="900"
+    font-size="200"
+    letter-spacing="-12"
+    fill="#ffffff"
+  >SL</text>
+
+  <!-- Wordmark -->
+  <text
+    x="256" y="376"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-weight="700"
+    font-size="32"
+    letter-spacing="8"
+    fill="#fcd116"
+    opacity="0.92"
+  >SALIN-LAHI</text>
+</svg>

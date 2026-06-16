@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#bd001a"/>
+
+  <!-- Subtle radial glow -->
+  <radialGradient id="g" cx="50%" cy="38%" r="54%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+    <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="512" height="512" rx="96" fill="url(#g)"/>
+
+  <!-- Gold accent bar -->
+  <rect x="88" y="332" width="336" height="10" rx="5" fill="#fcd116" opacity="0.9"/>
+
+  <!-- "SL" logotype -->
+  <text
+    x="256" y="308"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-weight="900"
+    font-size="228"
+    letter-spacing="-14"
+    fill="#ffffff"
+  >SL</text>
+
+  <!-- Wordmark below -->
+  <text
+    x="256" y="390"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-weight="700"
+    font-size="38"
+    letter-spacing="10"
+    fill="#fcd116"
+    opacity="0.92"
+  >SALIN-LAHI</text>
+</svg>

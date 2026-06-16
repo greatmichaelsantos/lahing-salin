@@ -1,0 +1,44 @@
+{
+  "name": "SALIN-LAHI — Olongapo Heritage",
+  "short_name": "SALIN-LAHI",
+  "description": "Explore Olongapo City's living cultural heritage through interactive stations, timeline, and quiz.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf9f7",
+  "theme_color": "#bd001a",
+  "lang": "en-PH",
+  "categories": ["education", "entertainment"],
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Heritage Guide",
+      "short_name": "Guide",
+      "description": "Jump straight to the heritage station guide",
+      "url": "/?section=guide",
+      "icons": [{ "src": "assets/icons/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Cultural Quiz",
+      "short_name": "Quiz",
+      "description": "Test your knowledge of Olongapo's history",
+      "url": "/?section=quiz",
+      "icons": [{ "src": "assets/icons/icon.svg", "sizes": "any" }]
+    }
+  ]
+}

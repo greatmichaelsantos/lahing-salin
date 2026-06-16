@@ -262,6 +262,13 @@
         wireAdmin();
         // Retry once Firebase module has had time to initialise
         setTimeout(updateLeaderboardPreview, 2500);
+        // Handle PWA shortcut URLs (?section=guide, ?section=quiz, etc.)
+        var section = new URLSearchParams(window.location.search).get("section");
+        if (section) {
+          goTo(1, false);
+          var _shortcutMap = { guide: "ov-guide", quiz: "ov-quiz", city: "ov-city", timeline: "ov-timeline", leaderboard: "ov-lb" };
+          if (_shortcutMap[section]) setTimeout(function () { openOverlay(_shortcutMap[section]); }, 120);
+        }
       }
 
       function g(id) {
