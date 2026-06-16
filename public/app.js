@@ -129,7 +129,29 @@
         }
         bgAudioUpdate();
       }
+      // ── Fullscreen ──
+      function tryFullscreen() {
+        var el = document.documentElement;
+        var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+        if (req && !document.fullscreenElement && !document.webkitFullscreenElement) {
+          req.call(el).catch(function () {});
+        }
+      }
+
+      // Re-enter fullscreen if user exits (e.g. presses Escape) — kiosk behaviour
+      document.addEventListener("fullscreenchange", function () {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          setTimeout(tryFullscreen, 800);
+        }
+      });
+      document.addEventListener("webkitfullscreenchange", function () {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          setTimeout(tryFullscreen, 800);
+        }
+      });
+
       document.getElementById("idle").addEventListener("click", function () {
+        tryFullscreen();
         goTo(1);
       });
 
@@ -151,7 +173,7 @@
           var dx = e.changedTouches[0].clientX - sx;
           var dy = e.changedTouches[0].clientY - sy;
           if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
-            if (dx < 0 && cur === 0) goTo(1);
+            if (dx < 0 && cur === 0) { tryFullscreen(); goTo(1); }
             if (dx > 0 && cur === 1) goTo(0);
           }
         },
