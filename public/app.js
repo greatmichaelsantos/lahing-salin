@@ -10,8 +10,107 @@
       var lbFilter = "all";
       var ttsChunks = [],
         ttsIdx = 0,
-        ttsUtt = null;
+        ttsUtt = null,
+        ttsWords = [],
+        ttsChunkOffsets = [],
+        _ttsActiveWord = null,
+        _ttsWordTimer = null;
       var currentSection = null;
+
+      // ── Background Audio Controller ──
+      var BGAudio = (function () {
+        var VOLS = { idle: 0.40, active: 0.20, tts: 0.05 };
+        var _state  = "idle";
+        var _muted  = false;
+        var _ready  = false;   // true after first successful play()
+        var _fadeTimer = null;
+
+        function _audio() { return document.getElementById("bg-audio"); }
+
+        function _fadeTo(target, ms) {
+          var el = _audio();
+          if (!el) return;
+          if (_fadeTimer) { clearInterval(_fadeTimer); _fadeTimer = null; }
+          var from  = el.volume;
+          var delta = target - from;
+          if (Math.abs(delta) < 0.001) { el.volume = target; return; }
+          var steps = Math.max(1, Math.round(ms / 40));
+          var step  = 0;
+          _fadeTimer = setInterval(function () {
+            step++;
+            var t = step / steps;
+            var eased = 1 - Math.pow(1 - t, 2); // ease-out quad
+            el.volume = Math.min(1, Math.max(0, from + delta * eased));
+            if (step >= steps) {
+              el.volume = target;
+              clearInterval(_fadeTimer);
+              _fadeTimer = null;
+            }
+          }, 40);
+        }
+
+        function _applyVolume() {
+          _fadeTo(_muted ? 0 : (VOLS[_state] || 0.50), 700);
+        }
+
+        function _updateBtn() {
+          var btn = document.getElementById("btn-mute");
+          if (!btn) return;
+          if (_muted) {
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_off</span> Muted';
+            btn.style.color = "#bd001a";
+            btn.style.borderColor = "#bd001a";
+          } else {
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_up</span> Music';
+            btn.style.color = "#926e6b";
+            btn.style.borderColor = "#a8a9ad";
+          }
+        }
+
+        function start() {
+          var el = _audio();
+          if (!el || _ready) return;
+          el.volume = 0;
+          var p = el.play();
+          if (p && typeof p.then === "function") {
+            p.then(function () {
+              _ready = true;
+              _applyVolume();
+            }).catch(function (err) {
+              console.warn("BGAudio: play() blocked —", err.message);
+              // Re-register so the next interaction retries
+              document.addEventListener("touchstart", _bgAudioFirstStart, { passive: true });
+              document.addEventListener("mousedown", _bgAudioFirstStart);
+              document.addEventListener("click", _bgAudioFirstStart);
+            });
+          } else {
+            // Older browsers return undefined — assume it worked
+            _ready = true;
+            _applyVolume();
+          }
+        }
+
+        function setState(s) {
+          if (_state === s) return;
+          _state = s;
+          if (_ready) _applyVolume();
+        }
+
+        function toggleMute() {
+          _muted = !_muted;
+          if (!_ready) start();
+          _applyVolume();
+          _updateBtn();
+        }
+
+        return { start: start, setState: setState, toggleMute: toggleMute };
+      }());
+
+      // Recalculates which BGAudio volume level is appropriate for current state
+      function bgAudioUpdate() {
+        if (ttsActive) { BGAudio.setState("tts"); return; }
+        BGAudio.setState(cur === 0 ? "idle" : "active");
+      }
 
       // ── Slider ──
       var track = document.getElementById("track");
@@ -28,6 +127,7 @@
         } else {
           clearTimeout(idleTimer);
         }
+        bgAudioUpdate();
       }
       document.getElementById("idle").addEventListener("click", function () {
         goTo(1);
@@ -61,11 +161,13 @@
       // ── Overlay helpers ──
       function openOverlay(id) {
         document.getElementById(id).classList.add("open");
+        bgAudioUpdate();
       }
       function closeOverlay(id) {
         ttsStop();
-        if (id === "ov-detail") stationAudioStop();
+        if (id === "ov-detail") { stationAudioStop(); stopCarousel(); }
         document.getElementById(id).classList.remove("open");
+        bgAudioUpdate();
       }
       function goBack() {
         stationAudioStop();
@@ -107,18 +209,26 @@
         // called when TTS starts — stop the countdown
         ttsActive = true;
         clearTimeout(idleTimer);
+        bgAudioUpdate();
       }
 
       function resumeIdleTimer() {
         // called when TTS ends/stops — restart the countdown
         ttsActive = false;
         resetIdle();
+        bgAudioUpdate();
       }
 
       // reset on any user interaction
       document.addEventListener("touchstart", resetIdle, { passive: true });
       document.addEventListener("mousedown", resetIdle);
       document.addEventListener("touchend", resetIdle, { passive: true });
+
+      // Start background music on first interaction (browser autoplay policy)
+      function _bgAudioFirstStart() { BGAudio.start(); }
+      document.addEventListener("touchstart", _bgAudioFirstStart, { once: true, passive: true });
+      document.addEventListener("mousedown",  _bgAudioFirstStart, { once: true });
+      document.addEventListener("click",      _bgAudioFirstStart, { once: true });
 
       // start the timer immediately when on dashboard
       function startIdleTimer() {
@@ -177,6 +287,7 @@
           openOverlay("ov-lb");
           await buildLeaderboard();
         };
+        g("btn-mute").onclick = BGAudio.toggleMute;
         g("tl-tts-play").onclick = tlTtsPlay;
         g("tl-tts-stop").onclick = ttsStop;
         g("q-next").onclick = nextQ;
@@ -317,6 +428,144 @@
           });
       }
 
+      // ── Per-station fun fact styles ──
+      var FF_STYLES = {
+        "aeta-history": [
+          { bg:"#EBF5FB", border:"#C5DCF0", iBg:"rgba(41,128,185,0.15)", iColor:"#2471A3", tColor:"#1A5276",
+            svg:'<line x1="12" y1="2" x2="12" y2="22"/><path d="M2 7l5 5-5 5"/><path d="M22 7l-5 5 5 5"/><path d="M7 2l5 5 5-5"/><path d="M7 22l5-5 5 5"/>' },
+          { bg:"#EAFAF1", border:"#ABECC6", iBg:"rgba(39,174,96,0.15)", iColor:"#1E8449", tColor:"#1A5E37",
+            svg:'<path d="M17 8C8 10 5.9 16.17 3.82 22h.06c6.02.05 16.02-2.98 14.92-15z"/><path d="M17 8h.5c1.38 0 2.5 1.12 2.5 2.5v.5"/>' }
+        ],
+        "livelihood": [
+          { bg:"#F4ECF7", border:"#D7BDE2", iBg:"rgba(142,68,173,0.15)", iColor:"#8E44AD", tColor:"#6C3483",
+            svg:'<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
+          { bg:"#FEF9E7", border:"#FAD7A0", iBg:"rgba(230,126,34,0.15)", iColor:"#E67E22", tColor:"#B7770D",
+            svg:'<path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v10"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>' }
+        ],
+        "music": [
+          { bg:"#EBF5FB", border:"#C5DCF0", iBg:"rgba(36,113,163,0.15)", iColor:"#2471A3", tColor:"#1A5276",
+            svg:'<path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/>' },
+          { bg:"#F4ECF7", border:"#D7BDE2", iBg:"rgba(142,68,173,0.15)", iColor:"#8E44AD", tColor:"#6C3483",
+            svg:'<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>' }
+        ],
+        "tools": [
+          { bg:"#EBF5FB", border:"#A9D2ED", iBg:"rgba(26,82,118,0.15)", iColor:"#1A5276", tColor:"#154360",
+            svg:'<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>' },
+          { bg:"#FEF5E7", border:"#FAD4A8", iBg:"rgba(211,84,0,0.15)", iColor:"#CA6F1E", tColor:"#935116",
+            svg:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>' }
+        ],
+        "values": [
+          { bg:"#EAFAF1", border:"#ABECC6", iBg:"rgba(39,174,96,0.15)", iColor:"#1E8449", tColor:"#1A5E37",
+            svg:'<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>' },
+          { bg:"#FEF9E7", border:"#FAD7A0", iBg:"rgba(230,126,34,0.15)", iColor:"#D4AC0D", tColor:"#9A7D0A",
+            svg:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>' }
+        ],
+        "origins": [
+          { bg:"#FDEDEC", border:"#F5B7B1", iBg:"rgba(192,21,46,0.15)", iColor:"#C0152E", tColor:"#922B21",
+            svg:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' },
+          { bg:"#EBF5FB", border:"#A9D2ED", iBg:"rgba(26,82,118,0.15)", iColor:"#1A5276", tColor:"#154360",
+            svg:'<circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>' }
+        ],
+        "naval": [
+          { bg:"#EAFAF1", border:"#ABECC6", iBg:"rgba(39,174,96,0.15)", iColor:"#1E8449", tColor:"#1A5E37",
+            svg:'<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>' },
+          { bg:"#FEF9E7", border:"#FAD7A0", iBg:"rgba(200,151,58,0.15)", iColor:"#B7860B", tColor:"#9A7D0A",
+            svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' }
+        ],
+        "culture": [
+          { bg:"#FEF9E7", border:"#FAD7A0", iBg:"rgba(200,151,58,0.15)", iColor:"#B7860B", tColor:"#9A7D0A",
+            svg:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+          { bg:"#FDEDEC", border:"#F5B7B1", iBg:"rgba(192,21,46,0.15)", iColor:"#C0152E", tColor:"#922B21",
+            svg:'<circle cx="12" cy="12" r="10"/><path d="M12 8l-4 4 4 4"/><path d="M16 12H8"/>' }
+        ]
+      };
+
+      // ── Carousel state ──
+      var _carouselTimer = null;
+      var _carouselImages = [];
+      var _carouselIdx = 0;
+
+      function getStationImages(s) {
+        if (!s.photo_url) return [];
+        var base = s.photo_url.replace(/(\d+)\.\w+$/, "");
+        var ext = s.photo_url.match(/\.\w+$/)[0];
+        return [base + "1" + ext, base + "2" + ext, base + "3" + ext];
+      }
+
+      function stopCarousel() {
+        if (_carouselTimer) { clearInterval(_carouselTimer); _carouselTimer = null; }
+      }
+
+      function _setCarouselSlide(idx, fade) {
+        _carouselIdx = idx;
+        var img = g("detail-img");
+        var dots = g("detail-hero-dots");
+        if (!img) return;
+        if (fade) {
+          img.style.opacity = "0";
+          setTimeout(function () {
+            img.src = _carouselImages[idx];
+            img.style.opacity = "1";
+          }, 420);
+        } else {
+          img.src = _carouselImages[idx];
+          img.style.opacity = _carouselImages[idx] ? "1" : "0";
+        }
+        if (dots) {
+          var els = dots.querySelectorAll(".hs-hero-dot");
+          for (var i = 0; i < els.length; i++) {
+            els[i].classList.toggle("active", i === idx);
+          }
+        }
+      }
+
+      function startCarousel(images) {
+        stopCarousel();
+        _carouselImages = images || [];
+        var img = g("detail-img");
+        var dots = g("detail-hero-dots");
+        if (!_carouselImages.length) {
+          if (img) { img.src = ""; img.style.opacity = "0"; }
+          if (dots) dots.innerHTML = "";
+          return;
+        }
+        if (dots) {
+          dots.innerHTML = "";
+          _carouselImages.forEach(function (_, i) {
+            var d = document.createElement("button");
+            d.className = "hs-hero-dot" + (i === 0 ? " active" : "");
+            d.setAttribute("aria-label", "Image " + (i + 1));
+            (function (idx) {
+              d.onclick = function () { _setCarouselSlide(idx, false); };
+            }(i));
+            dots.appendChild(d);
+          });
+        }
+        _setCarouselSlide(0, false);
+        if (_carouselImages.length > 1) {
+          _carouselTimer = setInterval(function () {
+            _setCarouselSlide((_carouselIdx + 1) % _carouselImages.length, true);
+          }, 4000);
+        }
+      }
+
+      function applyFFStyles(stationId) {
+        var styles = FF_STYLES[stationId];
+        if (!styles) return;
+        function applyOne(cardId, iconId, titleId, s) {
+          var card = g(cardId), icon = g(iconId), title = g(titleId);
+          if (card) { card.style.background = s.bg; card.style.borderColor = s.border; }
+          if (icon) {
+            icon.style.background = s.iBg;
+            icon.style.color = s.iColor;
+            icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + s.svg + '</svg>';
+          }
+          if (title) title.style.color = s.tColor;
+        }
+        applyOne("detail-ff1-card", "detail-ff1-icon", "detail-ff1-title", styles[0]);
+        applyOne("detail-ff2-card", "detail-ff2-icon", "detail-ff2-title", styles[1]);
+      }
+
       function sectionEmoji(id) {
         var map = {
           "aeta-history": "🏹",
@@ -346,11 +595,8 @@
         g("detail-title").textContent = s.title;
         g("detail-about-title").textContent = s.title;
 
-        // Hero image
-        var img = g("detail-img");
-        img.onerror = function () { img.style.opacity = "0"; };
-        img.onload = function () { img.style.opacity = ""; };
-        img.src = s.photo_url || "";
+        // Hero carousel
+        startCarousel(getStationImages(s));
 
         // Main content text (clamped preview in card)
         g("detail-text").textContent = s.content;
@@ -361,9 +607,11 @@
         g("detail-ff1-text").textContent  = ff[0] ? ff[0].text  : "";
         g("detail-ff2-title").textContent = ff[1] ? ff[1].title : "";
         g("detail-ff2-text").textContent  = ff[1] ? ff[1].text  : "";
+        applyFFStyles(s.id);
 
         // Reset audio bar
-        g("detail-audio-fill").style.width = "0%";
+        var seekBar = g("detail-audio-seek");
+        if (seekBar) { seekBar.value = 0; seekBar.style.setProperty("--p", "0%"); }
         g("detail-audio-time").textContent = "0:00";
         _setListenBtnState("paused");
 
@@ -382,17 +630,29 @@
         };
         audio.onended = function () {
           resumeIdleTimer();
-          g("detail-audio-fill").style.width = "0%";
+          var sb = g("detail-audio-seek");
+          if (sb) { sb.value = 0; sb.style.setProperty("--p", "0%"); }
           g("detail-audio-time").textContent = "0:00";
           _setListenBtnState("paused");
         };
         audio.ontimeupdate = function () {
           if (audio.duration) {
-            g("detail-audio-fill").style.width =
-              (audio.currentTime / audio.duration) * 100 + "%";
+            var pct = (audio.currentTime / audio.duration) * 100;
+            var sb = g("detail-audio-seek");
+            if (sb) { sb.value = pct; sb.style.setProperty("--p", pct + "%"); }
             g("detail-audio-time").textContent = _fmtTime(audio.currentTime);
           }
         };
+
+        // Wire seek slider
+        var seekEl = g("detail-audio-seek");
+        if (seekEl) {
+          seekEl.oninput = function () {
+            if (audio.duration) {
+              audio.currentTime = (seekEl.value / 100) * audio.duration;
+            }
+          };
+        }
 
         // Wire play/stop buttons
         g("detail-listen-btn").onclick = stationAudioToggle;
@@ -432,9 +692,9 @@
         if (!audio) return;
         audio.pause();
         audio.currentTime = 0;
-        var fill = g("detail-audio-fill");
+        var sb2 = g("detail-audio-seek");
         var time = g("detail-audio-time");
-        if (fill) fill.style.width = "0%";
+        if (sb2) { sb2.value = 0; sb2.style.setProperty("--p", "0%"); }
         if (time) time.textContent = "0:00";
         _setListenBtnState("paused");
       }
@@ -458,6 +718,44 @@
         return m + ":" + (s < 10 ? "0" + s : s);
       }
 
+      // ── TTS word highlighting helpers ──
+      function _renderTtsWords(el, text) {
+        el.innerHTML = "";
+        var arr = [];
+        var re = /(\S+)/g, m, lastEnd = 0;
+        while ((m = re.exec(text)) !== null) {
+          if (m.index > lastEnd) {
+            el.appendChild(document.createTextNode(text.slice(lastEnd, m.index)));
+          }
+          var span = document.createElement("span");
+          span.className = "hs-tts-word";
+          span.textContent = m[1];
+          el.appendChild(span);
+          arr.push({ start: m.index, end: m.index + m[1].length, span: span });
+          lastEnd = m.index + m[1].length;
+        }
+        if (lastEnd < text.length) {
+          el.appendChild(document.createTextNode(text.slice(lastEnd)));
+        }
+        return arr;
+      }
+
+      function _ttsHighlightAt(absIdx) {
+        if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
+        var best = null;
+        for (var i = 0; i < ttsWords.length; i++) {
+          var w = ttsWords[i];
+          if (w.start <= absIdx && absIdx < w.end) { best = w; break; }
+          if (w.start > absIdx) { best = ttsWords[i > 0 ? i - 1 : 0]; break; }
+        }
+        if (!best && ttsWords.length) best = ttsWords[ttsWords.length - 1];
+        if (best) {
+          best.span.classList.add("hs-tts-active");
+          _ttsActiveWord = best.span;
+          best.span.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
+
       // ── TTS ──
       function ttsPlay() {
         if (!window.speechSynthesis) {
@@ -466,12 +764,19 @@
         }
         pauseIdleTimer(); // pause idle countdown while listening
         window.speechSynthesis.cancel();
-        var raw = g("detail-text").innerText || g("detail-text").textContent;
+        var _detailEl = g("detail-text");
+        var raw = _detailEl ? (_detailEl.innerText || _detailEl.textContent) : "";
         if (!raw.trim()) return;
         var _tp = g("tts-play"), _ts = g("tts-stop"), _tst = g("tts-status");
         if (_tp)  _tp.style.display  = "none";
         if (_ts)  _ts.style.display  = "inline-flex";
         if (_tst) _tst.textContent   = "Reading aloud...";
+
+        // Render word spans for karaoke highlighting
+        if (_detailEl) ttsWords = _renderTtsWords(_detailEl, raw);
+        else ttsWords = [];
+        if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
+
         var sents = raw.match(/[^.!?\n]+[.!?\n]*/g) || [raw];
         ttsChunks = [];
         var buf = "";
@@ -482,6 +787,16 @@
             buf = "";
           }
         });
+
+        // Compute each chunk's start position in raw (for onboundary mapping)
+        ttsChunkOffsets = [];
+        var _searchFrom = 0;
+        for (var ci = 0; ci < ttsChunks.length; ci++) {
+          var _fi = raw.indexOf(ttsChunks[ci], _searchFrom);
+          ttsChunkOffsets.push(_fi >= 0 ? _fi : _searchFrom);
+          _searchFrom = _fi >= 0 ? _fi + ttsChunks[ci].length : _searchFrom + ttsChunks[ci].length;
+        }
+
         ttsIdx = 0;
         function next() {
           if (ttsIdx >= ttsChunks.length) {
@@ -505,12 +820,46 @@
           }
           if (pick) ttsUtt.voice = pick;
           ttsIdx++;
-          ttsUtt.onend = function () {
-            setTimeout(next, 80);
-          };
-          ttsUtt.onerror = function (e) {
-            if (e.error !== "interrupted") ttsStop();
-          };
+          (function (chunkIdx) {
+            var chunkText = ttsChunks[chunkIdx] || "";
+            // Pre-compute word start positions within the chunk for fallback timer
+            var cwStarts = [];
+            var re2 = /\S+/g, m2;
+            while ((m2 = re2.exec(chunkText)) !== null) cwStarts.push(m2.index);
+
+            var boundaryFired = false;
+
+            ttsUtt.onboundary = function (e) {
+              if (e.name !== "word") return;
+              boundaryFired = true;
+              if (_ttsWordTimer) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; }
+              _ttsHighlightAt((ttsChunkOffsets[chunkIdx] || 0) + e.charIndex);
+            };
+
+            ttsUtt.onstart = function () {
+              // If onboundary hasn't fired within 350ms, fall back to a timer
+              setTimeout(function () {
+                if (boundaryFired || !cwStarts.length) return;
+                var wi = 0;
+                var msPerWord = Math.round(60000 / (130 * 0.88)); // ~524ms @ rate 0.88
+                _ttsWordTimer = setInterval(function () {
+                  if (boundaryFired) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; return; }
+                  if (wi >= cwStarts.length) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; return; }
+                  _ttsHighlightAt((ttsChunkOffsets[chunkIdx] || 0) + cwStarts[wi]);
+                  wi++;
+                }, msPerWord);
+              }, 350);
+            };
+
+            ttsUtt.onend = function () {
+              if (_ttsWordTimer) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; }
+              setTimeout(next, 80);
+            };
+            ttsUtt.onerror = function (e) {
+              if (_ttsWordTimer) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; }
+              if (e.error !== "interrupted") ttsStop();
+            };
+          }(ttsIdx - 1));
           window.speechSynthesis.speak(ttsUtt);
         }
         if (window.speechSynthesis.getVoices().length > 0) {
@@ -527,8 +876,10 @@
       }
       function ttsStop() {
         if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (_ttsWordTimer) { clearInterval(_ttsWordTimer); _ttsWordTimer = null; }
         ttsChunks = [];
         ttsIdx = 9999;
+        if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
         var p = g("tts-play"),
           s = g("tts-stop"),
           st = g("tts-status");

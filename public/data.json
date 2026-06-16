@@ -29,9 +29,9 @@
       "icon": "AETA",
       "color": "#C8973A",
       "station": "Station A",
-      "photo_url": "assets/stations/station-a.jpg",
+      "photo_url": "assets/stations/station-a/station-a1.jpg",
       "photo_caption": "The Aeta — first people of the Philippine archipelago",
-      "audio": "assets/stations/station-a.mp3",
+      "audio": "assets/stations/station-a/station-a.mp3",
       "content": "Arriving in Luzon roughly 50,000 years ago via ancient land bridges exposed during the Pleistocene Ice Age, the ancestors of the Aeta became the first humans to settle the Philippine archipelago. Following the arrival of agricultural Austronesian migrants around 6,000 years ago, they intentionally retreated into the rugged highlands of Luzon to preserve their unique mobile lifestyle and genetic homogeneity. This deep-rooted resilience faced a modern crisis in June 1991 when the violent eruption of Mount Pinatubo permanently displaced many Aeta communities from their traditional mountain sanctuaries into new resettlement zones.",
       "fun_facts": [
         {
@@ -57,26 +57,26 @@
       "icon": "LIVE",
       "color": "#2D6A4F",
       "station": "Station B",
-      "photo_url": "assets/stations/station-b.jpg",
+      "photo_url": "assets/stations/station-b/station-b1.jpg",
       "photo_caption": "Traditional Aeta livelihood and community life",
-      "audio": "assets/stations/station-b.mp3",
-      "content": "The traditional music of the Aeta serves as a vital spiritual utility and an oral historical archive, utilizing instruments like bamboo tube zithers (kabungbung), nose flutes (bansik), and flat gongs (gassa) forged entirely from jungle materials. These sonic elements come together during the Anituan healing séance, a dramatic group ritual where a spiritual medium enters a trance to communicate with ancestral spirits (anitos). Through rhythmic dancing and hypnotic instrumental drones, the community creates a sensory environment designed to identify and cast away negative frequencies causing physical or psychological illness.",
+      "audio": "assets/stations/station-b/station-b.mp3",
+      "content": "The traditional economic structure of the Aeta is rooted in a highly sophisticated, nomadic hunter-gatherer framework that uses a seasonal \"Sustainability Loop\" to prevent the overexploitation of natural resources. By balancing a traditional eco-harvest of precise wildlife tracking and selective foraging with natural regeneration through seasonal camp movements, they allow forest ecosystems to recover naturally. These unmatched survival capabilities far exceeded modern military tracking technology, leading the U.S. Navy to contract Aeta elders during the Vietnam War to establish the legendary Jungle Environmental Survival Training (JEST) at Subic Bay.",
       "fun_facts": [
         {
-          "title": "The Bird-Mimicking Flute",
-          "text": "The bansik is a highly specialized bamboo nose flute featuring precision-cut tonal holes designed explicitly to mirror the complex calls of forest birds."
+          "title": "The Fallow Masterclass",
+          "text": "Instead of permanently altering the land, the Aeta utilize deep-forest fallow periods to give wild plant matrices and local wildlife populations ample time to naturally multiply and regenerate."
         },
         {
-          "title": "Open-Palm Rhythms",
-          "text": "Unlike traditional Western or Asian gongs that require mallets, the sacred gassa gong is played entirely with the bare open palm to create steady, earth-grounding cadences."
+          "title": "Navy SEAL Instructors",
+          "text": "Thousands of elite American forces, including Navy SEALs and special forces operators, were trained directly by Aeta instructors in wilderness survival before being deployed to active combat zones."
         }
       ],
       "questions": [
-        { "q": "What is a kabungbung?", "opts": ["A bamboo flute", "A bamboo tube zither", "A type of drum", "A wooden horn"], "ans": 1 },
-        { "q": "What is the Anituan?", "opts": ["A harvest festival", "A warrior ceremony", "A healing séance", "A coming-of-age ritual"], "ans": 2 },
-        { "q": "What type of flute is the bansik?", "opts": ["Lip flute", "End-blown flute", "Nose flute", "Pan flute"], "ans": 2 },
-        { "q": "What do the ancestral spirits communicate through during the Anituan?", "opts": ["Silence and meditation", "Rhythmic dancing and instrumental drones", "Chanting alone", "Feasting"], "ans": 1 },
-        { "q": "What are the ancestral spirits called in Aeta tradition?", "opts": ["Aswang", "Anitos", "Diwata", "Tikbalang"], "ans": 1 }
+        { "q": "What is the Aeta 'Sustainability Loop'?", "opts": ["A farming rotation system", "A seasonal balance of eco-harvest and natural regeneration through camp movements", "A trading route between villages", "A spiritual cleansing ritual"], "ans": 1 },
+        { "q": "How do the Aeta prevent overexploitation of forest resources?", "opts": ["By cultivating permanent farms", "By hunting only large animals", "Through seasonal camp movements that allow ecosystems to recover", "By restricting hunting to elders only"], "ans": 2 },
+        { "q": "What school did the U.S. Navy establish with help from Aeta elders?", "opts": ["SEAL Qualification Training", "Jungle Environmental Survival Training (JEST)", "Ranger Reconnaissance School", "Marine Combat Training"], "ans": 1 },
+        { "q": "What are fallow periods used for in Aeta livelihood?", "opts": ["Celebrating seasonal festivals", "Allowing wild plants and wildlife to naturally multiply and regenerate", "Trading with lowland communities", "Training younger hunters"], "ans": 1 },
+        { "q": "Why did the U.S. Navy contract Aeta elders during the Vietnam War?", "opts": ["To build military bases in the mountains", "Because their survival capabilities exceeded modern military tracking technology", "To serve as interpreters", "To supply food to troops"], "ans": 1 }
       ]
     },
     {
@@ -85,9 +85,9 @@
       "icon": "MUSI",
       "color": "#8B2635",
       "station": "Station C",
-      "photo_url": "assets/stations/station-c.jpg",
+      "photo_url": "assets/stations/station-c/station-c1.jpg",
       "photo_caption": "Aeta indigenous musical traditions",
-      "audio": "assets/stations/station-c.mp3",
+      "audio": "assets/stations/station-c/station-c.mp3",
       "content": "The traditional music of the Aeta serves as a vital spiritual utility and an oral historical archive, utilizing instruments like bamboo tube zithers (kabungbung), nose flutes (bansik), and flat gongs (gassa) forged entirely from jungle materials. These sonic elements come together during the Anituan healing séance, a dramatic group ritual where a spiritual medium enters a trance to communicate with ancestral spirits (anitos). Through rhythmic dancing and hypnotic instrumental drones, the community creates a sensory environment designed to identify and cast away negative frequencies causing physical or psychological illness.",
       "fun_facts": [
         {
@@ -113,9 +113,9 @@
       "icon": "TOOL",
       "color": "#1565C0",
       "station": "Station D",
-      "photo_url": "assets/stations/station-d.jpg",
+      "photo_url": "assets/stations/station-d/station-d1.jpg",
       "photo_caption": "Aeta traditional hunting tools and bow-and-arrow craft",
-      "audio": "assets/stations/station-d.mp3",
+      "audio": "assets/stations/station-d/station-d.mp3",
       "content": "The Aeta engineered a highly advanced bow and arrow complex individually custom-built to match the unique biometric strength and arm span of each specific hunter. Their bows, known as pana, are crafted from dense anaw palm wood that must be continuously dipped in mountain rivers to preserve elasticity, paired with rot-resistant bowstrings woven from wild Ficus vine bark. To maximize hunting efficiency, they utilize a specialized arrow suite that includes aerodynamic feathered hunting arrows, multi-pronged fishing points, and heavy detachable arrowheads designed to snag on thick brush when tracking large wild boar.",
       "fun_facts": [
         {
@@ -141,26 +141,26 @@
       "icon": "VALU",
       "color": "#6B3FA0",
       "station": "Station E",
-      "photo_url": "assets/stations/station-e.jpg",
+      "photo_url": "assets/stations/station-e/station-e1.jpg",
       "photo_caption": "Aeta cultural values and traditions",
-      "audio": "assets/stations/station-e.mp3",
-      "content": "The Aeta engineered a highly advanced bow and arrow complex individually custom-built to match the unique biometric strength and arm span of each specific hunter. Their bows, known as pana, are crafted from dense anaw palm wood that must be continuously dipped in mountain rivers to preserve elasticity, paired with rot-resistant bowstrings woven from wild Ficus vine bark. To maximize hunting efficiency, they utilize a specialized arrow suite that includes aerodynamic feathered hunting arrows, multi-pronged fishing points, and heavy detachable arrowheads designed to snag on thick brush when tracking large wild boar.",
+      "audio": "assets/stations/station-e/station-e.mp3",
+      "content": "Traditional Aeta society operates completely without monarchs or vertical class structures, relying instead on a decentralized, horizontal leadership grid governed by a Tribal Council of Elders. Their unwavering commitment to radical social equality is reinforced by a system of mandatory communal meat sharing that ensures resources are distributed transparently across the village so the weakest or oldest members never starve. To preserve this cultural universe, youth undergo mimetic education through Talek dances, physically mimicking forest animals to memorize their behaviors and pass down vital ecosystem survival settings.",
       "fun_facts": [
         {
-          "title": "River-Dipped Weaponry",
-          "text": "Aeta hunters must continuously 'humidify' their anaw palm self-bows in flowing mountain rivers to prevent the dense wood from drying out and to maintain its explosive mechanical snapping power."
+          "title": "Anti-Hoarding Culture",
+          "text": "In the Aeta community, hoarding wealth or keeping all the game from a successful hunt for yourself is considered a severe social violation that threatens the entire village's food sovereignty."
         },
         {
-          "title": "Smart Tracking Technology",
-          "text": "The bugwan arrow features a detachable barbed metal tip connected to the main shaft by a sturdy cord, intentionally designed to separate upon impact and snag on dense jungle brush to slow down heavy game."
+          "title": "True Consensus Rule",
+          "text": "The elders do not rule by decree; every single decision affecting the community is debated openly and publicly until a total, unanimous community consensus is reached."
         }
       ],
       "questions": [
-        { "q": "How is each Aeta bow customized?", "opts": ["By tribe elders based on age", "Built to match individual biometric strength and arm span", "Randomly selected", "Based on social rank"], "ans": 1 },
-        { "q": "What type of arrows are used for fishing?", "opts": ["Feathered hunting arrows", "Heavy detachable arrowheads", "Multi-pronged fishing points", "Poison-tipped arrows"], "ans": 2 },
-        { "q": "The Aeta hunting system is best described as:", "opts": ["Basic and primitive", "Borrowed from other cultures", "Highly engineered and specialized", "Based on foreign technology"], "ans": 2 },
-        { "q": "What makes Aeta arrows unique?", "opts": ["They glow in the dark", "A specialized suite for different hunting purposes", "They are made entirely from metal", "They are thrown, not shot"], "ans": 1 },
-        { "q": "The bowstring is designed to be:", "opts": ["Flexible but weak", "Rot-resistant", "Made of animal leather", "Replaced monthly"], "ans": 1 }
+        { "q": "How is traditional Aeta society structured?", "opts": ["Under a single monarch", "Through a vertical class system", "With a decentralized Tribal Council of Elders", "By military leadership"], "ans": 2 },
+        { "q": "What is the purpose of the Talek dance?", "opts": ["Entertainment only", "Mimicking forest animals to pass down survival knowledge", "Celebrating harvests", "Honoring ancestral spirits"], "ans": 1 },
+        { "q": "What does mandatory communal meat sharing ensure?", "opts": ["The strongest hunters eat first", "Resources are shared so the weakest and oldest are never left to starve", "Meat is traded with neighboring tribes", "Only elders receive food"], "ans": 1 },
+        { "q": "What is considered a severe social violation in Aeta culture?", "opts": ["Singing during ceremonies", "Hunting large animals", "Hoarding wealth or keeping all game from a hunt", "Speaking to elders directly"], "ans": 2 },
+        { "q": "How are community decisions made in Aeta society?", "opts": ["By the tribal chief alone", "By a vote of warriors only", "Through open debate until unanimous consensus is reached", "By the eldest woman in the tribe"], "ans": 2 }
       ]
     },
     {
@@ -169,9 +169,9 @@
       "icon": "ORIG",
       "color": "#A0522D",
       "station": "Station F",
-      "photo_url": "assets/stations/station-f.jpg",
+      "photo_url": "assets/stations/station-f/station-f1.jpg",
       "photo_caption": "The ancestral roots and origins of Olongapo City",
-      "audio": "assets/stations/station-f.mp3",
+      "audio": "assets/stations/station-f/station-f.mp3",
       "content": "Originally settled by the indigenous Ambala Ayta and early Malay Sambal peoples, the land that became Olongapo derived its topographical name from the Sambal words 'olang' (gentle) and 'gapo' (shoreline). The region's ethnic ancestors maintained a fierce identity, with pre-colonial Sambal warriors wielding poison-tipped arrows and kalasag shields while communicating with their creator deity, Malayari, through microtonal singing led by bayoc shamans. This history is mirrored by the legendary oral folklore of 'Ulo ng Apo,' where the tragic sight of a beloved chieftain's severed head served as a rallying cry that forged an unyielding spirit of communal unity and radical self-reliance through centuries of foreign incursions and natural disasters.",
       "fun_facts": [
         {
@@ -197,9 +197,9 @@
       "icon": "NAVY",
       "color": "#1A5276",
       "station": "Station G",
-      "photo_url": "assets/stations/station-g.jpg",
+      "photo_url": "assets/stations/station-g/station-g1.jpg",
       "photo_caption": "Subic Bay naval history and the transformation to Freeport Zone",
-      "audio": "assets/stations/station-g.mp3",
+      "audio": "assets/stations/station-g/station-g.mp3",
       "content": "The strategic deep-water harbor of Subic Bay was transformed from a quiet fishing village into a major Spanish naval arsenal in 1884 by royal decree, before being claimed and expanded by the United States following the Spanish-American War. During the height of the Cold War and the Vietnam War, it exploded in size to become the single largest overseas defense facility of the U.S. military, fundamentally anchoring Olongapo's economy and turning it into a high-energy metropolis. This historic era came to an abrupt end on November 24, 1992, when the American flag was lowered for the last time following the catastrophic 1991 eruption of Mount Pinatubo, prompting the city to successfully pivot the base into the modern Subic Bay Freeport Zone.",
       "fun_facts": [
         {
@@ -225,9 +225,9 @@
       "icon": "CULT",
       "color": "#C0152E",
       "station": "Station H",
-      "photo_url": "assets/stations/station-h.jpg",
+      "photo_url": "assets/stations/station-h/station-h1.jpg",
       "photo_caption": "The vibrant people and culture of Olongapo City",
-      "audio": "assets/stations/station-h.mp3",
+      "audio": "assets/stations/station-h/station-h.mp3",
       "content": "The cultural identity of Olongapo's diverse and exceptionally resilient community is anchored in a deep 'spirit of unity' that traces back to its origins as an ancient Aeta fishing village and its evolution into a bustling strategic naval base. This vibrant social tapestry seamlessly blends indigenous traditions with heavy American and Spanish historical influences, fostering an energetic urban culture celebrated today through a lively rock music scene and coastal events like the Sibit-Sibit Festival. By continuing these annual maritime traditions, modern locals actively preserve the legacy and traditional fishing culture of their ancestors.",
       "fun_facts": [
         {

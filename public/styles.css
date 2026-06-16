@@ -3346,7 +3346,31 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.6s ease;
+        transition: transform 0.6s ease, opacity 0.4s ease;
+      }
+      .hs-hero-dots {
+        position: absolute;
+        bottom: 58px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 7px;
+        z-index: 4;
+      }
+      .hs-hero-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.45);
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: background 0.25s, transform 0.25s;
+      }
+      .hs-hero-dot.active {
+        background: #fff;
+        transform: scale(1.35);
       }
       .hs-hero-overlay {
         position: absolute;
@@ -3483,10 +3507,18 @@
         color: #4A4744;
         flex: 1 1 auto;
         min-height: 0;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
+        overflow-y: auto;
+      }
+      .hs-tts-word {
+        display: inline;
+        border-radius: 3px;
+        padding: 1px 1px;
+        transition: background 0.08s, color 0.08s;
+      }
+      .hs-tts-active {
+        background: #FFE44D;
+        color: #1A1A1A;
+        border-radius: 3px;
       }
 
       /* ── Mini Audio Bar ── */
@@ -3516,18 +3548,40 @@
         transition: opacity 0.15s;
       }
       .hs-mini-play:active { opacity: 0.8; }
-      .hs-audio-track {
+      .hs-audio-seek {
+        --p: 0%;
         flex: 1 1 auto;
         height: 5px;
-        background: #E2DDD6;
+        -webkit-appearance: none;
+        appearance: none;
+        background: linear-gradient(to right, #C0152E var(--p), #E2DDD6 var(--p));
         border-radius: 3px;
-        overflow: hidden;
+        cursor: pointer;
+        outline: none;
+        border: none;
       }
-      .hs-audio-fill {
-        width: 0%;
-        height: 100%;
+      .hs-audio-seek::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
         background: #C0152E;
-        border-radius: 3px;
+        cursor: pointer;
+        box-shadow: 0 1px 4px rgba(192,21,46,0.35);
+      }
+      .hs-audio-seek::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #C0152E;
+        border: none;
+        cursor: pointer;
+      }
+      .hs-audio-seek::-webkit-slider-runnable-track { background: transparent; }
+      .hs-audio-seek::-moz-range-track { background: transparent; }
+      /* legacy fill element kept for JS compat */
+      .hs-audio-fill {
+        display: none;
         transition: width 0.5s linear;
       }
       .hs-audio-time {
@@ -3557,6 +3611,8 @@
       .hs-fun-fact {
         flex: 1 1 0;
         min-height: 0;
+        background: #FBF5DA;
+        border: 1px solid #EBDB95;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -3629,13 +3685,11 @@
         pointer-events: none;
       }
       .hs-quiz-icon {
-        width: 44px;
-        height: 44px;
+        width: 52px;
+        height: 52px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid rgba(255,255,255,0.65);
-        border-radius: 12px;
         flex-shrink: 0;
       }
       .hs-quiz-title {
@@ -3668,3 +3722,198 @@
         transition: opacity 0.15s;
       }
       .hs-quiz-btn:active { opacity: 0.85; }
+
+      @keyframes hs-bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-7px); }
+      }
+      .hs-bounce-icon {
+        animation: hs-bounce 1.2s ease-in-out infinite;
+      }
+
+      /* ══════════════════════════════════════════════
+         HERITAGE STATION DETAIL — Mobile Responsive
+         Collapses 2-col grid → single scrollable column
+      ══════════════════════════════════════════════ */
+
+      /* ── Tablet & phone portrait (≤768px) ── */
+      @media (max-width: 768px) {
+        /* Header: slightly shorter, tighter padding */
+        .hs-header {
+          height: 54px;
+          padding: 0 16px;
+        }
+        .hs-header-title {
+          font-size: 16px;
+        }
+        .hs-listen-btn {
+          padding: 9px 13px;
+          font-size: 10.5px;
+          gap: 7px;
+        }
+
+        /* Main: single column, full scroll */
+        .hs-main {
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          padding: 12px;
+        }
+
+        /* Left: flow naturally, no grid rows */
+        .hs-left {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          min-height: unset;
+        }
+
+        /* Hero: explicit height instead of grid fraction */
+        .hs-hero {
+          height: 220px;
+          min-height: unset;
+          flex-shrink: 0;
+        }
+        .hs-hero-title {
+          font-size: clamp(16px, 4vw, 22px);
+        }
+
+        /* About box: grow to fit all its text */
+        .hs-about {
+          min-height: unset;
+          height: auto;
+          overflow: visible;
+          flex-shrink: 0;
+        }
+        .hs-about-title {
+          white-space: normal;
+          overflow: visible;
+          text-overflow: clip;
+          font-size: 17px;
+        }
+        .hs-about-text {
+          flex: unset;
+          min-height: unset;
+          overflow-y: visible;
+          font-size: 14px;
+          line-height: 1.65;
+        }
+
+        /* Right: flow naturally, no grid rows */
+        .hs-right {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          min-height: unset;
+        }
+
+        /* Fun facts: side-by-side row saves vertical space */
+        .hs-ff-stack {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          min-height: unset;
+          flex-direction: unset;
+        }
+        .hs-fun-fact {
+          flex: unset;
+          min-height: unset;
+          align-items: flex-start;
+        }
+        .hs-ff-text {
+          -webkit-line-clamp: 5;
+          font-size: 12px;
+        }
+
+        /* Quiz CTA: compact horizontal row */
+        .hs-quiz-cta {
+          min-height: unset;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          text-align: left;
+          padding: 16px;
+          gap: 10px;
+        }
+        .hs-quiz-icon {
+          width: 36px;
+          height: 36px;
+        }
+        .hs-quiz-title {
+          font-size: 16px;
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        .hs-quiz-sub {
+          width: 100%;
+          order: 3;
+        }
+        .hs-quiz-btn {
+          width: 100%;
+          order: 4;
+          margin-top: 0;
+          padding: 13px;
+        }
+      }
+
+      /* ── Small phone portrait (≤480px) ── */
+      @media (max-width: 480px) {
+        .hs-header {
+          height: 50px;
+          padding: 0 12px;
+        }
+        .hs-header-title {
+          font-size: 14px;
+        }
+        /* Show only icon on very small screens */
+        .hs-listen-btn .hs-listen-label {
+          display: none;
+        }
+        .hs-listen-btn {
+          padding: 9px 12px;
+          gap: 0;
+          border-radius: 50%;
+          min-width: 36px;
+          min-height: 36px;
+          justify-content: center;
+        }
+        .hs-listen-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .hs-main {
+          padding: 10px;
+          gap: 10px;
+        }
+
+        /* Hero: shorter on small screens */
+        .hs-hero {
+          height: 190px;
+        }
+        .hs-hero-title {
+          font-size: 16px;
+        }
+
+        /* Fun facts: stack vertically */
+        .hs-ff-stack {
+          grid-template-columns: 1fr;
+        }
+
+        .hs-about-title {
+          font-size: 15px;
+        }
+        .hs-about-text {
+          font-size: 13px;
+        }
+
+        .hs-quiz-title {
+          font-size: 15px;
+        }
+        .hs-quiz-sub {
+          font-size: 11px;
+        }
+      }
