@@ -1495,11 +1495,11 @@
         {
           color: "#8B5CF6",
           icon: "🏙️",
-          year: "February 9, 1966",
+          year: "June 1, 1966",
           title: "City of Olongapo",
           sub: "Chartered & Independent",
-          body: "Republic Act No. 4645, signed on February 9, 1966, officially converted Olongapo from a municipality into an independent chartered city. This date is celebrated annually as the city's founding anniversary.",
-          did: "Mayor Catalino Cahigan Ramos served as the first elected mayor of the newly chartered Olongapo City, overseeing its rapid urban development under the presence of the nearby US Naval Base.",
+          body: "Republic Act No. 4645, signed on June 1, 1966, officially converted Olongapo from a municipality into an independent chartered city. This date is celebrated annually as the city's founding anniversary.",
+          did: "Mayor James Leonard T. Gordon became the first mayor of the newly chartered Olongapo City. He helped take care of the young city and make it grow. And because the Subic Bay Naval Base was nearby, the city developed very quickly.",
         },
         {
           color: "#06B6A4",
