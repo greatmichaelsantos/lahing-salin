@@ -438,8 +438,7 @@
         clearTimeout(_apTimer);
         var steps = _apConfig.steps || [];
         if (idx >= steps.length) {
-          if (_apConfig.loop) { _apRunStep(0); }
-          else { apStop(); }
+          apStop();
           return;
         }
         _apStepIdx = idx;
