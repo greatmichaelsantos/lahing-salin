@@ -451,6 +451,32 @@
             </button>
 
             <div style="display: flex; align-items: center; gap: 10px">
+              <!-- Auto Play -->
+              <button
+                id="btn-autoplay"
+                style="
+                  background: #fff;
+                  border: 1px solid #a8a9ad;
+                  color: #1a6e3a;
+                  border-radius: 9999px;
+                  padding: 10px 22px;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
+                  font-weight: 700;
+                  font-size: 13px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                  box-shadow: 0 4px 0 #d4d4d4;
+                  transition: all 0.15s;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <span class="material-symbols-outlined" style="font-size:16px">slideshow</span>
+                Auto Play
+              </button>
+
               <!-- Mute toggle -->
               <button
                 id="btn-mute"
@@ -1118,6 +1144,7 @@
         <button class="admin-tab-btn on" data-tab="scores">Scores</button>
         <button class="admin-tab-btn" data-tab="stats">Stats</button>
         <button class="admin-tab-btn" data-tab="settings">Settings</button>
+        <button class="admin-tab-btn" data-tab="presentation">Presentation</button>
       </div>
 
       <!-- Scrollable tab content -->
@@ -1348,10 +1375,65 @@
           </div>
         </div>
         <!-- end settings tab -->
+
+        <!-- ══ PRESENTATION TAB ══ -->
+        <div class="admin-tab-content" id="admin-tab-presentation" style="display:none">
+
+          <!-- Live controls -->
+          <div class="settings-section">
+            <div class="settings-section-title">▶ Presentation Controls</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+              <button class="settings-btn" id="ap-admin-start-btn" style="background:#1a6e3a;color:#fff">Start</button>
+              <button class="settings-btn" id="ap-admin-pause-btn" style="background:#b08000;color:#fff" disabled>Pause</button>
+              <button class="settings-btn" id="ap-admin-resume-btn" style="background:#1a6e3a;color:#fff;display:none">Resume</button>
+              <button class="settings-btn" id="ap-admin-stop-btn" style="background:#bd001a;color:#fff" disabled>Stop</button>
+            </div>
+            <div class="settings-msg" id="ap-admin-status"></div>
+          </div>
+
+          <!-- Flow editor -->
+          <div class="settings-section">
+            <div class="settings-section-title">🎬 Presentation Flow (JSON)</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:10px;line-height:1.6">
+              Edit the auto-play sequence. Each step has a <code>type</code>:
+              <code>"idle"</code>, <code>"dashboard"</code>, <code>"guide"</code>,
+              <code>"station"</code> (needs <code>"id"</code>), or <code>"wait"</code>.
+              Steps with navigation use <code>"duration"</code> (ms).
+              Station steps use <code>"waitAfter"</code> (ms after audio ends before advancing).<br>
+              <code>"initialWait"</code>: delay before sequence starts (ms).<br>
+              <code>"loop"</code>: <code>true</code> to repeat continuously.
+            </div>
+            <textarea
+              id="ap-flow-editor"
+              class="settings-input"
+              rows="16"
+              spellcheck="false"
+              style="width:100%;font-family:monospace;font-size:12px;line-height:1.5;resize:vertical;white-space:pre"
+            ></textarea>
+            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+              <button class="settings-btn" id="ap-flow-save-btn">Save Flow</button>
+              <button class="settings-btn" id="ap-flow-reset-btn" style="background:#f0f0f0;color:#444">Reset to Default</button>
+            </div>
+            <div class="settings-msg" id="ap-flow-msg"></div>
+          </div>
+
+        </div>
+        <!-- end presentation tab -->
+
       </div>
       <!-- end #admin-tab-content-wrap -->
     </div>
     <!-- end #ov-admin -->
+
+    <!-- ── Auto Play blocking overlay ── -->
+    <div id="ap-overlay" style="display:none;position:fixed;inset:0;z-index:9000;pointer-events:all;background:transparent;flex-direction:column;justify-content:flex-end">
+      <div id="ap-control-bar" style="background:rgba(10,10,10,0.84);backdrop-filter:blur(10px);padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <span id="ap-status-text" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;flex:1;min-width:140px">Presentation Running</span>
+        <button id="ap-pause-btn" style="background:#fcd400;color:#221b00;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">⏸ Pause</button>
+        <button id="ap-resume-btn" style="display:none;background:#22c55e;color:#fff;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">▶ Resume</button>
+        <button id="ap-stop-btn" style="background:#bd001a;color:#fff;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">⏹ Stop</button>
+      </div>
+    </div>
 
     <!-- Global background music — managed by BGAudio in app.js -->
     <audio id="bg-audio" src="assets/bg.MP3" loop preload="auto"></audio>
