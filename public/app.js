@@ -276,7 +276,6 @@
         });
 
       function init() {
-        apLoadConfig();
         buildCityPreview();
         buildGuidePreview();
         buildCity();
@@ -299,232 +298,6 @@
 
       function g(id) {
         return document.getElementById(id);
-      }
-
-      // ── Auto Play ──
-      var AP_DEFAULTS = {
-        initialWait: 5000,
-        loop: true,
-        steps: [
-          { type: "idle",      duration: 1000  },
-          { type: "dashboard", duration: 300   },
-          { type: "guide",     duration: 300   },
-          { type: "station",   id: "aeta-history", waitAfter: 3000 }
-        ]
-      };
-
-      var _apState    = "stopped"; // "stopped" | "running" | "paused"
-      var _apConfig   = null;
-      var _apTimer    = null;
-      var _apStepIdx  = 0;
-      var _apEndedHandler = null; // ref for station-audio "ended" listener
-
-      function apLoadConfig() {
-        try {
-          var saved = localStorage.getItem("salin-lahi-ap-config");
-          if (saved) { _apConfig = JSON.parse(saved); return; }
-        } catch (e) {}
-        _apConfig = JSON.parse(JSON.stringify(AP_DEFAULTS));
-      }
-
-      function apSaveConfig(obj) {
-        _apConfig = obj;
-        try { localStorage.setItem("salin-lahi-ap-config", JSON.stringify(obj)); } catch (e) {}
-      }
-
-      function _apGetStationId() {
-        var step = (_apConfig.steps || []).find(function(s) { return s.type === "station"; });
-        if (step && step.id) return step.id;
-        return DATA && DATA.sections && DATA.sections[0] ? DATA.sections[0].id : null;
-      }
-
-      function apStart() {
-        if (_apState === "running" || _apState === "paused") return;
-        if (!_apConfig) apLoadConfig();
-        _apState = "running";
-        _apStepIdx = 0;
-        _apShowOverlay(true);
-        _apSetStatus("Starting…");
-        _apSyncAdminBtns();
-        _apUpdateBtn();
-        clearTimeout(idleTimer);
-        var wait = (_apConfig.initialWait != null) ? _apConfig.initialWait : 5000;
-        _apSetStatus("Starting in " + (wait / 1000).toFixed(1).replace(".0","") + "s");
-        _apTimer = setTimeout(function () { _apRunStep(0); }, wait);
-      }
-
-      function apPause() {
-        if (_apState !== "running") return;
-        _apState = "paused";
-        clearTimeout(_apTimer);
-        _apTimer = null;
-        var audio = g("station-audio");
-        if (audio && !audio.paused) audio.pause();
-        _apSetStatus("Paused");
-        _apSyncOverlayBtns();
-        _apSyncAdminBtns();
-      }
-
-      function apResume() {
-        if (_apState !== "paused") return;
-        _apState = "running";
-        _apSyncOverlayBtns();
-        _apSyncAdminBtns();
-        var step = (_apConfig.steps || [])[_apStepIdx];
-        if (step && step.type === "station") {
-          // Re-attach ended handler and resume audio
-          var audio = g("station-audio");
-          if (audio) {
-            if (_apEndedHandler) { audio.removeEventListener("ended", _apEndedHandler); }
-            _apEndedHandler = _apMakeEndedHandler(_apStepIdx);
-            audio.addEventListener("ended", _apEndedHandler);
-            audio.play().catch(function () {});
-          }
-          _apSetStatus("Station: " + (step.id || ""));
-        } else {
-          // Re-run the current timed step from scratch
-          _apRunStep(_apStepIdx);
-        }
-      }
-
-      function apStop() {
-        _apState = "stopped";
-        clearTimeout(_apTimer);
-        _apTimer = null;
-        if (_apEndedHandler) {
-          var audio = g("station-audio");
-          if (audio) audio.removeEventListener("ended", _apEndedHandler);
-          _apEndedHandler = null;
-        }
-        _apShowOverlay(false);
-        document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
-        stationAudioStop();
-        ttsStop();
-        goTo(1);
-        bgAudioUpdate();
-        resetIdle();
-        _apUpdateBtn();
-        _apSyncAdminBtns();
-      }
-
-      function _apMakeEndedHandler(idx) {
-        return function () {
-          var audio = g("station-audio");
-          if (audio) audio.removeEventListener("ended", _apEndedHandler);
-          _apEndedHandler = null;
-          if (_apState !== "running") return;
-          var step = (_apConfig.steps || [])[idx];
-          var waitAfter = (step && step.waitAfter != null) ? step.waitAfter : 3000;
-          _apTimer = setTimeout(function () { _apRunStep(idx + 1); }, waitAfter);
-        };
-      }
-
-      function _apRunStep(idx) {
-        if (_apState !== "running") return;
-        clearTimeout(_apTimer);
-        var steps = _apConfig.steps || [];
-        if (idx >= steps.length) {
-          if (_apConfig.loop) { _apRunStep(0); }
-          else { apStop(); }
-          return;
-        }
-        _apStepIdx = idx;
-        var step = steps[idx];
-
-        function advance() { _apRunStep(idx + 1); }
-
-        if (step.type === "idle") {
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
-          stationAudioStop(); ttsStop();
-          goTo(0, true);
-          _apSetStatus("Idle Screen");
-          _apTimer = setTimeout(advance, step.duration || 1000);
-
-        } else if (step.type === "dashboard") {
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
-          stationAudioStop(); ttsStop();
-          goTo(1, true);
-          _apSetStatus("Dashboard");
-          _apTimer = setTimeout(advance, step.duration || 300);
-
-        } else if (step.type === "guide") {
-          goTo(1, true);
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
-          g("ov-guide").classList.add("open");
-          bgAudioUpdate();
-          _apSetStatus("Heritage Guide");
-          _apTimer = setTimeout(advance, step.duration || 300);
-
-        } else if (step.type === "station") {
-          var sectionId = step.id || _apGetStationId();
-          if (!sectionId) { advance(); return; }
-          goTo(1, true);
-          if (!g("ov-guide").classList.contains("open")) { g("ov-guide").classList.add("open"); }
-          openSection(sectionId);
-          _apSetStatus("Station: " + sectionId);
-          var audio = g("station-audio");
-          if (audio) {
-            if (_apEndedHandler) audio.removeEventListener("ended", _apEndedHandler);
-            _apEndedHandler = _apMakeEndedHandler(idx);
-            audio.addEventListener("ended", _apEndedHandler);
-          }
-
-        } else if (step.type === "wait") {
-          _apSetStatus("Waiting…");
-          _apTimer = setTimeout(advance, step.duration || 1000);
-        }
-      }
-
-      function _apShowOverlay(show) {
-        var el = g("ap-overlay");
-        if (!el) return;
-        el.style.display = show ? "flex" : "none";
-      }
-
-      function _apSetStatus(text) {
-        var el = g("ap-status-text");
-        if (el) el.textContent = "Presentation — " + text;
-        var adminEl = g("ap-admin-status");
-        if (adminEl) { adminEl.textContent = text; adminEl.className = "settings-msg ok"; }
-      }
-
-      function _apSyncOverlayBtns() {
-        var pause  = g("ap-pause-btn");
-        var resume = g("ap-resume-btn");
-        if (pause)  pause.style.display  = _apState === "running" ? "" : "none";
-        if (resume) resume.style.display = _apState === "paused"  ? "" : "none";
-      }
-
-      function _apSyncAdminBtns() {
-        var startBtn  = g("ap-admin-start-btn");
-        var pauseBtn  = g("ap-admin-pause-btn");
-        var resumeBtn = g("ap-admin-resume-btn");
-        var stopBtn   = g("ap-admin-stop-btn");
-        var running   = _apState === "running";
-        var paused    = _apState === "paused";
-        var active    = running || paused;
-        if (startBtn)  startBtn.disabled  = active;
-        if (pauseBtn)  { pauseBtn.disabled = !running; pauseBtn.style.display = paused ? "none" : ""; }
-        if (resumeBtn) { resumeBtn.disabled = !paused;  resumeBtn.style.display = paused ? "" : "none"; }
-        if (stopBtn)   stopBtn.disabled  = !active;
-      }
-
-      function _apUpdateBtn() {
-        var btn = g("btn-autoplay");
-        if (!btn) return;
-        var active = _apState === "running" || _apState === "paused";
-        btn.innerHTML = active
-          ? '<span class="material-symbols-outlined" style="font-size:16px">stop_circle</span> Stop'
-          : '<span class="material-symbols-outlined" style="font-size:16px">slideshow</span> Auto Play';
-        btn.style.color       = active ? "#bd001a" : "#1a6e3a";
-        btn.style.borderColor = active ? "#bd001a" : "#a8a9ad";
-      }
-
-      function _apPopulateEditor() {
-        var ta = g("ap-flow-editor");
-        if (!ta) return;
-        if (!_apConfig) apLoadConfig();
-        ta.value = JSON.stringify(_apConfig, null, 2);
       }
 
       // ── Wire buttons ──
@@ -554,13 +327,6 @@
           await buildLeaderboard();
         };
         g("btn-mute").onclick = BGAudio.toggleMute;
-        g("btn-autoplay").onclick = function () {
-          if (_apState === "running" || _apState === "paused") { apStop(); }
-          else { apStart(); }
-        };
-        g("ap-pause-btn").onclick  = apPause;
-        g("ap-resume-btn").onclick = apResume;
-        g("ap-stop-btn").onclick   = apStop;
         g("q-next").onclick = nextQ;
         g("save-btn").onclick = saveScore;
         g("skip-btn").onclick = function () {
@@ -2446,7 +2212,7 @@
       }
 
       function showAdminTab(tab) {
-        ["scores", "stats", "settings", "presentation"].forEach(function (t) {
+        ["scores", "stats", "settings"].forEach(function (t) {
           g("admin-tab-" + t).style.display = t === tab ? "" : "none";
         });
         document.querySelectorAll(".admin-tab-btn").forEach(function (btn) {
@@ -2458,10 +2224,6 @@
             ? adminLastSync.toLocaleString("en-PH")
             : "—";
           g("idle-input").value = Math.round(IDLE_TIMEOUT / 1000);
-        }
-        if (tab === "presentation") {
-          _apPopulateEditor();
-          _apSyncAdminBtns();
         }
       }
 
@@ -2806,38 +2568,6 @@
             if (msg) { msg.textContent = "Idle timeout set to " + val + "s."; msg.className = "settings-msg ok"; }
           };
         });
-
-        // ── Presentation tab ──
-        safe("ap-admin-start-btn",  function(el) { el.onclick = apStart; });
-        safe("ap-admin-pause-btn",  function(el) { el.onclick = apPause; });
-        safe("ap-admin-resume-btn", function(el) { el.onclick = apResume; });
-        safe("ap-admin-stop-btn",   function(el) { el.onclick = apStop; });
-
-        safe("ap-flow-save-btn", function(el) {
-          el.onclick = function () {
-            var ta  = g("ap-flow-editor");
-            var msg = g("ap-flow-msg");
-            if (!ta) return;
-            try {
-              var parsed = JSON.parse(ta.value);
-              if (!Array.isArray(parsed.steps)) throw new Error("steps must be an array");
-              apSaveConfig(parsed);
-              if (msg) { msg.textContent = "Flow saved."; msg.className = "settings-msg ok"; }
-            } catch (err) {
-              if (msg) { msg.textContent = "Invalid JSON: " + err.message; msg.className = "settings-msg err"; }
-            }
-          };
-        });
-
-        safe("ap-flow-reset-btn", function(el) {
-          el.onclick = function () {
-            apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
-            _apPopulateEditor();
-            var msg = g("ap-flow-msg");
-            if (msg) { msg.textContent = "Reset to default."; msg.className = "settings-msg ok"; }
-          };
-        });
-
       }
 
       startIdleCycle();
