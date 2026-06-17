@@ -67,8 +67,8 @@
           "text": "Instead of permanently altering the land, the Aeta utilize deep-forest fallow periods to give wild plant matrices and local wildlife populations ample time to naturally multiply and regenerate."
         },
         {
-          "title": "Navy SEAL Instructors",
-          "text": "Thousands of elite American forces, including Navy SEALs and special forces operators, were trained directly by Aeta instructors in wilderness survival before being deployed to active combat zones."
+          "title": "Jungle Hydration Secrets",
+          "text": "One of the vital tracking skills Aeta elders taught foreign pilots was how to systematically identify and extract clean, potable drinking water hidden entirely inside wild forest vines."
         }
       ],
       "questions": [
@@ -203,12 +203,12 @@
       "content": "The strategic deep-water harbor of Subic Bay was transformed from a quiet fishing village into a major Spanish naval arsenal in 1884 by royal decree, before being claimed and expanded by the United States following the Spanish-American War. During the height of the Cold War and the Vietnam War, it exploded in size to become the single largest overseas defense facility of the U.S. military, fundamentally anchoring Olongapo's economy and turning it into a high-energy metropolis. This historic era came to an abrupt end on November 24, 1992, when the American flag was lowered for the last time following the catastrophic 1991 eruption of Mount Pinatubo, prompting the city to successfully pivot the base into the modern Subic Bay Freeport Zone.",
       "fun_facts": [
         {
-          "title": "The JEST Connection",
-          "text": "During the Vietnam War era, the U.S. Navy contracted local Aeta elders to establish the Jungle Environmental Survival Training (JEST) school at Subic Bay to teach elite American forces vital survival skills."
-        },
-        {
           "title": "The City of Volunteers",
           "text": "When the U.S. Navy unexpectedly departed after the 1991 eruption of Mount Pinatubo, over 8,000 local citizens preserved and protected the billions of dollars worth of left-behind military infrastructure without pay."
+        },
+        {
+          "title": "The Ghostly Lighthouse Ruins",
+          "text": "Grande Island, strategically guarding the mouth of Subic Bay, houses early 20th-century tactical military fortification ruins that historical local fishermen actively avoided due to folklore of ancient war spirits."
         }
       ],
       "questions": [
@@ -231,17 +231,17 @@
       "content": "The cultural identity of Olongapo's diverse and exceptionally resilient community is anchored in a deep 'spirit of unity' that traces back to its origins as an ancient Aeta fishing village and its evolution into a bustling strategic naval base. This vibrant social tapestry seamlessly blends indigenous traditions with heavy American and Spanish historical influences, fostering an energetic urban culture celebrated today through a lively rock music scene and coastal events like the Sibit-Sibit Festival. By continuing these annual maritime traditions, modern locals actively preserve the legacy and traditional fishing culture of their ancestors.",
       "fun_facts": [
         {
-          "title": "The City of Volunteers",
-          "text": "Following the sudden exit of the U.S. Navy and the devastating eruption of Mount Pinatubo in 1991, over 8,000 local citizens successfully protected and preserved the military facilities without pay."
+          "title": "Color-Coded Public Transport",
+          "text": "Olongapo City is the only city in the Philippines to implement a completely color-coded public transportation network. This system visually distinguishes jeepney and tricycle routes, making navigation and route familiarization incredibly simple for residents and visitors."
         },
         {
-          "title": "The No Left Turn Rule",
-          "text": "Olongapo pioneered a uniquely strict 'No Left Turn' traffic system across its city streets — a legacy of extreme public discipline established to transform the city's image after decades of being a rowdy, wide-open military port town."
+          "title": "The Neon Transition",
+          "text": "Before transitioning into a modern commercial freeport, Olongapo boasted one of the highest concentrations of live rock music clubs in Asia during the mid-to-late 20th century, deeply shaping the history of Filipino classic rock."
         }
       ],
       "questions": [
         { "q": "What festival celebrates the maritime traditions of Olongapo?", "opts": ["Kadayawan Festival", "Sinulog Festival", "Sibit-Sibit Festival", "Pahiyas Festival"], "ans": 2 },
-        { "q": "What unique traffic system did Olongapo pioneer?", "opts": ["No Right Turn system", "No Left Turn system", "No U-Turn system", "One-Way system only"], "ans": 1 },
+        { "q": "What makes Olongapo the only city of its kind in the Philippines?", "opts": ["Its underground subway system", "Its completely color-coded public transportation network", "Its all-electric jeepney fleet", "Its toll-free highways"], "ans": 1 },
         { "q": "Olongapo's cultural identity blends which influences?", "opts": ["Chinese and Japanese", "Indigenous, American, and Spanish", "British and French", "Malay and Indian"], "ans": 1 },
         { "q": "The 'spirit of unity' in Olongapo traces back to:", "opts": ["The Spanish colonial era", "The American naval era", "Its origins as an Aeta fishing village", "The SBMA transformation"], "ans": 2 },
         { "q": "What aspect of modern culture thrives in Olongapo today?", "opts": ["Classical orchestra", "Lively rock music scene", "Traditional opera", "Jazz clubs"], "ans": 1 }

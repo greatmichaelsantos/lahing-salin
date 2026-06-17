@@ -775,11 +775,8 @@
         // Hero carousel
         startCarousel(getStationImages(s));
 
-        // Main content text — wrap words in spans for karaoke highlighting
-        if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
-        _audioWordTimings = null;
-        _ttsTimingSource = { title: s.title || "", content: s.content || "" };
-        ttsWords = _renderTtsWords(g("detail-text"), s.content);
+        // Main content text
+        g("detail-text").textContent = s.content;
 
         // Fun facts
         var ff = s.fun_facts || [];
@@ -807,7 +804,6 @@
         audio.onpause = function () {
           resumeIdleTimer();
           _setListenBtnState("paused");
-          if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
         };
         audio.onended = function () {
           resumeIdleTimer();
@@ -815,7 +811,6 @@
           if (sb) { sb.value = 0; sb.style.setProperty("--p", "0%"); }
           g("detail-audio-time").textContent = "0:00";
           _setListenBtnState("paused");
-          if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
         };
         audio.ontimeupdate = function () {
           if (audio.duration) {
@@ -823,33 +818,6 @@
             var sb = g("detail-audio-seek");
             if (sb) { sb.value = pct; sb.style.setProperty("--p", pct + "%"); }
             g("detail-audio-time").textContent = _fmtTime(audio.currentTime);
-            // Karaoke highlight — build weighted timings once on first tick with duration
-            if (ttsWords.length && !audio.paused) {
-              if (!_audioWordTimings && _ttsTimingSource) {
-                _audioWordTimings = _buildAudioTimings(
-                  _ttsTimingSource.title, _ttsTimingSource.content, audio.duration
-                );
-              }
-              if (_audioWordTimings) {
-                var t = audio.currentTime;
-                var timings = _audioWordTimings;
-                if (t < timings[0]) {
-                  if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
-                } else {
-                  var wi = timings.length - 1;
-                  for (var i = 1; i < timings.length; i++) {
-                    if (timings[i] > t) { wi = i - 1; break; }
-                  }
-                  var ww = ttsWords[wi];
-                  if (ww && ww.span !== _ttsActiveWord) {
-                    if (_ttsActiveWord) _ttsActiveWord.classList.remove("hs-tts-active");
-                    ww.span.classList.add("hs-tts-active");
-                    _ttsActiveWord = ww.span;
-                    ww.span.scrollIntoView({ block: "nearest", behavior: "smooth" });
-                  }
-                }
-              }
-            }
           }
         };
 
