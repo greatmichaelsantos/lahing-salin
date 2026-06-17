@@ -1383,38 +1383,61 @@
           <div class="settings-section">
             <div class="settings-section-title">▶ Presentation Controls</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-              <button class="settings-btn" id="ap-admin-start-btn" style="background:#1a6e3a;color:#fff">Start</button>
-              <button class="settings-btn" id="ap-admin-pause-btn" style="background:#b08000;color:#fff" disabled>Pause</button>
-              <button class="settings-btn" id="ap-admin-resume-btn" style="background:#1a6e3a;color:#fff;display:none">Resume</button>
-              <button class="settings-btn" id="ap-admin-stop-btn" style="background:#bd001a;color:#fff" disabled>Stop</button>
+              <button class="settings-btn" id="ap-admin-start-btn" style="background:#1a6e3a;color:#fff;display:flex;align-items:center;gap:6px">
+                <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Start
+              </button>
+              <button class="settings-btn" id="ap-admin-pause-btn" style="background:#b08000;color:#fff;display:flex;align-items:center;gap:6px" disabled>
+                <span class="material-symbols-outlined" style="font-size:15px">pause_circle</span> Pause
+              </button>
+              <button class="settings-btn" id="ap-admin-resume-btn" style="background:#1a6e3a;color:#fff;display:none;align-items:center;gap:6px">
+                <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Resume
+              </button>
+              <button class="settings-btn" id="ap-admin-stop-btn" style="background:#bd001a;color:#fff;display:flex;align-items:center;gap:6px" disabled>
+                <span class="material-symbols-outlined" style="font-size:15px">stop_circle</span> Stop
+              </button>
             </div>
-            <div class="settings-msg" id="ap-admin-status"></div>
+            <div class="settings-msg" id="ap-admin-status" style="margin-top:8px"></div>
           </div>
 
-          <!-- Flow editor -->
+          <!-- Flow builder -->
           <div class="settings-section">
-            <div class="settings-section-title">🎬 Presentation Flow (JSON)</div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:10px;line-height:1.6">
-              Edit the auto-play sequence. Each step has a <code>type</code>:
-              <code>"idle"</code>, <code>"dashboard"</code>, <code>"guide"</code>,
-              <code>"station"</code> (needs <code>"id"</code>), or <code>"wait"</code>.
-              Steps with navigation use <code>"duration"</code> (ms).
-              Station steps use <code>"waitAfter"</code> (ms after audio ends before advancing).<br>
-              <code>"initialWait"</code>: delay before sequence starts (ms).<br>
-              <code>"loop"</code>: <code>true</code> to repeat continuously.
+            <div class="settings-section-title">🎬 Presentation Flow</div>
+
+            <!-- Countdown -->
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:#f0f4ff;border-radius:10px;padding:10px 14px;flex-wrap:wrap">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#1a3488">timer</span>
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#1a3488;flex:1">Countdown before start</span>
+              <input id="ap-countdown-input" type="number" min="0" max="60" value="0"
+                style="width:64px;padding:8px;border-radius:8px;border:1.5px solid #b0bce8;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;text-align:center">
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#555">seconds</span>
             </div>
-            <textarea
-              id="ap-flow-editor"
-              class="settings-input"
-              rows="16"
-              spellcheck="false"
-              style="width:100%;font-family:monospace;font-size:12px;line-height:1.5;resize:vertical;white-space:pre"
-            ></textarea>
-            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-              <button class="settings-btn" id="ap-flow-save-btn">Save Flow</button>
+
+            <!-- Step list (built by JS) -->
+            <div id="ap-steps-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
+
+            <!-- Add step -->
+            <button id="ap-add-step-btn"
+              style="width:100%;padding:11px;border-radius:10px;border:2px dashed #c8cfe0;background:#fafbff;color:#1a3488;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.04em;margin-bottom:14px">
+              + Add Step
+            </button>
+
+            <!-- Save / Reset -->
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="settings-btn" id="ap-flow-save-btn" style="background:#1a3488;color:#fff;display:flex;align-items:center;gap:6px">
+                <span class="material-symbols-outlined" style="font-size:15px">save</span> Save Flow
+              </button>
               <button class="settings-btn" id="ap-flow-reset-btn" style="background:#f0f0f0;color:#444">Reset to Default</button>
             </div>
-            <div class="settings-msg" id="ap-flow-msg"></div>
+            <div class="settings-msg" id="ap-flow-msg" style="margin-top:8px"></div>
+          </div>
+
+          <!-- Quick Navigate -->
+          <div class="settings-section">
+            <div class="settings-section-title">🔀 Quick Navigate</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:12px">
+              Jump to any screen instantly to test or preview during demos.
+            </div>
+            <div id="ap-nav-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:8px"></div>
           </div>
 
         </div>

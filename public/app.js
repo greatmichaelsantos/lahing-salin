@@ -303,15 +303,29 @@
 
       // ── Auto Play ──
       var AP_DEFAULTS = {
-        initialWait: 5000,
+        initialWait: 0,
         loop: true,
         steps: [
-          { type: "idle",      duration: 1000  },
-          { type: "dashboard", duration: 300   },
-          { type: "guide",     duration: 300   },
-          { type: "station",   id: "aeta-history", waitAfter: 3000 }
+          { type: "idle",    duration: 5000 },
+          { type: "station", id: "aeta-history", waitAfter: 3000 }
         ]
       };
+
+      var AP_SCREENS = [
+        { value: "idle",                 label: "Idle Screen"              },
+        { value: "dashboard",            label: "Dashboard"                },
+        { value: "guide",                label: "Heritage Guide"           },
+        { value: "station:aeta-history", label: "Station A — Aeta History" },
+        { value: "station:livelihood",   label: "Station B — Livelihood"   },
+        { value: "station:music",        label: "Station C — Music"        },
+        { value: "station:tools",        label: "Station D — Tools"        },
+        { value: "station:values",       label: "Station E — Values"       },
+        { value: "station:origins",      label: "Station F — Origins"      },
+        { value: "station:naval",        label: "Station G — Naval"        },
+        { value: "station:culture",      label: "Station H — Culture"      },
+        { value: "timeline",             label: "Timeline"                 },
+        { value: "quiz",                 label: "Quiz"                     },
+      ];
 
       var _apState    = "stopped"; // "stopped" | "running" | "paused"
       var _apConfig   = null;
@@ -469,6 +483,21 @@
             audio.addEventListener("ended", _apEndedHandler);
           }
 
+        } else if (step.type === "timeline") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          openOverlay("ov-timeline");
+          _apSetStatus("Timeline");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+
+        } else if (step.type === "quiz") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          resetQuizSelect();
+          openOverlay("ov-quiz");
+          _apSetStatus("Quiz");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+
         } else if (step.type === "wait") {
           _apSetStatus("Waiting…");
           _apTimer = setTimeout(advance, step.duration || 1000);
@@ -520,11 +549,169 @@
         btn.style.borderColor = active ? "#bd001a" : "#a8a9ad";
       }
 
-      function _apPopulateEditor() {
-        var ta = g("ap-flow-editor");
-        if (!ta) return;
+      // ── Flow Builder helpers ──
+
+      function _apStepToScreenVal(step) {
+        if (step.type === "station") return "station:" + (step.id || "aeta-history");
+        return step.type;
+      }
+
+      function _apStepWaitSec(step) {
+        if (step.type === "station") return Math.round((step.waitAfter || 0) / 1000);
+        return Math.round((step.duration || 0) / 1000);
+      }
+
+      function _apScreenToStep(screenVal, waitSec) {
+        if (screenVal.startsWith("station:")) {
+          return { type: "station", id: screenVal.split(":")[1], waitAfter: waitSec * 1000 };
+        }
+        return { type: screenVal, duration: waitSec * 1000 };
+      }
+
+      function _apOptionsHTML(selectedVal) {
+        return AP_SCREENS.map(function (s) {
+          return '<option value="' + s.value + '"' + (s.value === selectedVal ? " selected" : "") + '>' + s.label + '</option>';
+        }).join("");
+      }
+
+      function _apMakeStepRow(step, idx, total) {
+        var screenVal = _apStepToScreenVal(step);
+        var waitSec   = _apStepWaitSec(step);
+        var isStation = step.type === "station";
+        var div = document.createElement("div");
+        div.className = "ap-step-row";
+        div.setAttribute("data-idx", idx);
+        div.style.cssText = "display:flex;align-items:center;gap:8px;background:#f8f9fb;border:1.5px solid #e2e5ec;border-radius:12px;padding:10px 12px;flex-wrap:wrap;transition:border-color 0.15s";
+        div.innerHTML =
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:11px;color:#aaa;min-width:20px;text-align:center">' + (idx + 1) + '</span>' +
+          '<select class="ap-step-screen" style="flex:1;min-width:160px;padding:8px 10px;border-radius:8px;border:1.5px solid #d0d4df;font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:600;background:#fff;cursor:pointer">' +
+            _apOptionsHTML(screenVal) +
+          '</select>' +
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#888;white-space:nowrap">⏱ ' + (isStation ? "wait after" : "stay for") + '</span>' +
+          '<input type="number" class="ap-step-wait" min="0" max="9999" value="' + waitSec + '" style="width:64px;padding:8px 8px;border-radius:8px;border:1.5px solid #d0d4df;font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:700;text-align:center">' +
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#888">sec</span>' +
+          '<button class="ap-step-up" title="Move up" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #d0d4df;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;' + (idx === 0 ? "opacity:0.3;pointer-events:none" : "") + '">↑</button>' +
+          '<button class="ap-step-down" title="Move down" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #d0d4df;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;' + (idx === total - 1 ? "opacity:0.3;pointer-events:none" : "") + '">↓</button>' +
+          '<button class="ap-step-remove" title="Remove step" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #f0b0b0;background:#fff6f6;color:#bd001a;cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center">×</button>';
+
+        // Update label when screen changes
+        div.querySelector(".ap-step-screen").onchange = function () {
+          var isS = this.value.startsWith("station:");
+          var label = div.querySelector("span:nth-child(3)");
+          if (label) label.textContent = "⏱ " + (isS ? "wait after" : "stay for");
+        };
+        div.querySelector(".ap-step-up").onclick = function () { _apMoveStep(idx, -1); };
+        div.querySelector(".ap-step-down").onclick = function () { _apMoveStep(idx, 1); };
+        div.querySelector(".ap-step-remove").onclick = function () { _apRemoveStep(idx); };
+        return div;
+      }
+
+      function _apReadFlowFromUI() {
+        var countdown = parseInt((g("ap-countdown-input") || {}).value || "0", 10) || 0;
+        var list = g("ap-steps-list");
+        var rows = list ? list.querySelectorAll(".ap-step-row") : [];
+        var steps = [];
+        rows.forEach(function (row) {
+          var screenEl = row.querySelector(".ap-step-screen");
+          var waitEl   = row.querySelector(".ap-step-wait");
+          var screenVal = screenEl ? screenEl.value : "idle";
+          var waitSec   = parseInt(waitEl ? waitEl.value : "0", 10) || 0;
+          steps.push(_apScreenToStep(screenVal, waitSec));
+        });
+        return { initialWait: countdown * 1000, loop: true, steps: steps };
+      }
+
+      function _apBuildFlowUI() {
         if (!_apConfig) apLoadConfig();
-        ta.value = JSON.stringify(_apConfig, null, 2);
+        var countdownEl = g("ap-countdown-input");
+        if (countdownEl) countdownEl.value = Math.round((_apConfig.initialWait || 0) / 1000);
+        var list = g("ap-steps-list");
+        if (!list) return;
+        list.innerHTML = "";
+        var steps = _apConfig.steps || [];
+        steps.forEach(function (step, idx) {
+          list.appendChild(_apMakeStepRow(step, idx, steps.length));
+        });
+        _apBuildNavGrid();
+      }
+
+      function _apRemoveStep(idx) {
+        var config = _apReadFlowFromUI();
+        config.steps.splice(idx, 1);
+        _apConfig = config;
+        _apBuildFlowUI();
+      }
+
+      function _apMoveStep(idx, dir) {
+        var config = _apReadFlowFromUI();
+        var steps = config.steps;
+        var newIdx = idx + dir;
+        if (newIdx < 0 || newIdx >= steps.length) return;
+        var tmp = steps[idx]; steps[idx] = steps[newIdx]; steps[newIdx] = tmp;
+        _apConfig = config;
+        _apBuildFlowUI();
+      }
+
+      function _apBuildNavGrid() {
+        var grid = g("ap-nav-grid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        var colors = {
+          idle:      { bg: "#f0f0f0", color: "#444",    border: "#d0d0d0" },
+          dashboard: { bg: "#e8eeff", color: "#1a3488",  border: "#b0bce8" },
+          guide:     { bg: "#e8eeff", color: "#1a3488",  border: "#b0bce8" },
+          station:   { bg: "#e8f5ee", color: "#1a6e3a",  border: "#a0d4b0" },
+          timeline:  { bg: "#fff8e0", color: "#7a5800",  border: "#e8d080" },
+          quiz:      { bg: "#f0e8ff", color: "#5a1a8a",  border: "#c0a0e0" },
+        };
+        AP_SCREENS.forEach(function (screen) {
+          var category = screen.value.startsWith("station:") ? "station" : screen.value;
+          var c = colors[category] || colors.idle;
+          var btn = document.createElement("button");
+          btn.textContent = screen.label;
+          btn.title = "Navigate to " + screen.label;
+          btn.style.cssText = "background:" + c.bg + ";color:" + c.color + ";border:1.5px solid " + c.border + ";border-radius:10px;padding:10px 12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.04em;cursor:pointer;text-align:left;transition:all 0.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+          btn.onclick = function () { apNavigateTo(screen.value); };
+          grid.appendChild(btn);
+        });
+      }
+
+      function apNavigateTo(screenVal) {
+        if (screenVal === "idle") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(0, true);
+        } else if (screenVal === "dashboard") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(1, true);
+        } else if (screenVal === "guide") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
+          g("ov-guide").classList.add("open");
+        } else if (screenVal.startsWith("station:")) {
+          var sId = screenVal.split(":")[1];
+          goTo(1, true);
+          if (!g("ov-guide").classList.contains("open")) g("ov-guide").classList.add("open");
+          openSection(sId);
+        } else if (screenVal === "timeline") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          openOverlay("ov-timeline");
+          setTimeout(function () {
+            var car = g("tl-carousel");
+            if (!car) return;
+            tlAudioToggle(Math.round(car.scrollLeft / car.clientWidth));
+          }, 120);
+        } else if (screenVal === "quiz") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          resetQuizSelect();
+          openOverlay("ov-quiz");
+        }
+        bgAudioUpdate();
+        resetIdle();
+        closeOverlay("ov-admin");
       }
 
       // ── Wire buttons ──
@@ -2460,7 +2647,7 @@
           g("idle-input").value = Math.round(IDLE_TIMEOUT / 1000);
         }
         if (tab === "presentation") {
-          _apPopulateEditor();
+          _apBuildFlowUI();
           _apSyncAdminBtns();
         }
       }
@@ -2813,28 +3000,30 @@
         safe("ap-admin-resume-btn", function(el) { el.onclick = apResume; });
         safe("ap-admin-stop-btn",   function(el) { el.onclick = apStop; });
 
+        safe("ap-add-step-btn", function(el) {
+          el.onclick = function () {
+            var config = _apReadFlowFromUI();
+            config.steps.push({ type: "idle", duration: 3000 });
+            _apConfig = config;
+            _apBuildFlowUI();
+          };
+        });
+
         safe("ap-flow-save-btn", function(el) {
           el.onclick = function () {
-            var ta  = g("ap-flow-editor");
+            var config = _apReadFlowFromUI();
+            apSaveConfig(config);
             var msg = g("ap-flow-msg");
-            if (!ta) return;
-            try {
-              var parsed = JSON.parse(ta.value);
-              if (!Array.isArray(parsed.steps)) throw new Error("steps must be an array");
-              apSaveConfig(parsed);
-              if (msg) { msg.textContent = "Flow saved."; msg.className = "settings-msg ok"; }
-            } catch (err) {
-              if (msg) { msg.textContent = "Invalid JSON: " + err.message; msg.className = "settings-msg err"; }
-            }
+            if (msg) { msg.textContent = "Flow saved!"; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
           };
         });
 
         safe("ap-flow-reset-btn", function(el) {
           el.onclick = function () {
             apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
-            _apPopulateEditor();
+            _apBuildFlowUI();
             var msg = g("ap-flow-msg");
-            if (msg) { msg.textContent = "Reset to default."; msg.className = "settings-msg ok"; }
+            if (msg) { msg.textContent = "Reset to default."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
           };
         });
 
