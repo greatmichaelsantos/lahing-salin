@@ -666,7 +666,7 @@
         if (!s.photo_url) return [];
         var base = s.photo_url.replace(/(\d+)\.\w+$/, "");
         var ext = s.photo_url.match(/\.\w+$/)[0];
-        return [base + "1" + ext, base + "2" + ext, base + "3" + ext];
+        return [1,2,3,4,5].map(function(n){ return base + n + ext; });
       }
 
       function stopCarousel() {
