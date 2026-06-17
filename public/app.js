@@ -304,7 +304,7 @@
       // ── Auto Play ──
       var AP_DEFAULTS = {
         initialWait: 0,
-        loop: true,
+        loop: false,
         steps: [
           { type: "idle",    duration: 5000 },
           { type: "station", id: "aeta-history", waitAfter: 3000 }
@@ -618,7 +618,7 @@
           var waitSec   = parseInt(waitEl ? waitEl.value : "0", 10) || 0;
           steps.push(_apScreenToStep(screenVal, waitSec));
         });
-        return { initialWait: countdown * 1000, loop: true, steps: steps };
+        return { initialWait: countdown * 1000, loop: false, steps: steps };
       }
 
       function _apBuildFlowUI() {
