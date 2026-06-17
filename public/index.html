@@ -13,7 +13,10 @@
     <meta name="theme-color" content="#bd001a" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="apple-mobile-web-app-title" content="SALIN-LAHI" />
     <link rel="apple-touch-icon" href="assets/icons/icon.svg" />
 
@@ -22,7 +25,7 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,900&family=Bricolage+Grotesque:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=Material+Symbols+Outlined:wght,FILL@400,0..1&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="app">
@@ -45,8 +48,8 @@
           </div>
 
           <div class="bento-grid">
-            <!-- CITY OVERVIEW 8×4 -->
-            <div class="tile t-city" id="btn-city">
+            <!-- HERITAGE GUIDE 8×4 -->
+            <div class="tile t-city" id="btn-guide">
               <div
                 class="tile-deco"
                 style="
@@ -63,26 +66,26 @@
                   <div
                     class="tile-title"
                     style="
-                      font-size: clamp(36px, 4.5vw, 54px);
+                      font-size: clamp(44px, 5.5vw, 68px);
                       color: #1b1c1b;
                       margin-top: 12px;
                     "
                   >
-                    City Overview
+                    Heritage Guide
                   </div>
                   <div
                     class="tile-desc"
                     style="
-                      font-size: 18px;
+                      font-size: 22px;
                       color: #5d3f3c;
                       opacity: 0.85;
                       margin-top: 8px;
                       max-width: 380px;
                       line-height: 1.55;
                     "
-                    id="city-preview"
+                    id="guide-preview"
                   >
-                    Facts, map &amp; history of Olongapo City.
+                    9 cultural topics — from the Aeta to the Smart City era.
                   </div>
                 </div>
                 <button
@@ -93,13 +96,13 @@
                     box-shadow: 0 4px 0 #930011;
                   "
                 >
-                  Open Explorer
+                  Start Learning
                 </button>
               </div>
             </div>
 
-            <!-- HERITAGE GUIDE 4×3 -->
-            <div class="tile t-guide" id="btn-guide">
+            <!-- CITY OVERVIEW 4×3 -->
+            <div class="tile t-guide" id="btn-city">
               <div class="tile-inner">
                 <div
                   style="
@@ -116,7 +119,7 @@
                   <span
                     class="material-symbols-outlined fill-icon"
                     style="color: #fff; font-size: 28px"
-                    >menu_book</span
+                    >location_city</span
                   >
                 </div>
                 <div>
@@ -124,7 +127,7 @@
                     class="tile-title"
                     style="font-size: 30px; color: #fff; margin-bottom: 6px"
                   >
-                    Heritage Guide
+                    City Overview
                   </div>
                   <div
                     class="tile-desc"
@@ -133,9 +136,9 @@
                       color: rgba(255, 255, 255, 0.8);
                       line-height: 1.5;
                     "
-                    id="guide-preview"
+                    id="city-preview"
                   >
-                    9 cultural topics — from the Aeta to the Smart City era.
+                    Facts, map &amp; history of Olongapo City.
                   </div>
                 </div>
                 <button
@@ -148,7 +151,7 @@
                     display: block;
                   "
                 >
-                  Start Learning
+                  Open Explorer
                 </button>
               </div>
             </div>
@@ -260,7 +263,7 @@
             <!-- TIMELINE 4×2 -->
             <div class="tile t-timeline" id="btn-timeline">
               <img
-                src="assets/timeline/timeline-1.png"
+                src="assets\timeline\timeline-1\timeline-1a.png"
                 style="
                   position: absolute;
                   inset: 0;
@@ -388,9 +391,7 @@
                 gap: 8px;
               "
             >
-              <span
-                class="material-symbols-outlined"
-                style="font-size: 16px"
+              <span class="material-symbols-outlined" style="font-size: 16px"
                 >lock</span
               >
               Admin
@@ -406,7 +407,7 @@
                   color: #926e6b;
                   border-radius: 9999px;
                   padding: 10px 22px;
-                  font-family: 'Space Grotesk', sans-serif;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
                   font-weight: 700;
                   font-size: 13px;
                   letter-spacing: 0.06em;
@@ -419,7 +420,10 @@
                   gap: 8px;
                 "
               >
-                <span class="material-symbols-outlined" style="font-size:16px">volume_up</span> Music
+                <span class="material-symbols-outlined" style="font-size: 16px"
+                  >volume_up</span
+                >
+                Music
               </button>
 
               <!-- Scan QR button -->
@@ -556,34 +560,49 @@
 
     <!-- DETAIL OVERLAY — Heritage Station Mockup Design -->
     <div class="overlay" id="ov-detail">
-
       <!-- HEADER BAR -->
       <header class="hs-header">
         <div class="hs-header-left">
           <button class="hs-back-btn" onclick="goBack()" aria-label="Back">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M19 12H5"></path>
+              <path d="M12 19l-7-7 7-7"></path>
+            </svg>
           </button>
           <span class="hs-header-title">Heritage Station</span>
         </div>
         <button class="hs-listen-btn" id="detail-listen-btn">
           <span class="hs-listen-icon" id="detail-listen-icon">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"></path>
+            </svg>
           </span>
-          <span id="detail-listen-label" class="hs-listen-label">Listen to the story</span>
+          <span id="detail-listen-label" class="hs-listen-label"
+            >Listen to the story</span
+          >
         </button>
       </header>
 
       <!-- MAIN GRID: 70% left / 30% right -->
       <main class="hs-main">
-
         <!-- LEFT: HERO IMAGE + ABOUT BOX -->
         <section class="hs-left">
-
           <!-- HERO IMAGE -->
           <div class="hs-hero" id="detail-hero">
             <img id="detail-img" src="" alt="" class="hs-hero-img" />
             <div class="hs-hero-overlay"></div>
-            <span class="hs-station-badge" id="detail-station-badge">Station A</span>
+            <span class="hs-station-badge" id="detail-station-badge"
+              >Station A</span
+            >
             <div class="hs-hero-dots" id="detail-hero-dots"></div>
             <div class="hs-hero-bottom">
               <div class="hs-hero-label">Heritage Photo</div>
@@ -594,38 +613,82 @@
           <!-- ABOUT BOX -->
           <div class="hs-about">
             <div class="hs-about-header">
-              <span class="hs-station-tag" id="detail-about-badge">Station A</span>
+              <span class="hs-station-tag" id="detail-about-badge"
+                >Station A</span
+              >
               <h2 class="hs-about-title" id="detail-about-title"></h2>
             </div>
             <div class="hs-about-subhead">
               <span class="hs-about-icon">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon
+                    points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"
+                  ></polygon>
+                </svg>
               </span>
               <span>About the Station</span>
             </div>
             <p class="hs-about-text" id="detail-text"></p>
             <!-- Mini Audio Bar -->
             <div class="hs-audio-bar">
-              <button class="hs-mini-play" id="detail-mini-play" aria-label="Play audio">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
+              <button
+                class="hs-mini-play"
+                id="detail-mini-play"
+                aria-label="Play audio"
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z"></path>
+                </svg>
               </button>
-              <input type="range" class="hs-audio-seek" id="detail-audio-seek" value="0" min="0" max="100" step="0.1" aria-label="Audio seek">
+              <input
+                type="range"
+                class="hs-audio-seek"
+                id="detail-audio-seek"
+                value="0"
+                min="0"
+                max="100"
+                step="0.1"
+                aria-label="Audio seek"
+              />
               <span class="hs-audio-time" id="detail-audio-time">0:00</span>
             </div>
           </div>
-
         </section>
 
         <!-- RIGHT: FUN FACTS + QUIZ CTA -->
         <aside class="hs-right">
-
           <!-- FUN FACTS STACK -->
           <div class="hs-ff-stack">
-
             <!-- FUN FACT 1 -->
             <div class="hs-fun-fact" id="detail-ff1-card">
               <span class="hs-ff-icon" id="detail-ff1-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18L12 4z"></path></svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 20h18L12 4z"></path>
+                </svg>
               </span>
               <div class="hs-ff-body">
                 <div class="hs-ff-title" id="detail-ff1-title">Fun Fact</div>
@@ -636,34 +699,63 @@
             <!-- FUN FACT 2 -->
             <div class="hs-fun-fact" id="detail-ff2-card">
               <span class="hs-ff-icon" id="detail-ff2-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l9-9 9 9"></path><path d="M5 13v7h14v-7"></path></svg>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 13l9-9 9 9"></path>
+                  <path d="M5 13v7h14v-7"></path>
+                </svg>
               </span>
               <div class="hs-ff-body">
                 <div class="hs-ff-title" id="detail-ff2-title">Fun Fact</div>
                 <p class="hs-ff-text" id="detail-ff2-text"></p>
               </div>
             </div>
-
           </div>
 
           <!-- QUIZ CTA -->
           <div class="hs-quiz-cta">
             <div class="hs-quiz-cta-bg"></div>
             <span class="hs-quiz-icon">
-              <svg class="hs-bounce-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path></svg>
+              <svg
+                class="hs-bounce-icon"
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path
+                  d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"
+                ></path>
+                <path
+                  d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"
+                ></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+              </svg>
             </span>
             <div class="hs-quiz-title">Ready to be Quizzed?</div>
             <div class="hs-quiz-sub">Test your explorer knowledge!</div>
             <button class="hs-quiz-btn" id="detail-quiz-btn">Start Quiz</button>
           </div>
-
         </aside>
-
       </main>
 
       <!-- Hidden audio element for station mp3 -->
       <audio id="station-audio"></audio>
-
     </div>
 
     <!-- QUIZ OVERLAY -->
@@ -839,10 +931,9 @@
       <!-- Top bar -->
       <div class="ov-topbar">
         <div class="ov-topbar-left">
-          <div
-            class="ov-icon"
-            style="background: #1b1c1b; font-size: 20px"
-          >🛡️</div>
+          <div class="ov-icon" style="background: #1b1c1b; font-size: 20px">
+            🛡️
+          </div>
           <span class="ov-topbar-title">Admin Dashboard</span>
         </div>
         <button class="back-btn" onclick="closeOverlay('ov-admin')">
@@ -855,7 +946,9 @@
         <div id="admin-ai-hero-header">
           <div>
             <div id="admin-ai-hero-title">🤖 AI Insights</div>
-            <div id="admin-ai-hero-sub">Groq-powered analysis of student quiz performance</div>
+            <div id="admin-ai-hero-sub">
+              Groq-powered analysis of student quiz performance
+            </div>
           </div>
           <div id="admin-ai-hero-controls">
             <!-- Topic scope dropdown -->
@@ -865,15 +958,33 @@
                 <span class="groq-dd-arrow"></span>
               </div>
               <div class="groq-dd-menu">
-                <div class="groq-dd-item selected" data-value="all">All Topics</div>
-                <div class="groq-dd-item" data-value="aeta-history">Station A — Aeta History</div>
-                <div class="groq-dd-item" data-value="livelihood">Station B — Traditional Livelihood</div>
-                <div class="groq-dd-item" data-value="music">Station C — Indigenous Music</div>
-                <div class="groq-dd-item" data-value="tools">Station D — Traditional Tools</div>
-                <div class="groq-dd-item" data-value="values">Station E — Cultural Values</div>
-                <div class="groq-dd-item" data-value="origins">Station F — Olongapo Origins</div>
-                <div class="groq-dd-item" data-value="naval">Station G — Naval Heritage</div>
-                <div class="groq-dd-item" data-value="culture">Station H — People &amp; Culture</div>
+                <div class="groq-dd-item selected" data-value="all">
+                  All Topics
+                </div>
+                <div class="groq-dd-item" data-value="aeta-history">
+                  Station A — Aeta History
+                </div>
+                <div class="groq-dd-item" data-value="livelihood">
+                  Station B — Traditional Livelihood
+                </div>
+                <div class="groq-dd-item" data-value="music">
+                  Station C — Indigenous Music
+                </div>
+                <div class="groq-dd-item" data-value="tools">
+                  Station D — Traditional Tools
+                </div>
+                <div class="groq-dd-item" data-value="values">
+                  Station E — Cultural Values
+                </div>
+                <div class="groq-dd-item" data-value="origins">
+                  Station F — Olongapo Origins
+                </div>
+                <div class="groq-dd-item" data-value="naval">
+                  Station G — Naval Heritage
+                </div>
+                <div class="groq-dd-item" data-value="culture">
+                  Station H — People &amp; Culture
+                </div>
               </div>
             </div>
             <!-- Analysis type dropdown -->
@@ -883,20 +994,34 @@
                 <span class="groq-dd-arrow"></span>
               </div>
               <div class="groq-dd-menu">
-                <div class="groq-dd-item selected" data-value="general">General Overview</div>
-                <div class="groq-dd-item" data-value="struggling">Where Students Struggle</div>
-                <div class="groq-dd-item" data-value="grade">By Grade Level</div>
+                <div class="groq-dd-item selected" data-value="general">
+                  General Overview
+                </div>
+                <div class="groq-dd-item" data-value="struggling">
+                  Where Students Struggle
+                </div>
+                <div class="groq-dd-item" data-value="grade">
+                  By Grade Level
+                </div>
                 <div class="groq-dd-item" data-value="trends">Score Trends</div>
-                <div class="groq-dd-item" data-value="recommendations">Teaching Recommendations</div>
+                <div class="groq-dd-item" data-value="recommendations">
+                  Teaching Recommendations
+                </div>
               </div>
             </div>
-            <button id="groq-analyze-btn" onclick="generateInsights()">✨ Generate</button>
+            <button id="groq-analyze-btn" onclick="generateInsights()">
+              ✨ Generate
+            </button>
           </div>
         </div>
         <div id="groq-output">
-          <div id="groq-placeholder">Click ✨ Generate to analyze student scores with AI.</div>
-          <div id="groq-loading" style="display:none;">🤖 Analyzing scores… <span class="groq-spinner"></span></div>
-          <div id="groq-cards" style="display:none;">
+          <div id="groq-placeholder">
+            Click ✨ Generate to analyze student scores with AI.
+          </div>
+          <div id="groq-loading" style="display: none">
+            🤖 Analyzing scores… <span class="groq-spinner"></span>
+          </div>
+          <div id="groq-cards" style="display: none">
             <div class="groq-card groq-card-strengths">
               <div class="groq-card-header">
                 <span class="groq-card-icon">💪</span>
@@ -919,7 +1044,7 @@
               <div class="groq-card-body" id="groq-card-improve"></div>
             </div>
           </div>
-          <div id="groq-error" style="display:none;"></div>
+          <div id="groq-error" style="display: none"></div>
         </div>
       </div>
 
@@ -932,7 +1057,6 @@
 
       <!-- Scrollable tab content -->
       <div id="admin-tab-content-wrap">
-
         <!-- ══ SCORES TAB ══ -->
         <div class="admin-tab-content" id="admin-tab-scores">
           <div class="admin-toolbar">
@@ -975,7 +1099,7 @@
           <div class="clear-confirm-box" id="clear-confirm-box">
             <div
               style="
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
                 font-size: 14px;
                 font-weight: 700;
                 color: #bd001a;
@@ -1001,7 +1125,7 @@
                   border: none;
                   border-radius: 9999px;
                   padding: 12px;
-                  font-family: 'Space Grotesk', sans-serif;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
                   font-weight: 700;
                   font-size: 15px;
                   cursor: pointer;
@@ -1017,7 +1141,7 @@
                   border: 1px solid #a8a9ad;
                   border-radius: 9999px;
                   padding: 12px;
-                  font-family: 'Space Grotesk', sans-serif;
+                  font-family: &quot;Space Grotesk&quot;, sans-serif;
                   font-weight: 700;
                   font-size: 15px;
                   cursor: pointer;
@@ -1030,7 +1154,11 @@
         </div>
 
         <!-- ══ STATS TAB ══ -->
-        <div class="admin-tab-content" id="admin-tab-stats" style="display: none">
+        <div
+          class="admin-tab-content"
+          id="admin-tab-stats"
+          style="display: none"
+        >
           <div class="stat-card-grid" id="admin-stat-cards"></div>
           <div class="bar-chart">
             <div class="bar-chart-title">Attempts by Topic</div>
@@ -1039,14 +1167,17 @@
         </div>
 
         <!-- ══ SETTINGS TAB ══ -->
-        <div class="admin-tab-content" id="admin-tab-settings" style="display: none">
-
+        <div
+          class="admin-tab-content"
+          id="admin-tab-settings"
+          style="display: none"
+        >
           <!-- Change PIN -->
           <div class="settings-section">
             <div class="settings-section-title">🔑 Change PIN</div>
             <label
               style="
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
                 font-size: 12px;
                 font-weight: 700;
                 color: #926e6b;
@@ -1067,7 +1198,7 @@
             />
             <label
               style="
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
                 font-size: 12px;
                 font-weight: 700;
                 color: #926e6b;
@@ -1089,15 +1220,15 @@
             <button class="settings-btn" id="pin-save-btn">Save PIN</button>
             <div
               style="
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
                 font-size: 12px;
                 color: #926e6b;
                 margin-top: 8px;
               "
             >
-              ⚠ PIN change is in-memory only — reloading the page resets it to the
-              hardcoded default. Edit <code>ADMIN_PIN</code> in app.js to make it
-              permanent.
+              ⚠ PIN change is in-memory only — reloading the page resets it to
+              the hardcoded default. Edit <code>ADMIN_PIN</code> in app.js to
+              make it permanent.
             </div>
             <div class="settings-msg" id="pin-save-msg"></div>
           </div>
@@ -1128,7 +1259,7 @@
             <div class="settings-section-title">⏱ Idle Timer</div>
             <label
               style="
-                font-family: 'Space Grotesk', sans-serif;
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
                 font-size: 12px;
                 font-weight: 700;
                 color: #926e6b;
@@ -1150,10 +1281,12 @@
             <button class="settings-btn" id="idle-apply-btn">Apply</button>
             <div class="settings-msg" id="idle-msg"></div>
           </div>
-
-        </div><!-- end settings tab -->
-      </div><!-- end #admin-tab-content-wrap -->
-    </div><!-- end #ov-admin -->
+        </div>
+        <!-- end settings tab -->
+      </div>
+      <!-- end #admin-tab-content-wrap -->
+    </div>
+    <!-- end #ov-admin -->
 
     <!-- Global background music — managed by BGAudio in app.js -->
     <audio id="bg-audio" src="assets/bg.MP3" loop preload="auto"></audio>
@@ -1166,15 +1299,21 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          navigator.serviceWorker.register("/sw.js")
+          navigator.serviceWorker
+            .register("/sw.js")
             .then(function (reg) {
               /* Notify app.js when a new SW version is waiting */
               reg.addEventListener("updatefound", function () {
                 var next = reg.installing;
                 if (!next) return;
                 next.addEventListener("statechange", function () {
-                  if (next.state === "installed" && navigator.serviceWorker.controller) {
-                    console.info("SALIN-LAHI: update available — reload to apply.");
+                  if (
+                    next.state === "installed" &&
+                    navigator.serviceWorker.controller
+                  ) {
+                    console.info(
+                      "SALIN-LAHI: update available — reload to apply.",
+                    );
                   }
                 });
               });

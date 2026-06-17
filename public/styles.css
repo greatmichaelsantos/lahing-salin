@@ -403,156 +403,464 @@
         margin: 0;
       }
 
-      /* ══ CITY OVERVIEW ══ */
+      /* ══ CITY OVERVIEW — bento layout ══ */
       #ov-city .ov-scrollable {
-        background: #faf9f7;
+        background: #eceae7;
       }
-      .city-hero {
+      /* desktop/tablet: fit everything in one screen, no scrolling */
+      @media (min-width: 761px) {
+        #ov-city .ov-scrollable {
+          overflow: hidden;
+        }
+      }
+      .cty-root {
+        display: flex;
+        gap: 12px;
+        padding: 14px;
+        height: 100%;
+        min-height: 100%;
+        background: #eceae7;
+      }
+      .cty-main {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+      }
+      .cty-hero {
+        flex: 1.55;
         position: relative;
-        height: 220px;
+        border-radius: 18px;
         overflow: hidden;
-        flex-shrink: 0;
-        background: #2d1a00;
+        display: flex;
+        align-items: flex-end;
+        background: linear-gradient(135deg, #0f3460, #1a3488);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14), 0 0 0 1px #d6d4d1;
+        min-height: 0;
       }
-      .city-hero img {
+      .cty-hero img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0.65;
       }
-      .city-hero-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(transparent 25%, rgba(0, 0, 0, 0.85));
+      .cty-hero-grad {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding: clamp(16px, 2vw, 28px);
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.78) 0%,
+          rgba(0, 0, 0, 0.15) 70%,
+          transparent 100%
+        );
         display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 20px 28px;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
       }
-      .city-hero-title {
+      .cty-hero-badge {
+        display: inline-block;
+        background: #fcd400;
+        color: #705d00;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(10px, 1vw, 13px);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+      }
+      .cty-hero-title {
         font-family: "Bricolage Grotesque", sans-serif;
-        font-size: 40px;
+        font-size: clamp(34px, 4.2vw, 60px);
         font-weight: 800;
         color: #fff;
-        letter-spacing: -0.02em;
+        line-height: 0.95;
       }
-      .city-hero-sub {
+      .cty-hero-sub {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.65);
-        margin-top: 4px;
+        font-size: clamp(13px, 1.3vw, 18px);
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 6px;
+        letter-spacing: 0.02em;
+      }
+      .cty-hero-loc {
+        background: #fcd400;
+        color: #705d00;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(11px, 1.05vw, 14px);
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .cty-hero-loc .material-symbols-outlined {
+        font-size: 16px;
+      }
+
+      .cty-bottom {
+        display: flex;
+        gap: 12px;
+        flex: 1;
+        min-height: 0;
+      }
+      .cty-card {
+        border-radius: 16px;
+        padding: clamp(14px, 1.5vw, 22px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px #d6d4d1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .cty-about {
+        flex: 1.5;
+        background: #fff;
+        color: #1b1c1b;
+      }
+      .cty-about-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(11px, 1.05vw, 14px);
         font-weight: 700;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-      }
-      .city-pad {
-        padding: 24px 28px;
-      }
-      /* stat tiles — speedometer gauge style */
-      .stat-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 20px;
-      }
-      .stat-box {
-        border-radius: 16px;
-        padding: 16px 12px;
-        text-align: center;
-        background: #fff;
-        border: 1px solid #a8a9ad;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-      }
-      .stat-box-val {
-        font-family: "Bricolage Grotesque", sans-serif;
-        font-size: 34px;
-        font-weight: 800;
         color: #bd001a;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 10px;
+        flex-shrink: 0;
       }
-      .stat-box-lbl {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 13px;
-        margin-top: 5px;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        font-weight: 700;
-        color: #926e6b;
+      .cty-about-label::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        background: #bd001a;
+        border-radius: 50%;
+        display: inline-block;
+        flex-shrink: 0;
       }
-      .map-box {
-        border-radius: 16px;
+      .cty-about-text {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: clamp(13.5px, 1.1vw, 18px);
+        line-height: 1.65;
+        color: #33332f;
+        flex: 1;
         overflow: hidden;
-        border: 1px solid #a8a9ad;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
       }
-      .map-box img {
-        width: 100%;
-        display: block;
+      .cty-facts {
+        flex: 1.05;
+        background: #bd001a;
+        color: #fff;
       }
-      .map-box-lbl {
-        background: #fcd400;
-        padding: 10px 16px;
-        font-size: 15px;
-        color: #221b00;
-        text-align: center;
+      .cty-facts-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(15px, 1.4vw, 20px);
         font-weight: 700;
-        font-family: "Space Grotesk", sans-serif;
-        letter-spacing: 0.04em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
       }
-      .city-desc {
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #a8a9ad;
-        padding: 18px 20px;
-        font-size: 18px;
-        line-height: 1.8;
-        color: #1b1c1b;
-        font-weight: 400;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      .cty-facts-list {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 0;
       }
-      /* facts — ledger rows with chrome rules */
-      .facts-box {
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid #a8a9ad;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
-      }
-      .facts-head {
-        padding: 12px 18px;
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 14px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        font-weight: 700;
-        color: #705d00;
-        background: #fcd400;
-        border-bottom: 1px solid #a8a9ad;
-      }
-      .fact-row {
+      .cty-fact-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 18px;
-        border-bottom: 1px solid #e7bdb9;
-        background: #fff;
+        gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
       }
-      .fact-row:last-child {
+      .cty-fact-row:last-child {
         border-bottom: none;
       }
-      .fact-k {
+      .cty-fact-k {
         font-family: "Space Grotesk", sans-serif;
-        font-size: 15px;
-        color: #926e6b;
+        font-size: clamp(10px, 0.95vw, 13px);
         font-weight: 700;
-        text-transform: uppercase;
         letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fcd400;
+        flex-shrink: 0;
       }
-      .fact-v {
+      .cty-fact-v {
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 17px;
-        font-weight: 600;
+        font-size: clamp(11px, 1.05vw, 15px);
+        font-weight: 700;
+        color: #fff;
+        text-align: right;
+      }
+
+      .cty-mapcol {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 0;
+      }
+      .cty-maptile {
+        flex: 1;
+        background: #2e54c2;
+        color: #fff;
+      }
+      .cty-maptile-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(14px, 1.3vw, 18px);
+        font-weight: 700;
+        margin-bottom: 7px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .cty-map-img-wrap {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        min-height: 0;
+      }
+      .cty-map-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transform: scale(1.18);
+        display: block;
+      }
+      .cty-maptile-loc {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(10px, 1vw, 13px);
+        font-weight: 500;
+        text-align: center;
+        opacity: 0.88;
+        margin-top: 7px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+      .cty-maptile-loc .material-symbols-outlined {
+        font-size: 14px;
+      }
+
+      .cty-mayor-card {
+        flex-shrink: 0;
+        border-radius: 16px;
+        padding: clamp(12px, 1.3vw, 18px);
+        background: #1a3488;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px #d6d4d1;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+      .cty-mayor-avatar {
+        width: clamp(44px, 4vw, 58px);
+        height: clamp(44px, 4vw, 58px);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(16px, 1.6vw, 22px);
+        font-weight: 800;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .cty-mayor-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(10px, 0.95vw, 13px);
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        opacity: 0.65;
+      }
+      .cty-mayor-name {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(15px, 1.5vw, 21px);
+        font-weight: 700;
+        line-height: 1.15;
+        margin-top: 3px;
+      }
+
+      /* sidebar — stat tiles */
+      .cty-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: clamp(158px, 16vw, 216px);
+        min-height: 0;
+        flex-shrink: 0;
+      }
+      .cty-stat {
+        flex: 1;
+        border-radius: 16px;
+        padding: clamp(8px, 1vw, 14px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px #d6d4d1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 5px;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .cty-stat-icon {
+        width: clamp(36px, 3.2vw, 48px);
+        height: clamp(36px, 3.2vw, 48px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .cty-stat-icon .material-symbols-outlined {
+        font-size: clamp(18px, 1.9vw, 26px);
+      }
+      .cty-stat-val {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(26px, 1.5vw, 30px);
+        font-weight: 800;
+        line-height: 1;
+      }
+      .cty-stat-val-sm {
+        font-size: clamp(20px, 2.2vw, 30px);
+      }
+      .cty-stat-lbl {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(11px, 1.1vw, 15px);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .cty-stat-red {
+        background: #bd001a;
+        color: #fff;
+      }
+      .cty-stat-red .cty-stat-icon {
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .cty-stat-red .cty-stat-lbl {
+        opacity: 0.85;
+      }
+      .cty-stat-yellow {
+        background: #fcd400;
+        color: #705d00;
+      }
+      .cty-stat-yellow .cty-stat-icon {
+        background: rgba(0, 0, 0, 0.08);
+      }
+      .cty-stat-yellow .cty-stat-lbl {
+        opacity: 0.8;
+      }
+      .cty-stat-blue {
+        background: #1a3488;
+        color: #fff;
+      }
+      .cty-stat-blue .cty-stat-icon {
+        background: rgba(255, 255, 255, 0.16);
+      }
+      .cty-stat-blue .cty-stat-lbl {
+        opacity: 0.85;
+      }
+      .cty-stat-white {
+        background: #fff;
         color: #1b1c1b;
+      }
+      .cty-stat-white .cty-stat-icon {
+        background: rgba(189, 0, 26, 0.08);
+        color: #bd001a;
+      }
+      .cty-stat-white .cty-stat-val {
+        color: #bd001a;
+      }
+      .cty-stat-white .cty-stat-lbl {
+        color: #888;
+      }
+      .cty-stat-navy {
+        background: #2e54c2;
+        color: #fff;
+        gap: 3px;
+      }
+      .cty-stat-navy .cty-stat-lbl {
+        opacity: 0.85;
+      }
+      .cty-stat-region {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(10px, 1vw, 13px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      /* stack into a single column on narrow screens */
+      @media (max-width: 760px) {
+        .cty-root {
+          flex-direction: column;
+          height: auto;
+          min-height: 0;
+          padding: 10px;
+          gap: 10px;
+        }
+        .cty-hero {
+          min-height: 200px;
+        }
+        .cty-hero-grad {
+          flex-wrap: wrap;
+        }
+        .cty-bottom {
+          flex-direction: column;
+          flex: none;
+        }
+        .cty-about {
+          flex: none;
+          min-height: 170px;
+        }
+        .cty-facts {
+          flex: none;
+          min-height: 230px;
+        }
+        .cty-mapcol {
+          flex: none;
+        }
+        .cty-maptile {
+          min-height: 160px;
+        }
+        .cty-sidebar {
+          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .cty-stat {
+          min-height: 110px;
+        }
       }
 
       /* ══ HERITAGE GUIDE ══ */
@@ -2002,18 +2310,6 @@
           grid-template-columns: 1fr 1fr;
         }
 
-        /* City stats */
-        .stat-row {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 8px;
-        }
-        .stat-box-val {
-          font-size: 22px;
-        }
-        .city-pad {
-          padding: 16px;
-        }
-
         /* Timeline */
         .tl-hero-title {
           font-size: 22px;
@@ -2080,8 +2376,8 @@
         .detail-hero {
           height: 140px;
         }
-        .city-hero {
-          height: 140px;
+        .cty-hero {
+          min-height: 140px;
         }
         .q-question {
           font-size: 18px;
@@ -2191,27 +2487,6 @@
         }
         .quiz-sel-pad {
           padding: 14px;
-        }
-
-        /* City overlay */
-        .city-pad {
-          padding: 14px;
-        }
-        .stat-row {
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 6px;
-        }
-        .stat-box-val {
-          font-size: 20px;
-        }
-        .stat-box {
-          padding: 12px 8px;
-        }
-        .city-hero {
-          height: 180px;
-        }
-        .city-hero-title {
-          font-size: 26px;
         }
 
         /* Detail */

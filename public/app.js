@@ -355,61 +355,137 @@
       }
 
       // ── City Overview ──
+      function _cityMayorInitials(name) {
+        var words = (name || "").split(" ").filter(function (w) {
+          return w && !/^(jr\.?|sr\.?|ii|iii|iv)$/i.test(w) && !/^[a-z]\.?$/i.test(w);
+        });
+        if (!words.length) return "?";
+        var first = words[0][0];
+        var last = words.length > 1 ? words[words.length - 1][0] : "";
+        return (first + last).toUpperCase();
+      }
+
       function buildCity() {
         var c = DATA.city;
+        var regionParts = (c.region || "").split("—");
+        var regionRoman = (regionParts[0] || "").replace(/region/i, "").trim();
+        var regionName = (regionParts[1] || "").trim();
+        var areaParts = (c.area || "").split(" ");
+        var areaNum = areaParts[0] || c.area;
+        var areaUnit = areaParts.slice(1).join(" ");
+        var foundedMatch = (c.founded || "").match(/\d{4}/);
+        var foundedYear = foundedMatch ? foundedMatch[0] : c.founded;
+
         var html = "";
+        html += '<div class="cty-root">';
+        html += '<div class="cty-main">';
+
+        // Hero
+        html += '<div class="cty-hero">';
         html +=
-          '<div class="city-hero"><img src="assets/homepage/ulo-ng-apo.jpg"' +
-          c.photo_url +
-          '" alt="' +
-          c.name +
-          '" onerror="this.src=\'\'">';
+          '<img src="assets/homepage/ulo-ng-apo.jpg" alt="' + c.name + '">';
+        html += '<div class="cty-hero-grad"><div>';
         html +=
-          '<div class="city-hero-overlay"><div class="city-hero-title">' +
-          c.name +
-          "</div>";
+          '<div class="cty-hero-badge">🇵🇭 Independent Chartered City</div>';
+        html += '<div class="cty-hero-title">' + c.name + "</div>";
         html +=
-          '<div class="city-hero-sub">' +
+          '<div class="cty-hero-sub">' +
           c.province +
           " &middot; " +
           c.region +
-          "</div></div></div>";
-        html += '<div class="city-pad">';
-        html += '<div class="stat-row">';
+          "</div></div>";
         html +=
-          '<div class="stat-box" style="background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3)"><div class="stat-box-val" style="color:#F5A623">' +
-          c.population +
-          '</div><div class="stat-box-lbl">Population</div></div>';
-        html +=
-          '<div class="stat-box" style="background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3)"><div class="stat-box-val" style="color:#F5A623">' +
-          c.barangays +
-          '</div><div class="stat-box-lbl">Barangays</div></div>';
-        html +=
-          '<div class="stat-box" style="background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3)"><div class="stat-box-val" style="color:#F5A623">1966</div><div class="stat-box-lbl">City Founded</div></div>';
+          '<div class="cty-hero-loc"><span class="material-symbols-outlined">location_on</span> Subic Bay, Philippines</div>';
+        html += "</div></div>";
+
+        // Bottom row: About / Quick Facts / Map + Mayor
+        html += '<div class="cty-bottom">';
+
+        html += '<div class="cty-card cty-about">';
+        html += '<div class="cty-about-label">About ' + c.name + "</div>";
+        html += '<div class="cty-about-text">' + c.description + "</div>";
         html += "</div>";
+
+        html += '<div class="cty-card cty-facts">';
         html +=
-          '<div class="map-box"><img src="' +
-          c.map_photo +
-          '" alt="Map" onerror="this.style.display=\'none\'"><div class="map-box-lbl">📍 Olongapo City, Zambales — Central Luzon, Philippines</div></div>';
-        html += '<div class="city-desc">' + c.description + "</div>";
-        html += '<div class="facts-box">';
-        html += '<div class="facts-head">Quick Facts</div>';
+          '<div class="cty-facts-title"><span class="material-symbols-outlined">checklist</span> Quick Facts</div>';
+        html += '<div class="cty-facts-list">';
         var facts = [
           ["Founded", c.founded],
           ["Province", c.province],
           ["Region", c.region],
           ["Area", c.area],
+          ["City Type", "Independent"],
           ["Mayor", c.mayor],
         ];
         facts.forEach(function (f) {
           html +=
-            '<div class="fact-row"><span class="fact-k">' +
+            '<div class="cty-fact-row"><span class="cty-fact-k">' +
             f[0] +
-            '</span><span class="fact-v">' +
+            '</span><span class="cty-fact-v">' +
             f[1] +
             "</span></div>";
         });
         html += "</div></div>";
+
+        html += '<div class="cty-mapcol">';
+        html += '<div class="cty-card cty-maptile">';
+        html +=
+          '<div class="cty-maptile-title"><span class="material-symbols-outlined">map</span> Location</div>';
+        html +=
+          '<div class="cty-map-img-wrap"><img src="assets/map.png" alt="Map of ' +
+          c.name +
+          '"></div>';
+        html +=
+          '<div class="cty-maptile-loc"><span class="material-symbols-outlined">location_on</span> Central Luzon</div>';
+        html += "</div>";
+        html += '<div class="cty-mayor-card">';
+        html +=
+          '<div class="cty-mayor-avatar">' +
+          _cityMayorInitials(c.mayor) +
+          "</div>";
+        html +=
+          '<div><div class="cty-mayor-label">City Mayor</div><div class="cty-mayor-name">' +
+          c.mayor +
+          "</div></div>";
+        html += "</div></div>"; // mayor-card, mapcol
+
+        html += "</div>"; // cty-bottom
+        html += "</div>"; // cty-main
+
+        // Sidebar stat tiles
+        html += '<div class="cty-sidebar">';
+        html +=
+          '<div class="cty-stat cty-stat-red"><div class="cty-stat-icon"><span class="material-symbols-outlined">groups</span></div><div class="cty-stat-val">' +
+          c.population +
+          '</div><div class="cty-stat-lbl">Population</div></div>';
+        html +=
+          '<div class="cty-stat cty-stat-yellow"><div class="cty-stat-icon"><span class="material-symbols-outlined">location_city</span></div><div class="cty-stat-val">' +
+          c.barangays +
+          '</div><div class="cty-stat-lbl">Barangays</div></div>';
+        html +=
+          '<div class="cty-stat cty-stat-blue"><div class="cty-stat-icon"><span class="material-symbols-outlined">event</span></div><div class="cty-stat-val">' +
+          foundedYear +
+          '</div><div class="cty-stat-lbl">Founded</div></div>';
+        html +=
+          '<div class="cty-stat cty-stat-white"><div class="cty-stat-icon"><span class="material-symbols-outlined">map</span></div><div class="cty-stat-val cty-stat-val-sm">' +
+          areaNum +
+          '</div><div class="cty-stat-lbl">' +
+          areaUnit +
+          "</div></div>";
+        html +=
+          '<div class="cty-stat cty-stat-navy"><div class="cty-stat-region">Region</div><div class="cty-stat-val">' +
+          regionRoman +
+          '</div><div class="cty-stat-lbl">' +
+          regionName +
+          "</div></div>";
+        html +=
+          '<div class="cty-stat cty-stat-yellow"><div class="cty-stat-icon"><span class="material-symbols-outlined">flag</span></div><div class="cty-stat-val cty-stat-val-sm">' +
+          c.province +
+          '</div><div class="cty-stat-lbl">Province</div></div>';
+        html += "</div>"; // cty-sidebar
+
+        html += "</div>"; // cty-root
         g("city-body").innerHTML = html;
       }
 
