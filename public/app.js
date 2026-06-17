@@ -1568,7 +1568,7 @@
         // timeline-6: a-e=jpg, f=png, g-j=jpg
         ["timeline-6a.jpg","timeline-6b.jpg","timeline-6c.jpg","timeline-6d.jpg","timeline-6e.jpg","timeline-6f.png","timeline-6g.jpg","timeline-6h.jpg","timeline-6i.jpg","timeline-6j.jpg"],
         // timeline-7: a=png, b-d=jpg, e=filename typo on disk, f-g=jpg, h=jpeg, i-j=jpg
-        ["timeline-7a.png","timeline-7b.jpg","timeline-7c.jpg","timeline-7d.jpg","timetine-7e.jpg","timeline-7f.jpg","timeline-7g.jpg","timeline-7h.jpeg","timeline-7i.jpg","timeline-7j.jpg"],
+        ["timeline-7a.png","timeline-7b.jpg","timeline-7c.jpg","timeline-7d.jpg","timetine-7e.jpg","timeline-7f.jpg","timeline-7g.jpg","timeline-7h.jpg","timeline-7i.jpg","timeline-7j.jpg"],
       ];
 
       function _tlSlide(index) {
