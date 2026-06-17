@@ -14,7 +14,10 @@
         ttsWords = [],
         ttsChunkOffsets = [],
         _ttsActiveWord = null,
-        _ttsWordTimer = null;
+        _ttsWordTimer = null,
+        _audioWordTimings = null,   // per-word start times (sec) built from weighted char model
+        _ttsTimingSource = null;    // {title, content} stored at station open for lazy timing build
+      var _tlActiveSlide = -1;      // index of the timeline slide whose MP3 is playing (-1 = none)
       var currentSection = null;
 
       // ── Background Audio Controller ──
@@ -311,14 +314,19 @@
         };
         g("btn-timeline").onclick = function () {
           openOverlay("ov-timeline");
+          // Auto-play whichever slide is currently showing
+          setTimeout(function () {
+            var car = g("tl-carousel");
+            if (!car) return;
+            var idx = Math.round(car.scrollLeft / car.clientWidth);
+            tlAudioToggle(idx);
+          }, 120);
         };
         g("btn-lb").onclick = async function () {
           openOverlay("ov-lb");
           await buildLeaderboard();
         };
         g("btn-mute").onclick = BGAudio.toggleMute;
-        g("tl-tts-play").onclick = tlTtsPlay;
-        g("tl-tts-stop").onclick = ttsStop;
         g("q-next").onclick = nextQ;
         g("save-btn").onclick = saveScore;
         g("skip-btn").onclick = function () {
@@ -627,8 +635,11 @@
         // Hero carousel
         startCarousel(getStationImages(s));
 
-        // Main content text (clamped preview in card)
-        g("detail-text").textContent = s.content;
+        // Main content text — wrap words in spans for karaoke highlighting
+        if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
+        _audioWordTimings = null;
+        _ttsTimingSource = { title: s.title || "", content: s.content || "" };
+        ttsWords = _renderTtsWords(g("detail-text"), s.content);
 
         // Fun facts
         var ff = s.fun_facts || [];
@@ -656,6 +667,7 @@
         audio.onpause = function () {
           resumeIdleTimer();
           _setListenBtnState("paused");
+          if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
         };
         audio.onended = function () {
           resumeIdleTimer();
@@ -663,6 +675,7 @@
           if (sb) { sb.value = 0; sb.style.setProperty("--p", "0%"); }
           g("detail-audio-time").textContent = "0:00";
           _setListenBtnState("paused");
+          if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
         };
         audio.ontimeupdate = function () {
           if (audio.duration) {
@@ -670,6 +683,33 @@
             var sb = g("detail-audio-seek");
             if (sb) { sb.value = pct; sb.style.setProperty("--p", pct + "%"); }
             g("detail-audio-time").textContent = _fmtTime(audio.currentTime);
+            // Karaoke highlight — build weighted timings once on first tick with duration
+            if (ttsWords.length && !audio.paused) {
+              if (!_audioWordTimings && _ttsTimingSource) {
+                _audioWordTimings = _buildAudioTimings(
+                  _ttsTimingSource.title, _ttsTimingSource.content, audio.duration
+                );
+              }
+              if (_audioWordTimings) {
+                var t = audio.currentTime;
+                var timings = _audioWordTimings;
+                if (t < timings[0]) {
+                  if (_ttsActiveWord) { _ttsActiveWord.classList.remove("hs-tts-active"); _ttsActiveWord = null; }
+                } else {
+                  var wi = timings.length - 1;
+                  for (var i = 1; i < timings.length; i++) {
+                    if (timings[i] > t) { wi = i - 1; break; }
+                  }
+                  var ww = ttsWords[wi];
+                  if (ww && ww.span !== _ttsActiveWord) {
+                    if (_ttsActiveWord) _ttsActiveWord.classList.remove("hs-tts-active");
+                    ww.span.classList.add("hs-tts-active");
+                    _ttsActiveWord = ww.span;
+                    ww.span.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                  }
+                }
+              }
+            }
           }
         };
 
@@ -783,6 +823,37 @@
           _ttsActiveWord = best.span;
           best.span.scrollIntoView({ block: "nearest", behavior: "smooth" });
         }
+      }
+
+      // Build per-word start timestamps from a weighted character model.
+      // Each word's share of the total duration is proportional to its letter count
+      // (proxy for syllables) plus a pause bonus for trailing punctuation.
+      // A title-end pause is added before the description starts.
+      function _buildAudioTimings(title, content, duration) {
+        function wWeight(w) {
+          var letters = w.replace(/[^a-zA-Z]/g, "").length || 1;
+          // sentence-end pause ≈ 0.5–0.8 s; clause pause ≈ 0.2–0.3 s
+          var pause = /[.!?]$/.test(w) ? 9 : /[,;:\-—]$/.test(w) ? 4 : 0;
+          return letters + pause;
+        }
+        var titleWords = (title.trim().match(/\S+/g) || []);
+        var descWords  = (content.match(/\S+/g) || []);
+        var titleW  = titleWords.reduce(function (s, w) { return s + wWeight(w); }, 0);
+        // ElevenLabs inserts a ~0.6 s pause between title and body;
+        // represent it as weight equivalent to ~12 letter-chars.
+        var TITLE_PAUSE = 12;
+        var descWeights = descWords.map(wWeight);
+        var descW = descWeights.reduce(function (a, b) { return a + b; }, 0);
+        var totalW = titleW + TITLE_PAUSE + descW;
+        var secPer = duration / totalW;
+        var titleDur = (titleW + TITLE_PAUSE) * secPer;
+        var timings = [];
+        var cum = titleDur;
+        for (var i = 0; i < descWeights.length; i++) {
+          timings.push(cum);
+          cum += descWeights[i] * secPer;
+        }
+        return timings;
       }
 
       // ── TTS ──
@@ -915,12 +986,7 @@
         if (p) p.style.display = "inline-flex";
         if (s) s.style.display = "none";
         if (st) st.textContent = "";
-        var tlp = g("tl-tts-play"),
-          tls = g("tl-tts-stop"),
-          tlst = g("tl-tts-status");
-        if (tlp) tlp.style.display = "inline-flex";
-        if (tls) tls.style.display = "none";
-        if (tlst) tlst.textContent = "";
+        tlAudioStop();
         // only resume idle timer if we're not already going to idle
         if (ttsActive) resumeIdleTimer();
       }
@@ -1379,6 +1445,73 @@
         },
       ];
 
+      function _tlSlide(index) {
+        var carousel = g("tl-carousel");
+        return (carousel && index >= 0) ? carousel.querySelectorAll(".tl-slide")[index] : null;
+      }
+
+      function _tlSetBtnState(index, playing) {
+        var slide = _tlSlide(index);
+        if (!slide) return;
+        var playPath  = '<path d="M8 5v14l11-7z"></path>';
+        var pausePath = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+        var svgBig  = '<svg width="9"  height="9"  viewBox="0 0 24 24" fill="currentColor">' + (playing ? pausePath : playPath) + '</svg>';
+        var svgMini = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">' + (playing ? pausePath : playPath) + '</svg>';
+        var icon  = slide.querySelector(".tl-listen-icon");
+        var label = slide.querySelector(".hs-listen-label");
+        var mini  = slide.querySelector(".tl-mini-play");
+        if (icon)  icon.innerHTML    = svgBig;
+        if (label) label.textContent = playing ? "Listening..." : "Listen to the story";
+        if (mini)  mini.innerHTML    = svgMini;
+      }
+
+      function _tlUpdateSeek(index, pct, seconds) {
+        var slide = _tlSlide(index);
+        if (!slide) return;
+        var seekEl = slide.querySelector(".tl-audio-seek");
+        var timeEl = slide.querySelector(".tl-audio-time");
+        if (seekEl) { seekEl.value = pct; seekEl.style.setProperty("--p", pct + "%"); }
+        if (timeEl) timeEl.textContent = _fmtTime(seconds);
+      }
+
+      function tlAudioStop() {
+        var audio = g("tl-audio");
+        if (!audio) return;
+        _tlSetBtnState(_tlActiveSlide, false);
+        _tlUpdateSeek(_tlActiveSlide, 0, 0);
+        _tlActiveSlide = -1;
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
+      function tlAudioToggle(index) {
+        var audio = g("tl-audio");
+        if (!audio) return;
+        if (_tlActiveSlide === index) {
+          if (audio.paused) {
+            pauseIdleTimer();
+            _tlSetBtnState(index, true);
+            audio.play().catch(function () {});
+          } else {
+            _tlSetBtnState(index, false);
+            audio.pause();
+          }
+          return;
+        }
+        // Stop previous slide
+        _tlSetBtnState(_tlActiveSlide, false);
+        _tlUpdateSeek(_tlActiveSlide, 0, 0);
+        _tlActiveSlide = -1;
+        audio.pause();
+        audio.currentTime = 0;
+        // Start new slide
+        audio.src = "assets/timeline/timeline-" + (index + 1) + "/timeline-" + (index + 1) + ".mp3";
+        _tlActiveSlide = index;
+        pauseIdleTimer();
+        _tlSetBtnState(index, true);
+        audio.play().catch(function () {});
+      }
+
       function buildTimeline() {
         var carousel = g("tl-carousel");
         var dotsWrap = g("tl-dots");
@@ -1388,7 +1521,7 @@
         var dots = "";
         TL_ITEMS.forEach(function (item, i) {
           var imgExt = i === 0 || i === 6 ? "png" : "jpg";
-          var imgSrc = "assets/timeline/timeline-" + (i + 1) + "." + imgExt;
+          var imgSrc = "assets/timeline/timeline-" + (i + 1) + "/timeline-" + (i + 1) + "a." + imgExt;
           slides += '<section class="tl-slide" aria-label="' + item.year + '">';
           slides +=
             '<img class="tl-slide-img" src="' +
@@ -1409,6 +1542,19 @@
           slides +=
             '<div class="tl-fact"><div class="tl-fact-label">Did You Know?</div>';
           slides += '<div class="tl-fact-text">' + item.did + "</div></div>";
+          slides +=
+            '<button class="hs-listen-btn tl-listen-btn" type="button">' +
+            '<span class="tl-listen-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>' +
+            '<span class="hs-listen-label">Listen to the story</span>' +
+            "</button>";
+          slides +=
+            '<div class="hs-audio-bar tl-audio-bar">' +
+            '<button class="hs-mini-play tl-mini-play" type="button" aria-label="Play audio">' +
+            '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>' +
+            "</button>" +
+            '<input type="range" class="hs-audio-seek tl-audio-seek" value="0" min="0" max="100" step="0.1" aria-label="Audio seek">' +
+            '<span class="hs-audio-time tl-audio-time">0:00</span>' +
+            "</div>";
           slides += "</div></section>";
           dots +=
             '<button class="tl-dot' +
@@ -1421,6 +1567,37 @@
         });
         carousel.innerHTML = slides;
         dotsWrap.innerHTML = dots;
+
+        // Wire per-slide listen button, mini-play, and seek input
+        carousel.querySelectorAll(".tl-slide").forEach(function (slide, i) {
+          var btn    = slide.querySelector(".tl-listen-btn");
+          var mini   = slide.querySelector(".tl-mini-play");
+          var seekEl = slide.querySelector(".tl-audio-seek");
+          if (btn)    btn.onclick    = function () { tlAudioToggle(i); };
+          if (mini)   mini.onclick   = function () { tlAudioToggle(i); };
+          if (seekEl) seekEl.oninput = function () {
+            var a = g("tl-audio");
+            if (a && a.duration) a.currentTime = (seekEl.value / 100) * a.duration;
+          };
+        });
+
+        // Timeline audio events
+        var tlAudio = g("tl-audio");
+        if (tlAudio) {
+          tlAudio.onplay  = function () { pauseIdleTimer(); };
+          tlAudio.onpause = function () { resumeIdleTimer(); };
+          tlAudio.onended = function () {
+            resumeIdleTimer();
+            _tlSetBtnState(_tlActiveSlide, false);
+            _tlUpdateSeek(_tlActiveSlide, 0, 0);
+            _tlActiveSlide = -1;
+          };
+          tlAudio.ontimeupdate = function () {
+            if (!tlAudio.duration) return;
+            var pct = (tlAudio.currentTime / tlAudio.duration) * 100;
+            _tlUpdateSeek(_tlActiveSlide, pct, tlAudio.currentTime);
+          };
+        }
 
         var prev = g("tl-prev");
         var next = g("tl-next");
@@ -1467,6 +1644,7 @@
           if (index !== tlLastScrollIndex) {
             tlLastScrollIndex = index;
             ttsStop();
+            tlAudioToggle(index);
           }
         };
         return;

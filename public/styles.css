@@ -1569,6 +1569,34 @@
         line-height: 1.45;
         color: rgba(255, 255, 255, 0.88);
       }
+      .tl-listen-btn {
+        align-self: flex-start;
+        margin-top: 4px;
+      }
+      .tl-info-red .tl-listen-btn {
+        background: #fff;
+        color: #bd001a;
+        box-shadow: 0 3px 0 #aaa;
+      }
+      .tl-info-red .tl-listen-btn:hover {
+        background: #f5f0f0;
+        box-shadow: 0 2px 0 #aaa;
+      }
+      .tl-audio-bar {
+        margin-top: 0;
+      }
+      .tl-info-red .tl-audio-bar {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.28);
+      }
+      .tl-info-red .tl-audio-bar .hs-audio-time {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .tl-info-red .hs-audio-seek {
+        background: linear-gradient(to right, #fff var(--p), rgba(255,255,255,0.3) var(--p));
+      }
+      .tl-info-red .hs-audio-seek::-webkit-slider-thumb { background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+      .tl-info-red .hs-audio-seek::-moz-range-thumb     { background: #fff; }
       .tl-nav {
         position: absolute;
         z-index: 4;
