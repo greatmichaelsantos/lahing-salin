@@ -1573,6 +1573,13 @@
         if (mini)  mini.innerHTML    = svgMini;
       }
 
+      function _tlSetPhotoActive(slideIndex, imgIndex) {
+        var slide = _tlSlide(slideIndex);
+        if (!slide) return;
+        var photos = slide.querySelectorAll(".tl-photo");
+        photos.forEach(function (p, i) { p.classList.toggle("active", i === imgIndex); });
+      }
+
       function _tlUpdateSeek(index, pct, seconds) {
         var slide = _tlSlide(index);
         if (!slide) return;
@@ -1587,6 +1594,7 @@
         if (!audio) return;
         _tlSetBtnState(_tlActiveSlide, false);
         _tlUpdateSeek(_tlActiveSlide, 0, 0);
+        _tlSetPhotoActive(_tlActiveSlide, 0);
         _tlActiveSlide = -1;
         audio.pause();
         audio.currentTime = 0;
@@ -1609,6 +1617,7 @@
         // Stop previous slide
         _tlSetBtnState(_tlActiveSlide, false);
         _tlUpdateSeek(_tlActiveSlide, 0, 0);
+        _tlSetPhotoActive(_tlActiveSlide, 0);
         _tlActiveSlide = -1;
         audio.pause();
         audio.currentTime = 0;
@@ -1629,14 +1638,14 @@
         var dots = "";
         TL_ITEMS.forEach(function (item, i) {
           var imgExt = i === 0 || i === 6 ? "png" : "jpg";
-          var imgSrc = "assets/timeline/timeline-" + (i + 1) + "/timeline-" + (i + 1) + "a." + imgExt;
+          var letters = ["a","b","c","d","e","f","g","h","i","j"];
+          var strip = '<div class="tl-photo-strip">';
+          letters.forEach(function (letter, li) {
+            strip += '<img class="tl-photo' + (li === 0 ? " active" : "") + '" src="assets/timeline/timeline-' + (i + 1) + "/timeline-" + (i + 1) + letter + "." + imgExt + '" alt="' + item.title + " " + (li + 1) + '" />';
+          });
+          strip += "</div>";
           slides += '<section class="tl-slide" aria-label="' + item.year + '">';
-          slides +=
-            '<img class="tl-slide-img" src="' +
-            imgSrc +
-            '" alt="' +
-            item.title +
-            '" />';
+          slides += strip;
           slides += '<div class="tl-info' + (i % 2 ? " tl-info-red" : "") + '">';
           slides += '<div class="tl-year">' + item.year + "</div>";
           slides += '<div class="tl-rule"></div>';
@@ -1698,12 +1707,17 @@
             resumeIdleTimer();
             _tlSetBtnState(_tlActiveSlide, false);
             _tlUpdateSeek(_tlActiveSlide, 0, 0);
+            _tlSetPhotoActive(_tlActiveSlide, 0);
             _tlActiveSlide = -1;
           };
           tlAudio.ontimeupdate = function () {
             if (!tlAudio.duration) return;
             var pct = (tlAudio.currentTime / tlAudio.duration) * 100;
             _tlUpdateSeek(_tlActiveSlide, pct, tlAudio.currentTime);
+            if (_tlActiveSlide >= 0) {
+              var imgIndex = Math.floor((tlAudio.currentTime / tlAudio.duration) * 10) % 10;
+              _tlSetPhotoActive(_tlActiveSlide, imgIndex);
+            }
           };
         }
 
