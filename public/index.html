@@ -156,7 +156,107 @@
               </div>
             </div>
 
-            <!-- TAKE QUIZ 4×3 -->
+            <!-- TIMELINE 4×3 -->
+            <div class="tile t-timeline" id="btn-timeline">
+              <img
+                src="assets\timeline\timeline-1\timeline-1a.png"
+                style="
+                  position: absolute;
+                  inset: 0;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  opacity: 0.45;
+                "
+                alt=""
+              />
+              <div
+                style="
+                  position: absolute;
+                  inset: 0;
+                  background: linear-gradient(to top, #2d7d9a 60%, rgba(45, 125, 154, 0.35) 100%);
+                "
+              ></div>
+              <!-- icon badge — top-left, same style as City Overview / Take Quiz -->
+              <div
+                style="
+                  position: absolute;
+                  top: 20px;
+                  left: 20px;
+                  width: 52px;
+                  height: 52px;
+                  border-radius: 14px;
+                  background: rgba(255, 255, 255, 0.2);
+                  border: 1px solid rgba(255, 255, 255, 0.35);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  z-index: 1;
+                "
+              >
+                <span
+                  class="material-symbols-outlined fill-icon"
+                  style="color: #fff; font-size: 28px"
+                  >history</span
+                >
+              </div>
+              <!-- vertically centered title + subtitle (button moved to bottom) -->
+              <div
+                style="
+                  position: absolute;
+                  inset: 0;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-start;
+                  justify-content: center;
+                  padding: 20px;
+                  z-index: 1;
+                "
+              >
+                <div class="tile-title" style="font-size: 30px; color: #fff; margin-bottom: 4px">
+                  Timeline
+                </div>
+                <div
+                  style="
+                    font-family: &quot;Space Grotesk&quot;, sans-serif;
+                    font-weight: 700;
+                    font-size: 14px;
+                    letter-spacing: 0.12em;
+                    text-transform: uppercase;
+                    color: rgba(255, 255, 255, 0.7);
+                  "
+                >
+                  Photo History
+                </div>
+              </div>
+              <!-- button pinned to bottom — same 18px padding as .tile-inner (matches "Open Explorer") -->
+              <div
+                style="
+                  position: absolute;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  padding: 18px;
+                  z-index: 1;
+                "
+              >
+                <button
+                  class="tile-btn"
+                  style="
+                    background: #fff;
+                    color: #2d7d9a;
+                    width: 100%;
+                    text-align: center;
+                    display: block;
+                    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+                  "
+                >
+                  View Timeline
+                </button>
+              </div>
+            </div>
+
+            <!-- TAKE QUIZ 4×2 -->
             <div class="tile t-quiz" id="btn-quiz">
               <div class="tile-inner">
                 <div
@@ -253,59 +353,12 @@
                     text-align: center;
                     display: block;
                     box-shadow: 0 4px 0 #b29400;
+                    padding: 14px 24px;
+                    font-size: 16px;
                   "
                 >
                   Play Now
                 </button>
-              </div>
-            </div>
-
-            <!-- TIMELINE 4×2 -->
-            <div class="tile t-timeline" id="btn-timeline">
-              <img
-                src="assets\timeline\timeline-1\timeline-1a.png"
-                style="
-                  position: absolute;
-                  inset: 0;
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
-                  opacity: 0.45;
-                "
-                alt=""
-              />
-              <div
-                style="
-                  position: absolute;
-                  inset: 0;
-                  background: linear-gradient(to top, #2d7d9a 30%, transparent);
-                "
-              ></div>
-              <div
-                style="
-                  position: absolute;
-                  bottom: 0;
-                  left: 0;
-                  right: 0;
-                  padding: 20px;
-                "
-              >
-                <div class="tile-title" style="font-size: 26px; color: #fff">
-                  Timeline
-                </div>
-                <div
-                  style="
-                    font-family: &quot;Space Grotesk&quot;, sans-serif;
-                    font-weight: 700;
-                    font-size: 14px;
-                    letter-spacing: 0.12em;
-                    text-transform: uppercase;
-                    color: rgba(255, 255, 255, 0.7);
-                    margin-top: 3px;
-                  "
-                >
-                  Photo History
-                </div>
               </div>
             </div>
 
@@ -514,6 +567,18 @@
         >
           Close
         </button>
+      </div>
+    </div>
+
+    <!-- CITY STAT MODAL -->
+    <div id="city-stat-modal" onclick="if(event.target===this)closeCityStat()">
+      <div class="csm-box">
+        <div class="csm-emoji"></div>
+        <div class="csm-title"></div>
+        <div class="csm-sub"></div>
+        <div class="csm-rule"></div>
+        <div class="csm-body"></div>
+        <button class="csm-close-btn" onclick="closeCityStat()">Got it! ✓</button>
       </div>
     </div>
 

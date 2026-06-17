@@ -365,6 +365,70 @@
         return (first + last).toUpperCase();
       }
 
+      // ── City Stat Modal ──
+      var CITY_STATS = {
+        mayor: {
+          bg: "#1a3488", text: "#fff", accent: "#fcd400", shadow: "#0e1f52",
+          emoji: "🏛️", title: "City Mayor", sub: "Rolen C. Paulino Jr.",
+          body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor Rolen C. Paulino Jr. leads the city government and makes big decisions — like where to build new roads, parks, and schools. Think of the mayor as a school principal... but for <em>the entire city</em>! 🗳️ The mayor is chosen by the people through elections, which means every single vote really counts."
+        },
+        population: {
+          bg: "#bd001a", text: "#fff", accent: "#fcd400", shadow: "#7a0011",
+          emoji: "👥", title: "Population", sub: "233,000+ people",
+          body: "More than <strong>233,000 people</strong> call Olongapo home! 🤯 To help you picture that — if you filled the biggest indoor arena in the Philippines (about 20,000 seats) over and over again, you'd need <strong>more than 11 arenas</strong> packed full of people just to fit everyone who lives here. With that many neighbors, there's always something exciting happening somewhere in the city!"
+        },
+        barangays: {
+          bg: "#fcd400", text: "#221b00", accent: "#bd001a", shadow: "#9a8000",
+          emoji: "🏘️", title: "Barangays", sub: "17 neighborhoods",
+          body: "A <strong>barangay</strong> is like a neighborhood with its very own mini-government and a leader called a <em>Barangay Captain</em>! Olongapo City is divided into <strong>17 barangays</strong> — each with its own community, its own character, and its own little story. Think of it like <strong>17 mini-villages</strong> all teaming up to build one amazing city together! 🤝 Which barangay are you from?"
+        },
+        founded: {
+          bg: "#2e54c2", text: "#fff", accent: "#fcd400", shadow: "#1a3488",
+          emoji: "🎂", title: "Founded", sub: "June 1, 1966",
+          body: "On <strong>June 1, 1966</strong>, a special law called <em>Republic Act No. 4645</em> officially made Olongapo an independent chartered city! Before that, it was just a small municipality. It's like a kid finally growing up and going independent! 🎉 Every year on June 1st, Olongapo celebrates its <strong>City Founding Anniversary</strong> — so the city has already had more than <strong>58 birthday parties!</strong>"
+        },
+        area: {
+          bg: "#ffffff", text: "#1b1c1b", accent: "#bd001a", shadow: "#c0c0c0",
+          emoji: "🗺️", title: "City Area", sub: "104.53 sq km",
+          body: "Olongapo stretches across <strong>104.53 square kilometers</strong> of land — that's about the size of <strong>14,600 full-size basketball courts</strong> laid side by side! 🏀 The city runs from lush green mountains in the west all the way to the sparkling shores of <em>Subic Bay</em> in the east. Lots of space for adventures, discoveries, and lots of amazing people!"
+        },
+        region: {
+          bg: "#2e54c2", text: "#fff", accent: "#fcd400", shadow: "#1a3488",
+          emoji: "🌏", title: "Region III", sub: "Central Luzon",
+          body: "<strong>Central Luzon</strong> (Region III) is a group of <strong>7 provinces</strong> in the heart of Luzon island — Aurora, Bataan, Bulacan, Nueva Ecija, Pampanga, Tarlac, and Zambales. Olongapo City is in Zambales, which is part of this region! Central Luzon is nicknamed the <em>\"Rice Granary of the Philippines\"</em> 🌾 because it grows so much of the country's food supply. Go Region III! 💪"
+        },
+        province: {
+          bg: "#fcd400", text: "#221b00", accent: "#bd001a", shadow: "#9a8000",
+          emoji: "🌋", title: "Province", sub: "Zambales",
+          body: "<strong>Zambales</strong> is the province where Olongapo City calls home! It stretches along the west coast of Luzon, right beside the beautiful <em>South China Sea</em> 🌊. Zambales is famous for its stunning beaches 🏖️, sweet mango farms 🥭, and the mighty <strong>Mount Pinatubo</strong> — one of the most famous volcanoes in the entire world! Olongapo runs its own city government, but it still proudly calls Zambales its home province."
+        }
+      };
+
+      function showCityStat(key) {
+        var s = CITY_STATS[key];
+        if (!s) return;
+        pauseIdleTimer();
+        var modal = document.getElementById("city-stat-modal");
+        var box   = modal.querySelector(".csm-box");
+        box.style.background = s.bg;
+        box.style.color      = s.text;
+        box.querySelector(".csm-rule").style.background = s.accent;
+        var btn = box.querySelector(".csm-close-btn");
+        btn.style.background = s.accent;
+        btn.style.color      = s.accent === "#fcd400" ? "#221b00" : "#fff";
+        btn.style.boxShadow  = "0 4px 0 " + s.shadow;
+        box.querySelector(".csm-emoji").textContent = s.emoji;
+        box.querySelector(".csm-title").textContent = s.title;
+        box.querySelector(".csm-sub").textContent   = s.sub;
+        box.querySelector(".csm-body").innerHTML    = s.body;
+        modal.classList.add("open");
+      }
+
+      function closeCityStat() {
+        document.getElementById("city-stat-modal").classList.remove("open");
+        resumeIdleTimer();
+      }
+
       function buildCity() {
         var c = DATA.city;
         var regionParts = (c.region || "").split("—");
@@ -439,7 +503,7 @@
         html +=
           '<div class="cty-maptile-loc"><span class="material-symbols-outlined">location_on</span> Central Luzon</div>';
         html += "</div>";
-        html += '<div class="cty-mayor-card">';
+        html += '<div class="cty-mayor-card" onclick="showCityStat(\'mayor\')">';
         html +=
           '<div class="cty-mayor-avatar">' +
           _cityMayorInitials(c.mayor) +
@@ -456,31 +520,31 @@
         // Sidebar stat tiles
         html += '<div class="cty-sidebar">';
         html +=
-          '<div class="cty-stat cty-stat-red"><div class="cty-stat-icon"><span class="material-symbols-outlined">groups</span></div><div class="cty-stat-val">' +
+          '<div class="cty-stat cty-stat-red" onclick="showCityStat(\'population\')"><div class="cty-stat-icon"><span class="material-symbols-outlined">groups</span></div><div class="cty-stat-val">' +
           c.population +
           '</div><div class="cty-stat-lbl">Population</div></div>';
         html +=
-          '<div class="cty-stat cty-stat-yellow"><div class="cty-stat-icon"><span class="material-symbols-outlined">location_city</span></div><div class="cty-stat-val">' +
+          '<div class="cty-stat cty-stat-yellow" onclick="showCityStat(\'barangays\')"><div class="cty-stat-icon"><span class="material-symbols-outlined">location_city</span></div><div class="cty-stat-val">' +
           c.barangays +
           '</div><div class="cty-stat-lbl">Barangays</div></div>';
         html +=
-          '<div class="cty-stat cty-stat-blue"><div class="cty-stat-icon"><span class="material-symbols-outlined">event</span></div><div class="cty-stat-val">' +
+          '<div class="cty-stat cty-stat-blue" onclick="showCityStat(\'founded\')"><div class="cty-stat-icon"><span class="material-symbols-outlined">event</span></div><div class="cty-stat-val">' +
           foundedYear +
           '</div><div class="cty-stat-lbl">Founded</div></div>';
         html +=
-          '<div class="cty-stat cty-stat-white"><div class="cty-stat-icon"><span class="material-symbols-outlined">map</span></div><div class="cty-stat-val cty-stat-val-sm">' +
+          '<div class="cty-stat cty-stat-white" onclick="showCityStat(\'area\')"><div class="cty-stat-icon"><span class="material-symbols-outlined">map</span></div><div class="cty-stat-val cty-stat-val-sm">' +
           areaNum +
           '</div><div class="cty-stat-lbl">' +
           areaUnit +
           "</div></div>";
         html +=
-          '<div class="cty-stat cty-stat-navy"><div class="cty-stat-region">Region</div><div class="cty-stat-val">' +
+          '<div class="cty-stat cty-stat-navy" onclick="showCityStat(\'region\')"><div class="cty-stat-region">Region</div><div class="cty-stat-val">' +
           regionRoman +
           '</div><div class="cty-stat-lbl">' +
           regionName +
           "</div></div>";
         html +=
-          '<div class="cty-stat cty-stat-yellow"><div class="cty-stat-icon"><span class="material-symbols-outlined">flag</span></div><div class="cty-stat-val cty-stat-val-sm">' +
+          '<div class="cty-stat cty-stat-yellow" onclick="showCityStat(\'province\')"><div class="cty-stat-icon"><span class="material-symbols-outlined">flag</span></div><div class="cty-stat-val cty-stat-val-sm">' +
           c.province +
           '</div><div class="cty-stat-lbl">Province</div></div>';
         html += "</div>"; // cty-sidebar
