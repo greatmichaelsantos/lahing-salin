@@ -1553,6 +1553,24 @@
         },
       ];
 
+      // Exact filenames per slide — extensions and names vary per image
+      var TL_IMAGES = [
+        // timeline-1: a=png, b-j=jpg
+        ["timeline-1a.png","timeline-1b.jpg","timeline-1c.jpg","timeline-1d.jpg","timeline-1e.jpg","timeline-1f.jpg","timeline-1g.jpg","timeline-1h.jpg","timeline-1i.jpg","timeline-1j.jpg"],
+        // timeline-2: all jpg
+        ["timeline-2a.jpg","timeline-2b.jpg","timeline-2c.jpg","timeline-2d.jpg","timeline-2e.jpg","timeline-2f.jpg","timeline-2g.jpg","timeline-2h.jpg","timeline-2i.jpg","timeline-2j.jpg"],
+        // timeline-3: all jpg
+        ["timeline-3a.jpg","timeline-3b.jpg","timeline-3c.jpg","timeline-3d.jpg","timeline-3e.jpg","timeline-3f.jpg","timeline-3g.jpg","timeline-3h.jpg","timeline-3i.jpg","timeline-3j.jpg"],
+        // timeline-4: all jpg
+        ["timeline-4a.jpg","timeline-4b.jpg","timeline-4c.jpg","timeline-4d.jpg","timeline-4e.jpg","timeline-4f.jpg","timeline-4g.jpg","timeline-4h.jpg","timeline-4i.jpg","timeline-4j.jpg"],
+        // timeline-5: all jpg
+        ["timeline-5a.jpg","timeline-5b.jpg","timeline-5c.jpg","timeline-5d.jpg","timeline-5e.jpg","timeline-5f.jpg","timeline-5g.jpg","timeline-5h.jpg","timeline-5i.jpg","timeline-5j.jpg"],
+        // timeline-6: a-e=jpg, f=png, g-j=jpg
+        ["timeline-6a.jpg","timeline-6b.jpg","timeline-6c.jpg","timeline-6d.jpg","timeline-6e.jpg","timeline-6f.png","timeline-6g.jpg","timeline-6h.jpg","timeline-6i.jpg","timeline-6j.jpg"],
+        // timeline-7: a=png, b-d=jpg, e=filename typo on disk, f-g=jpg, h=jpeg, i-j=jpg
+        ["timeline-7a.png","timeline-7b.jpg","timeline-7c.jpg","timeline-7d.jpg","timetine-7e.jpg","timeline-7f.jpg","timeline-7g.jpg","timeline-7h.jpeg","timeline-7i.jpg","timeline-7j.jpg"],
+      ];
+
       function _tlSlide(index) {
         var carousel = g("tl-carousel");
         return (carousel && index >= 0) ? carousel.querySelectorAll(".tl-slide")[index] : null;
@@ -1637,11 +1655,9 @@
         var slides = "";
         var dots = "";
         TL_ITEMS.forEach(function (item, i) {
-          var imgExt = i === 0 || i === 6 ? "png" : "jpg";
-          var letters = ["a","b","c","d","e","f","g","h","i","j"];
           var strip = '<div class="tl-photo-strip">';
-          letters.forEach(function (letter, li) {
-            strip += '<img class="tl-photo' + (li === 0 ? " active" : "") + '" src="assets/timeline/timeline-' + (i + 1) + "/timeline-" + (i + 1) + letter + "." + imgExt + '" alt="' + item.title + " " + (li + 1) + '" />';
+          TL_IMAGES[i].forEach(function (filename, li) {
+            strip += '<img class="tl-photo' + (li === 0 ? " active" : "") + '" src="assets/timeline/timeline-' + (i + 1) + "/" + filename + '" alt="' + item.title + " " + (li + 1) + '" />';
           });
           strip += "</div>";
           slides += '<section class="tl-slide" aria-label="' + item.year + '">';
