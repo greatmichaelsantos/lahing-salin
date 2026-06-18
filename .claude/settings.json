@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main/public/app.js\")",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" status)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" log --oneline -5)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" checkout -b autoplaybeta)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" add public/app.js public/index.html)",
+      "Bash(git -C 'c:/Users/Great Michael Santos/Desktop/salin-lahi-main' commit -m ' *)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" push -u origin autoplaybeta)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" checkout main)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" merge autoplaybeta)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" push origin main)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" revert a082d25 --no-edit)",
+      "Bash(git -C \"c:/Users/Great Michael Santos/Desktop/salin-lahi-main\" branch --show-current)"
+    ]
+  }
+}
