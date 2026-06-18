@@ -83,6 +83,16 @@ signInAnonymously(auth)
       await setDoc(doc(db, "salinlahi_config", "admin"), { presPin: pin }, { merge: true });
     };
 
+    // ── Presentation default flow — stored in salinlahi_config/presentation ──
+    window.fbGetPresFlow = async function () {
+      const snap = await getDoc(doc(db, "salinlahi_config", "presentation"));
+      if (snap.exists() && snap.data().flow) return snap.data().flow;
+      return null;
+    };
+    window.fbSetPresFlow = async function (flow) {
+      await setDoc(doc(db, "salinlahi_config", "presentation"), { flow: flow }, { merge: true });
+    };
+
     window.fbProjectId = firebaseConfig.projectId;
     window._fbReady    = true;
     window.dispatchEvent(new Event("firebase-ready"));

@@ -357,6 +357,7 @@
         _loadAdminPin();
         _loadPresPin();
         apLoadConfig();
+        _loadPresFlow();
         buildCityPreview();
         buildGuidePreview();
         buildCity();
@@ -437,6 +438,11 @@
         if (!_apConfig) apLoadConfig();
         _apState = "running";
         _apStepIdx = 0;
+        // Close any open overlay (e.g. ov-presentation) before the countdown
+        document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+        stationAudioStop(); ttsStop();
+        goTo(1, true);
+        bgAudioUpdate();
         _apShowOverlay(true);
         _apSetStatus("Starting…");
         _apSyncAdminBtns();
@@ -541,6 +547,7 @@
           _apTimer = setTimeout(advance, step.duration || 300);
 
         } else if (step.type === "guide") {
+          stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
           g("ov-guide").classList.add("open");
@@ -551,8 +558,10 @@
         } else if (step.type === "station") {
           var sectionId = step.id || _apGetStationId();
           if (!sectionId) { advance(); return; }
+          // Close ALL open overlays before navigating — prevents stale timeline/quiz/etc. bleeding through
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
           goTo(1, true);
-          if (!g("ov-guide").classList.contains("open")) { g("ov-guide").classList.add("open"); }
           openSection(sectionId);
           _apSetStatus("Station: " + sectionId);
           var audio = g("station-audio");
@@ -563,6 +572,7 @@
           }
 
         } else if (step.type === "timeline") {
+          stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           openOverlay("ov-timeline");
@@ -570,6 +580,7 @@
           _apTimer = setTimeout(advance, step.duration || 1000);
 
         } else if (step.type === "quiz") {
+          stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           resetQuizSelect();
@@ -2448,6 +2459,27 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         }
       }
 
+      function _loadPresFlow() {
+        function _fetch() {
+          if (!window.fbGetPresFlow) return;
+          window.fbGetPresFlow().then(function (flow) {
+            if (flow) {
+              _apConfig = flow;
+              // Persist to localStorage so it survives offline restarts
+              try { localStorage.setItem("salin-lahi-ap-config", JSON.stringify(flow)); } catch (e) {}
+            }
+          }).catch(function () {});
+        }
+        if (window._fbReady) {
+          _fetch();
+        } else {
+          window.addEventListener("firebase-ready", function handler() {
+            window.removeEventListener("firebase-ready", handler);
+            _fetch();
+          });
+        }
+      }
+
       // ── PIN Modal ──
       function openPinModal() {
         pinBuffer = "";
@@ -2508,6 +2540,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
       function openPresentationDashboard() {
         openOverlay("ov-presentation");
+        _apBuildFlowUI();
         _apSyncAdminBtns();
       }
 
@@ -2778,10 +2811,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             ? adminLastSync.toLocaleString("en-PH")
             : "—";
           g("idle-input").value = Math.round(IDLE_TIMEOUT / 1000);
-        }
-        if (tab === "presentation") {
-          _apBuildFlowUI();
-          _apSyncAdminBtns();
         }
       }
 
@@ -3200,16 +3229,45 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             var config = _apReadFlowFromUI();
             apSaveConfig(config);
             var msg = g("ap-flow-msg");
-            if (msg) { msg.textContent = "Flow saved!"; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+            if (msg) { msg.textContent = "Flow saved locally."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+          };
+        });
+
+        safe("ap-flow-save-default-btn", function(el) {
+          el.onclick = async function () {
+            var config = _apReadFlowFromUI();
+            var msg = g("ap-flow-msg");
+            el.disabled = true;
+            try {
+              await window.fbSetPresFlow(config);
+              apSaveConfig(config);
+              if (msg) { msg.textContent = "Default flow saved — synced to all devices."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 3000); }
+            } catch (e) {
+              if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
+            } finally {
+              el.disabled = false;
+            }
           };
         });
 
         safe("ap-flow-reset-btn", function(el) {
-          el.onclick = function () {
-            apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
-            _apBuildFlowUI();
+          el.onclick = async function () {
             var msg = g("ap-flow-msg");
-            if (msg) { msg.textContent = "Reset to default."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+            el.disabled = true;
+            try {
+              var firestoreFlow = window.fbGetPresFlow ? await window.fbGetPresFlow() : null;
+              var flow = firestoreFlow || JSON.parse(JSON.stringify(AP_DEFAULTS));
+              apSaveConfig(flow);
+              _apBuildFlowUI();
+              var label = firestoreFlow ? "Loaded saved default flow." : "Reset to factory default.";
+              if (msg) { msg.textContent = label; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+            } catch (e) {
+              apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
+              _apBuildFlowUI();
+              if (msg) { msg.textContent = "Reset to factory default."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+            } finally {
+              el.disabled = false;
+            }
           };
         });
 

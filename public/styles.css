@@ -3181,9 +3181,8 @@
         background: linear-gradient(135deg, #1b1c1b 0%, #2d2d2b 100%);
         border-radius: 16px;
         padding: 20px 24px;
-        margin: 16px 20px 0 20px;
+        margin: 16px 20px 20px 20px;
         border: 1px solid #3a3a38;
-        flex-shrink: 0;
       }
       #admin-ai-hero-header {
         display: flex;
