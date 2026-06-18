@@ -4575,9 +4575,9 @@
       }
       .indm-box {
         background: #f8f7f4;
-        border-radius: 22px;
+        border-radius: 18px;
         width: 100%;
-        max-width: 780px;
+        max-width: 600px;
         overflow: hidden;
         box-shadow: 0 24px 80px rgba(0,0,0,0.45);
       }
@@ -4585,7 +4585,7 @@
       /* Header */
       .indm-header {
         background: linear-gradient(140deg, #1b3a27 0%, #2e6b44 60%, #3a7a52 100%);
-        padding: 28px 28px 26px;
+        padding: 20px 20px 18px;
         position: relative;
       }
       .indm-close-btn {
@@ -4617,7 +4617,7 @@
       }
       .indm-title {
         font-family: "Fraunces", serif;
-        font-size: clamp(24px, 3.5vw, 36px);
+        font-size: clamp(20px, 2.5vw, 26px);
         font-weight: 900;
         color: #fff;
         line-height: 1.1;
@@ -4625,9 +4625,9 @@
       }
       .indm-subtitle {
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: clamp(13px, 1.3vw, 16px);
+        font-size: clamp(12px, 1.1vw, 13px);
         color: rgba(255,255,255,0.75);
-        margin-top: 6px;
+        margin-top: 5px;
         font-style: italic;
       }
       .indm-source-tag {
