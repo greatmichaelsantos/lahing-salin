@@ -341,6 +341,7 @@
         });
 
       function init() {
+        _loadAdminPin();
         apLoadConfig();
         buildCityPreview();
         buildGuidePreview();
@@ -2394,12 +2395,30 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       // ════════════════════════════════════════════
       // ADMIN DASHBOARD
       // ════════════════════════════════════════════
-      var ADMIN_PIN = "1234"; // TODO: change this PIN
+      var ADMIN_PIN = "1234"; // fallback — overwritten by Firestore on load
       var pinBuffer = "";
       var adminScores = [];
       var adminLastSync = null;
       var adminFilterSearch = "";
       var adminFilterTopic = "all";
+
+      // ── Load PIN from Firestore ──
+      function _loadAdminPin() {
+        function _fetch() {
+          if (!window.fbGetAdminPin) return;
+          window.fbGetAdminPin().then(function (pin) {
+            if (pin) ADMIN_PIN = pin;
+          }).catch(function () {});
+        }
+        if (window._fbReady) {
+          _fetch();
+        } else {
+          window.addEventListener("firebase-ready", function handler() {
+            window.removeEventListener("firebase-ready", handler);
+            _fetch();
+          });
+        }
+      }
 
       // ── PIN Modal ──
       function openPinModal() {
@@ -2998,12 +3017,18 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
         // Change PIN
         safe("pin-save-btn", function(el) {
-          el.onclick = function () {
+          el.onclick = async function () {
+            var spEl = g("pin-secret-pw");
             var npEl = g("pin-new");
             var cpEl = g("pin-confirm-input2");
-            var msg = g("pin-save-msg");
+            var msg  = g("pin-save-msg");
+            var sp = spEl ? spEl.value : "";
             var np = npEl ? npEl.value.trim() : "";
             var cp = cpEl ? cpEl.value.trim() : "";
+            if (sp !== "aplus") {
+              if (msg) { msg.textContent = "Incorrect secret password."; msg.className = "settings-msg err"; }
+              return;
+            }
             if (!/^\d{4}$/.test(np)) {
               if (msg) { msg.textContent = "PIN must be exactly 4 digits."; msg.className = "settings-msg err"; }
               return;
@@ -3012,10 +3037,19 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
               if (msg) { msg.textContent = "PINs do not match."; msg.className = "settings-msg err"; }
               return;
             }
-            ADMIN_PIN = np;
-            if (npEl) npEl.value = "";
-            if (cpEl) cpEl.value = "";
-            if (msg) { msg.textContent = "PIN updated for this session."; msg.className = "settings-msg ok"; }
+            el.disabled = true;
+            try {
+              await window.fbSetAdminPin(np);
+              ADMIN_PIN = np;
+              if (spEl) spEl.value = "";
+              if (npEl) npEl.value = "";
+              if (cpEl) cpEl.value = "";
+              if (msg) { msg.textContent = "PIN saved — active on all devices."; msg.className = "settings-msg ok"; }
+            } catch (e) {
+              if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
+            } finally {
+              el.disabled = false;
+            }
           };
         });
 

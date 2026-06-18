@@ -5,6 +5,7 @@ import { getAuth, signInAnonymously }
 import {
   getFirestore, collection, addDoc, getDocs,
   deleteDoc, doc, writeBatch, query, orderBy, limit,
+  getDoc, setDoc,
 }                               from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -60,6 +61,16 @@ signInAnonymously(auth)
         all.slice(i, i + 500).forEach(function (d) { batch.delete(d.ref); });
         await batch.commit();
       }
+    };
+
+    // ── Admin PIN — stored in salinlahi_config/admin ──
+    window.fbGetAdminPin = async function () {
+      const snap = await getDoc(doc(db, "salinlahi_config", "admin"));
+      if (snap.exists() && snap.data().pin) return snap.data().pin;
+      return null;
+    };
+    window.fbSetAdminPin = async function (pin) {
+      await setDoc(doc(db, "salinlahi_config", "admin"), { pin: pin }, { merge: true });
     };
 
     window.fbProjectId = firebaseConfig.projectId;

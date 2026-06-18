@@ -1300,6 +1300,24 @@
                 text-transform: uppercase;
                 letter-spacing: 0.08em;
               "
+              >Secret Password</label
+            >
+            <input
+              class="settings-input"
+              type="password"
+              id="pin-secret-pw"
+              placeholder="Enter secret password"
+              autocomplete="off"
+            />
+            <label
+              style="
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                color: #926e6b;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+              "
               >New PIN</label
             >
             <input
@@ -1334,18 +1352,6 @@
               autocomplete="new-password"
             />
             <button class="settings-btn" id="pin-save-btn">Save PIN</button>
-            <div
-              style="
-                font-family: &quot;Space Grotesk&quot;, sans-serif;
-                font-size: 12px;
-                color: #926e6b;
-                margin-top: 8px;
-              "
-            >
-              ⚠ PIN change is in-memory only — reloading the page resets it to
-              the hardcoded default. Edit <code>ADMIN_PIN</code> in app.js to
-              make it permanent.
-            </div>
             <div class="settings-msg" id="pin-save-msg"></div>
           </div>
 
