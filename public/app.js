@@ -790,8 +790,7 @@
         mayor: {
           bg: "#1a3488", text: "#fff", accent: "#fcd400", shadow: "#0e1f52",
           emoji: "🏛️", title: "City Mayor", sub: "Rolen C. Paulino Jr.",
-          body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor Rolen C. Paulino Jr. leads the city government and makes big decisions — like where to build new roads, parks, and schools. Think of the mayor as a school principal... but for <em>the entire city</em>! 🗳️ The mayor is chosen by the people through elections, which means every single vote really counts."
-        },
+body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <strong>Rolen C. Paulino Jr.</strong> leads Olongapo and makes important decisions to help the city grow and improve. Think of the mayor as a school principal... but for <em>the entire city</em>! 🏛️ He is currently serving his second consecutive term after winning re-election in 2025 and was recognized in 2026 as one of Central Luzon’s top-performing city mayors."        },
         population: {
           bg: "#bd001a", text: "#fff", accent: "#fcd400", shadow: "#7a0011",
           emoji: "👥", title: "Population", sub: "233,000+ people",
