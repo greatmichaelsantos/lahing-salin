@@ -8,8 +8,10 @@
       html,
       body {
         width: 100vw;
+        max-width: 100vw;
         height: 100vh;
         overflow: hidden;
+        overflow-x: hidden;
         background: #fff;
         font-family: "Plus Jakarta Sans", sans-serif;
       }
@@ -31,10 +33,11 @@
 
       /* ── Two-page slider ── */
       #app {
+        position: fixed;
+        inset: 0;
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        position: relative;
       }
       #track {
         display: flex;
@@ -2240,6 +2243,7 @@
           padding: 16px 18px 14px;
           gap: 10px;
           overflow-y: auto;
+          overflow-x: hidden;
           height: 100vh;
         }
         .greeting-title {
@@ -2796,6 +2800,7 @@
           flex-direction: column !important;
           gap: 12px !important;
           overflow-y: auto !important;
+          overflow-x: hidden !important;
           height: auto !important;
         }
         .t-city,
@@ -2808,6 +2813,9 @@
           overflow: visible !important;
           grid-column: unset !important;
           grid-row: unset !important;
+        }
+        .t-city {
+          overflow: hidden !important;
         }
         .t-timeline {
           min-height: 170px !important;
