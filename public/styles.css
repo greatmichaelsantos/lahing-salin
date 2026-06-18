@@ -222,12 +222,12 @@
       .t-timeline {
         grid-column: span 4;
         grid-row: span 3;
-        background: #2d7d9a;
+        background: #E37F4E;
       }
       .t-lb {
         grid-column: span 4;
         grid-row: span 2;
-        background: #e3e2e0;
+        background: #6E66B9;
       }
       .tile-inner {
         padding: 18px;
