@@ -53,6 +53,8 @@
         }
 
         function _applyVolume() {
+          var el = _audio();
+          if (el) el.muted = _muted;
           _fadeTo(_muted ? 0 : (VOLS[_state] || 0.50), 700);
         }
 
