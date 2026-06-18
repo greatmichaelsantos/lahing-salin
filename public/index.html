@@ -457,33 +457,6 @@
             </button>
 
             <div class="dash-bottombar-right" style="display: flex; align-items: center; gap: 10px">
-              <!-- Auto Play -->
-              <button
-                id="btn-autoplay"
-                class="dash-bottombar-btn"
-                style="
-                  background: #fff;
-                  border: 1px solid #a8a9ad;
-                  color: #1a6e3a;
-                  border-radius: 9999px;
-                  padding: 10px 22px;
-                  font-family: &quot;Space Grotesk&quot;, sans-serif;
-                  font-weight: 700;
-                  font-size: 13px;
-                  letter-spacing: 0.06em;
-                  text-transform: uppercase;
-                  cursor: pointer;
-                  box-shadow: 0 4px 0 #d4d4d4;
-                  transition: all 0.15s;
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                "
-              >
-                <span class="material-symbols-outlined" style="font-size:16px">slideshow</span>
-                <span class="dash-btn-label">Auto Play</span>
-              </button>
-
               <!-- Mute toggle -->
               <button
                 id="btn-mute"
@@ -1168,7 +1141,6 @@
         <button class="admin-tab-btn on" data-tab="scores">Scores</button>
         <button class="admin-tab-btn" data-tab="stats">Stats</button>
         <button class="admin-tab-btn" data-tab="settings">Settings</button>
-        <button class="admin-tab-btn" data-tab="presentation">Presentation</button>
       </div>
 
       <!-- Scrollable tab content -->
@@ -1355,6 +1327,19 @@
             <div class="settings-msg" id="pin-save-msg"></div>
           </div>
 
+          <!-- Change Presentation PIN -->
+          <div class="settings-section">
+            <div class="settings-section-title">🎬 Change Presentation PIN</div>
+            <label style="font-family:&quot;Space Grotesk&quot;,sans-serif;font-size:12px;font-weight:700;color:#926e6b;text-transform:uppercase;letter-spacing:0.08em">Secret Password</label>
+            <input class="settings-input" type="password" id="pres-pin-secret-pw" placeholder="Enter secret password" autocomplete="off" />
+            <label style="font-family:&quot;Space Grotesk&quot;,sans-serif;font-size:12px;font-weight:700;color:#926e6b;text-transform:uppercase;letter-spacing:0.08em">New Presentation PIN</label>
+            <input class="settings-input" type="password" id="pres-pin-new" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="4 digits" autocomplete="new-password" />
+            <label style="font-family:&quot;Space Grotesk&quot;,sans-serif;font-size:12px;font-weight:700;color:#926e6b;text-transform:uppercase;letter-spacing:0.08em">Confirm PIN</label>
+            <input class="settings-input" type="password" id="pres-pin-confirm" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="4 digits" autocomplete="new-password" />
+            <button class="settings-btn" id="pres-pin-save-btn">Save Presentation PIN</button>
+            <div class="settings-msg" id="pres-pin-save-msg"></div>
+          </div>
+
           <!-- Kiosk Info -->
           <div class="settings-section">
             <div class="settings-section-title">ℹ Kiosk Info</div>
@@ -1406,77 +1391,86 @@
         </div>
         <!-- end settings tab -->
 
-        <!-- ══ PRESENTATION TAB ══ -->
-        <div class="admin-tab-content" id="admin-tab-presentation" style="display:none">
-
-          <!-- Live controls -->
-          <div class="settings-section">
-            <div class="settings-section-title">▶ Presentation Controls</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
-              <button class="settings-btn" id="ap-admin-start-btn" style="background:#1a6e3a;color:#fff;display:flex;align-items:center;gap:6px">
-                <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Start
-              </button>
-              <button class="settings-btn" id="ap-admin-pause-btn" style="background:#b08000;color:#fff;display:flex;align-items:center;gap:6px" disabled>
-                <span class="material-symbols-outlined" style="font-size:15px">pause_circle</span> Pause
-              </button>
-              <button class="settings-btn" id="ap-admin-resume-btn" style="background:#1a6e3a;color:#fff;display:none;align-items:center;gap:6px">
-                <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Resume
-              </button>
-              <button class="settings-btn" id="ap-admin-stop-btn" style="background:#bd001a;color:#fff;display:flex;align-items:center;gap:6px" disabled>
-                <span class="material-symbols-outlined" style="font-size:15px">stop_circle</span> Stop
-              </button>
-            </div>
-            <div class="settings-msg" id="ap-admin-status" style="margin-top:8px"></div>
-          </div>
-
-          <!-- Flow builder -->
-          <div class="settings-section">
-            <div class="settings-section-title">🎬 Presentation Flow</div>
-
-            <!-- Countdown -->
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:#f0f4ff;border-radius:10px;padding:10px 14px;flex-wrap:wrap">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#1a3488">timer</span>
-              <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#1a3488;flex:1">Countdown before start</span>
-              <input id="ap-countdown-input" type="number" min="0" max="60" value="0"
-                style="width:64px;padding:8px;border-radius:8px;border:1.5px solid #b0bce8;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;text-align:center">
-              <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#555">seconds</span>
-            </div>
-
-            <!-- Step list (built by JS) -->
-            <div id="ap-steps-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
-
-            <!-- Add step -->
-            <button id="ap-add-step-btn"
-              style="width:100%;padding:11px;border-radius:10px;border:2px dashed #c8cfe0;background:#fafbff;color:#1a3488;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.04em;margin-bottom:14px">
-              + Add Step
-            </button>
-
-            <!-- Save / Reset -->
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button class="settings-btn" id="ap-flow-save-btn" style="background:#1a3488;color:#fff;display:flex;align-items:center;gap:6px">
-                <span class="material-symbols-outlined" style="font-size:15px">save</span> Save Flow
-              </button>
-              <button class="settings-btn" id="ap-flow-reset-btn" style="background:#f0f0f0;color:#444">Reset to Default</button>
-            </div>
-            <div class="settings-msg" id="ap-flow-msg" style="margin-top:8px"></div>
-          </div>
-
-          <!-- Quick Navigate -->
-          <div class="settings-section">
-            <div class="settings-section-title">🔀 Quick Navigate</div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:12px">
-              Jump to any screen instantly to test or preview during demos.
-            </div>
-            <div id="ap-nav-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:8px"></div>
-          </div>
-
-        </div>
-        <!-- end presentation tab -->
-
       </div>
       <!-- end #admin-tab-content-wrap -->
     </div>
     <!-- end #ov-admin -->
+
+    <!-- ── Presentation Settings Overlay ── -->
+    <div class="overlay" id="ov-presentation">
+      <div class="ov-topbar">
+        <div class="ov-topbar-left">
+          <div class="ov-icon" style="background: #1a3488; font-size: 20px">🎬</div>
+          <span class="ov-topbar-title">Presentation Settings</span>
+        </div>
+        <button class="back-btn" onclick="closeOverlay('ov-presentation')">← Close</button>
+      </div>
+      <div class="ov-scrollable">
+
+        <!-- Live controls -->
+        <div class="settings-section">
+          <div class="settings-section-title">▶ Presentation Controls</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <button class="settings-btn" id="ap-admin-start-btn" style="background:#1a6e3a;color:#fff;display:flex;align-items:center;gap:6px">
+              <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Start
+            </button>
+            <button class="settings-btn" id="ap-admin-pause-btn" style="background:#b08000;color:#fff;display:flex;align-items:center;gap:6px" disabled>
+              <span class="material-symbols-outlined" style="font-size:15px">pause_circle</span> Pause
+            </button>
+            <button class="settings-btn" id="ap-admin-resume-btn" style="background:#1a6e3a;color:#fff;display:none;align-items:center;gap:6px">
+              <span class="material-symbols-outlined" style="font-size:15px">play_circle</span> Resume
+            </button>
+            <button class="settings-btn" id="ap-admin-stop-btn" style="background:#bd001a;color:#fff;display:flex;align-items:center;gap:6px" disabled>
+              <span class="material-symbols-outlined" style="font-size:15px">stop_circle</span> Stop
+            </button>
+          </div>
+          <div class="settings-msg" id="ap-admin-status" style="margin-top:8px"></div>
+        </div>
+
+        <!-- Flow builder -->
+        <div class="settings-section">
+          <div class="settings-section-title">🎬 Presentation Flow</div>
+
+          <!-- Countdown -->
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;background:#f0f4ff;border-radius:10px;padding:10px 14px;flex-wrap:wrap">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#1a3488">timer</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#1a3488;flex:1">Countdown before start</span>
+            <input id="ap-countdown-input" type="number" min="0" max="60" value="0"
+              style="width:64px;padding:8px;border-radius:8px;border:1.5px solid #b0bce8;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;text-align:center">
+            <span style="font-family:'Space Grotesk',sans-serif;font-size:13px;color:#555">seconds</span>
+          </div>
+
+          <!-- Step list (built by JS) -->
+          <div id="ap-steps-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
+
+          <!-- Add step -->
+          <button id="ap-add-step-btn"
+            style="width:100%;padding:11px;border-radius:10px;border:2px dashed #c8cfe0;background:#fafbff;color:#1a3488;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.04em;margin-bottom:14px">
+            + Add Step
+          </button>
+
+          <!-- Save / Reset -->
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="settings-btn" id="ap-flow-save-btn" style="background:#1a3488;color:#fff;display:flex;align-items:center;gap:6px">
+              <span class="material-symbols-outlined" style="font-size:15px">save</span> Save Flow
+            </button>
+            <button class="settings-btn" id="ap-flow-reset-btn" style="background:#f0f0f0;color:#444">Reset to Default</button>
+          </div>
+          <div class="settings-msg" id="ap-flow-msg" style="margin-top:8px"></div>
+        </div>
+
+        <!-- Quick Navigate -->
+        <div class="settings-section">
+          <div class="settings-section-title">🔀 Quick Navigate</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:12px">
+            Jump to any screen instantly to test or preview during demos.
+          </div>
+          <div id="ap-nav-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:8px"></div>
+        </div>
+
+      </div>
+    </div>
+    <!-- end #ov-presentation -->
 
     <!-- ── Auto Play blocking overlay ── -->
     <div id="ap-overlay" style="display:none;position:fixed;inset:0;z-index:9000;pointer-events:all;background:transparent;flex-direction:column;justify-content:flex-end">

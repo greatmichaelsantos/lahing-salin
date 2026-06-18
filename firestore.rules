@@ -4,11 +4,11 @@ service cloud.firestore {
     match /salinlahi_config/{docId} {
       // Any authenticated session may read config (PIN is verified client-side)
       allow read: if request.auth != null;
-      // Only allow writing the pin field — secret password gate is enforced in app code
+      // Only allow writing pin and/or presPin — secret password gate is enforced in app code
       allow write: if request.auth != null
-        && request.resource.data.keys().hasOnly(["pin"])
-        && request.resource.data.pin is string
-        && request.resource.data.pin.matches("^[0-9]{4}$");
+        && request.resource.data.keys().hasOnly(["pin", "presPin"])
+        && (!("pin" in request.resource.data) || (request.resource.data.pin is string && request.resource.data.pin.matches("^[0-9]{4}$")))
+        && (!("presPin" in request.resource.data) || (request.resource.data.presPin is string && request.resource.data.presPin.matches("^[0-9]{4}$")));
     }
 
     match /salinlahi_scores/{docId} {

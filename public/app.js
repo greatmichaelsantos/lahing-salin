@@ -53,8 +53,12 @@
         function _fadeTo(target, ms) {
           target = Math.min(1, Math.max(0, target));
           if (_gain && _actx) {
+            // Always resume in case iOS suspended the context during SpeechSynthesis
+            if (_actx.state !== "running") _actx.resume();
             var now = _actx.currentTime;
-            _gain.gain.cancelScheduledValues(now);
+            // cancelScheduledValues(0) clears all pending events including any
+            // past-time setValueAtTime events left over from TTS state
+            _gain.gain.cancelScheduledValues(0);
             _gain.gain.setValueAtTime(_gain.gain.value, now);
             _gain.gain.linearRampToValueAtTime(target, now + ms / 1000);
             return;
@@ -67,14 +71,23 @@
 
         function _applyVolume() {
           var target = _muted ? 0 : (VOLS[_state] || 0.50);
-          if (_gain) {
-            // Web Audio path: gain node handles all volume; el.muted stays false
-            _fadeTo(target, 700);
-          } else {
-            var el = _audio();
-            if (el) el.muted = _muted;
-            _fadeTo(target, 700);
+          if (_gain && _actx) {
+            if (_state === "tts") {
+              // iOS suspends AudioContext when SpeechSynthesis starts, so a scheduled
+              // linearRamp never fires during TTS. Cancel all pending events and pin
+              // the gain at time 0 — past-time events fire on the next processing tick
+              // regardless of whether the context is currently running or suspended.
+              _gain.gain.cancelScheduledValues(0);
+              _gain.gain.setValueAtTime(target, 0);
+              if (_actx.state !== "running") _actx.resume();
+            } else {
+              _fadeTo(target, 700);
+            }
+            return;
           }
+          var el = _audio();
+          if (el) el.muted = _muted;
+          _fadeTo(target, 700);
         }
 
         function _updateBtn() {
@@ -342,6 +355,7 @@
 
       function init() {
         _loadAdminPin();
+        _loadPresPin();
         apLoadConfig();
         buildCityPreview();
         buildGuidePreview();
@@ -806,10 +820,6 @@
           await buildLeaderboard();
         };
         g("btn-mute").onclick = BGAudio.toggleMute;
-        g("btn-autoplay").onclick = function () {
-          if (_apState === "running" || _apState === "paused") { apStop(); }
-          else { apStart(); }
-        };
         g("ap-pause-btn").onclick  = apPause;
         g("ap-resume-btn").onclick = apResume;
         g("ap-stop-btn").onclick   = apStop;
@@ -2395,19 +2405,37 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       // ════════════════════════════════════════════
       // ADMIN DASHBOARD
       // ════════════════════════════════════════════
-      var ADMIN_PIN = "1234"; // fallback — overwritten by Firestore on load
+      var ADMIN_PIN = "1234";        // fallback — overwritten by Firestore on load
+      var PRESENTATION_PIN = "4321"; // fallback — overwritten by Firestore on load
       var pinBuffer = "";
       var adminScores = [];
       var adminLastSync = null;
       var adminFilterSearch = "";
       var adminFilterTopic = "all";
 
-      // ── Load PIN from Firestore ──
+      // ── Load PINs from Firestore ──
       function _loadAdminPin() {
         function _fetch() {
           if (!window.fbGetAdminPin) return;
           window.fbGetAdminPin().then(function (pin) {
             if (pin) ADMIN_PIN = pin;
+          }).catch(function () {});
+        }
+        if (window._fbReady) {
+          _fetch();
+        } else {
+          window.addEventListener("firebase-ready", function handler() {
+            window.removeEventListener("firebase-ready", handler);
+            _fetch();
+          });
+        }
+      }
+
+      function _loadPresPin() {
+        function _fetch() {
+          if (!window.fbGetPresPin) return;
+          window.fbGetPresPin().then(function (pin) {
+            if (pin) PRESENTATION_PIN = pin;
           }).catch(function () {});
         }
         if (window._fbReady) {
@@ -2462,6 +2490,9 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         if (pinBuffer === ADMIN_PIN) {
           closePinModal();
           openAdminDashboard();
+        } else if (pinBuffer === PRESENTATION_PIN) {
+          closePinModal();
+          openPresentationDashboard();
         } else {
           var dotsEl = g("pin-dots");
           dotsEl.classList.add("shake");
@@ -2473,6 +2504,11 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             g("pin-error").textContent = "";
           }, 800);
         }
+      }
+
+      function openPresentationDashboard() {
+        openOverlay("ov-presentation");
+        _apSyncAdminBtns();
       }
 
       // ── Admin overlay ──
@@ -2730,7 +2766,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       }
 
       function showAdminTab(tab) {
-        ["scores", "stats", "settings", "presentation"].forEach(function (t) {
+        ["scores", "stats", "settings"].forEach(function (t) {
           g("admin-tab-" + t).style.display = t === tab ? "" : "none";
         });
         document.querySelectorAll(".admin-tab-btn").forEach(function (btn) {
@@ -3045,6 +3081,44 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
               if (npEl) npEl.value = "";
               if (cpEl) cpEl.value = "";
               if (msg) { msg.textContent = "PIN saved — active on all devices."; msg.className = "settings-msg ok"; }
+            } catch (e) {
+              if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
+            } finally {
+              el.disabled = false;
+            }
+          };
+        });
+
+        // Presentation PIN change
+        safe("pres-pin-save-btn", function(el) {
+          el.onclick = async function () {
+            var spEl = g("pres-pin-secret-pw");
+            var npEl = g("pres-pin-new");
+            var cpEl = g("pres-pin-confirm");
+            var msg  = g("pres-pin-save-msg");
+            var sp = spEl ? spEl.value : "";
+            var np = npEl ? npEl.value.trim() : "";
+            var cp = cpEl ? cpEl.value.trim() : "";
+            if (sp !== "aplus") {
+              if (msg) { msg.textContent = "Incorrect secret password."; msg.className = "settings-msg err"; }
+              return;
+            }
+            if (!/^\d{4}$/.test(np)) {
+              if (msg) { msg.textContent = "PIN must be exactly 4 digits."; msg.className = "settings-msg err"; }
+              return;
+            }
+            if (np !== cp) {
+              if (msg) { msg.textContent = "PINs do not match."; msg.className = "settings-msg err"; }
+              return;
+            }
+            el.disabled = true;
+            try {
+              await window.fbSetPresPin(np);
+              PRESENTATION_PIN = np;
+              if (spEl) spEl.value = "";
+              if (npEl) npEl.value = "";
+              if (cpEl) cpEl.value = "";
+              if (msg) { msg.textContent = "Presentation PIN saved — active on all devices."; msg.className = "settings-msg ok"; }
             } catch (e) {
               if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
             } finally {
