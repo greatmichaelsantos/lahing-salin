@@ -23,39 +23,58 @@
       // ── Background Audio Controller ──
       var BGAudio = (function () {
         var VOLS = { idle: 0.40, active: 0.20, tts: 0.05 };
-        var _state  = "idle";
-        var _muted  = false;
-        var _ready  = false;   // true after first successful play()
-        var _fadeTimer = null;
+        var _state = "idle";
+        var _muted = false;
+        var _ready = false;
+        // Web Audio API — used for volume control on all platforms.
+        // iOS Safari ignores el.volume writes, so we route through a GainNode instead.
+        var _actx = null;
+        var _gain = null;
 
         function _audio() { return document.getElementById("bg-audio"); }
 
+        function _initWebAudio(el) {
+          if (_gain) return;
+          try {
+            var Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            _actx = new Ctx();
+            var src = _actx.createMediaElementSource(el);
+            _gain = _actx.createGain();
+            _gain.gain.value = 0;
+            src.connect(_gain);
+            _gain.connect(_actx.destination);
+          } catch (e) {
+            console.warn("BGAudio: WebAudio init failed —", e.message);
+            _actx = null; _gain = null;
+          }
+        }
+
         function _fadeTo(target, ms) {
+          target = Math.min(1, Math.max(0, target));
+          if (_gain && _actx) {
+            var now = _actx.currentTime;
+            _gain.gain.cancelScheduledValues(now);
+            _gain.gain.setValueAtTime(_gain.gain.value, now);
+            _gain.gain.linearRampToValueAtTime(target, now + ms / 1000);
+            return;
+          }
+          // Fallback for browsers without Web Audio
           var el = _audio();
           if (!el) return;
-          if (_fadeTimer) { clearInterval(_fadeTimer); _fadeTimer = null; }
-          var from  = el.volume;
-          var delta = target - from;
-          if (Math.abs(delta) < 0.001) { el.volume = target; return; }
-          var steps = Math.max(1, Math.round(ms / 40));
-          var step  = 0;
-          _fadeTimer = setInterval(function () {
-            step++;
-            var t = step / steps;
-            var eased = 1 - Math.pow(1 - t, 2); // ease-out quad
-            el.volume = Math.min(1, Math.max(0, from + delta * eased));
-            if (step >= steps) {
-              el.volume = target;
-              clearInterval(_fadeTimer);
-              _fadeTimer = null;
-            }
-          }, 40);
+          el.volume = target;
         }
 
         function _applyVolume() {
-          var el = _audio();
-          if (el) el.muted = _muted;
-          _fadeTo(_muted ? 0 : (VOLS[_state] || 0.50), 700);
+          var target = _muted ? 0 : (VOLS[_state] || 0.50);
+          if (_gain) {
+            // Web Audio path: gain node handles all volume; el.muted stays false
+            _fadeTo(target, 700);
+          } else {
+            var el = _audio();
+            if (el) el.muted = _muted;
+            _fadeTo(target, 700);
+          }
         }
 
         function _updateBtn() {
@@ -75,30 +94,32 @@
         function start() {
           var el = _audio();
           if (!el || _ready) return;
-          el.volume = 0;
+          _initWebAudio(el);
+          el.volume = 1; // el.volume is irrelevant once GainNode is active; set to 1 so gain has full range
           var p = el.play();
           if (p && typeof p.then === "function") {
             p.then(function () {
               _ready = true;
+              if (_actx && _actx.state === "suspended") _actx.resume();
               _applyVolume();
             }).catch(function (err) {
               console.warn("BGAudio: play() blocked —", err.message);
-              // Re-register so the next interaction retries
               document.addEventListener("touchstart", _bgAudioFirstStart, { passive: true });
               document.addEventListener("mousedown", _bgAudioFirstStart);
               document.addEventListener("click", _bgAudioFirstStart);
             });
           } else {
-            // Older browsers return undefined — assume it worked
             _ready = true;
+            if (_actx && _actx.state === "suspended") _actx.resume();
             _applyVolume();
           }
         }
 
         function setState(s) {
-          if (_state === s) return;
+          var changed = _state !== s;
           _state = s;
-          if (_ready) _applyVolume();
+          // Always re-apply when entering TTS to force the volume change on every trigger
+          if (_ready && (changed || s === "tts")) _applyVolume();
         }
 
         function toggleMute() {
@@ -135,7 +156,47 @@
         bgAudioUpdate();
       }
       // ── Fullscreen ──
+      var _isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+      // iOS: resize #app to match the actual visual viewport so content is never
+      // hidden behind Safari's address bar or bottom toolbar.
+      function _iosResizeApp() {
+        var vv = window.visualViewport;
+        if (!vv) return;
+        var app = document.getElementById("app");
+        if (!app) return;
+        app.style.top    = vv.offsetTop  + "px";
+        app.style.left   = vv.offsetLeft + "px";
+        app.style.width  = vv.width      + "px";
+        app.style.height = vv.height     + "px";
+      }
+
+      if (_isIOS && window.visualViewport) {
+        window.visualViewport.addEventListener("resize", _iosResizeApp);
+        window.visualViewport.addEventListener("scroll", _iosResizeApp);
+        _iosResizeApp(); // apply immediately on load
+      }
+
+      function _iosTryImmersive() {
+        // Collapse Safari address bar: requires body to be scrollable by ≥1px
+        document.body.style.minHeight = (window.innerHeight + 1) + "px";
+        window.scrollTo(0, 1);
+        setTimeout(function () {
+          document.body.style.minHeight = "";
+          _iosResizeApp();
+        }, 300);
+        // Try orientation lock (works in some WebViews; silently fails in Safari)
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock("landscape").catch(function () {});
+        }
+      }
+
       function tryFullscreen() {
+        if (_isIOS) {
+          _iosTryImmersive();
+          return;
+        }
+        // Android / desktop: standard Fullscreen API
         var el = document.documentElement;
         var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
         if (req && !document.fullscreenElement && !document.webkitFullscreenElement) {
@@ -143,17 +204,19 @@
         }
       }
 
-      // Re-enter fullscreen if user exits (e.g. presses Escape) — kiosk behaviour
-      document.addEventListener("fullscreenchange", function () {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          setTimeout(tryFullscreen, 800);
-        }
-      });
-      document.addEventListener("webkitfullscreenchange", function () {
-        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-          setTimeout(tryFullscreen, 800);
-        }
-      });
+      // Android / desktop: re-enter fullscreen if user exits (kiosk behaviour)
+      if (!_isIOS) {
+        document.addEventListener("fullscreenchange", function () {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            setTimeout(tryFullscreen, 800);
+          }
+        });
+        document.addEventListener("webkitfullscreenchange", function () {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            setTimeout(tryFullscreen, 800);
+          }
+        });
+      }
 
       document.getElementById("idle").addEventListener("click", function () {
         tryFullscreen();
