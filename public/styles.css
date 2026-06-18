@@ -4484,43 +4484,79 @@
       }
 
       /* ══════════════════════════════════════════
-         INDIGENOUS CULTURE TILE (City Overview)
+         INDIGENOUS CULTURE BLOCK (Station A)
       ══════════════════════════════════════════ */
-      .cty-indig-tile {
-        background: linear-gradient(135deg, #1b3a27 0%, #2d5a3d 100%) !important;
-        color: #fff !important;
+      #detail-indig-block {
+        margin-top: 14px;
+      }
+      .hs-indig-link {
+        display: inline-block;
+        background: none;
+        border: none;
+        padding: 0;
+        margin-bottom: 10px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: clamp(12.5px, 1.05vw, 14px);
+        color: #2563eb;
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: rgba(37,99,235,0.4);
+        transition: color 0.15s, text-decoration-color 0.15s;
+      }
+      .hs-indig-link:hover {
+        color: #1d4ed8;
+        text-decoration-color: #1d4ed8;
+      }
+      .hs-indig-tile {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: linear-gradient(135deg, #1b3a27 0%, #2d5a3d 100%);
+        border-radius: 14px;
+        padding: 14px 16px;
         cursor: pointer;
         transition: transform 0.15s, box-shadow 0.15s;
-        box-shadow: 0 4px 16px rgba(27, 58, 39, 0.35) !important;
+        box-shadow: 0 3px 12px rgba(27,58,39,0.3);
       }
-      .cty-indig-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(27,58,39,0.45) !important; }
-      .cty-indig-tile:active { transform: translateY(0); }
-      .cty-indig-tile .cty-facts-title { color: #7dd3a8; }
-      .cty-indig-desc {
-        font-size: clamp(12px, 1vw, 15px);
-        color: rgba(255,255,255,0.8);
-        line-height: 1.6;
-        flex: 1;
-        margin-top: 6px;
-      }
-      .cty-indig-cta {
-        margin-top: 14px;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(255,255,255,0.18);
-        border: 1px solid rgba(255,255,255,0.25);
-        padding: 7px 14px;
-        border-radius: 999px;
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        color: #a7f3c7;
+      .hs-indig-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,39,0.4); }
+      .hs-indig-tile:active { transform: translateY(0); }
+      .hs-indig-tile-icon {
+        font-size: 28px;
         flex-shrink: 0;
-        width: fit-content;
+        line-height: 1;
       }
+      .hs-indig-tile-content { flex: 1; min-width: 0; }
+      .hs-indig-tile-tag {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #7dd3a8;
+        margin-bottom: 3px;
+      }
+      .hs-indig-tile-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(13px, 1.2vw, 15px);
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.2;
+        margin-bottom: 3px;
+      }
+      .hs-indig-tile-sub {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 11.5px;
+        color: rgba(255,255,255,0.65);
+        line-height: 1.4;
+      }
+      .hs-indig-tile-arrow {
+        font-size: 18px;
+        color: rgba(255,255,255,0.5);
+        flex-shrink: 0;
+      }
+
+      /* (City Overview Quick Facts tile — original styles preserved in .cty-facts) */
 
       /* ══════════════════════════════════════════
          INDIGENOUS CULTURE MODAL
