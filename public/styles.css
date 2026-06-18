@@ -2665,14 +2665,27 @@
           font-size: 14px;
         }
 
-        /* Sleep button */
-        #btn-go-idle {
-          font-size: 12px;
-          padding: 8px 16px;
+        /* Bottom bar — 5 buttons collapse to icon-only circles so they
+           always fit one row, instead of wrapping/overflowing offscreen */
+        .dash-bottombar {
+          gap: 6px;
         }
-        #btn-qr {
-          font-size: 12px;
-          padding: 8px 16px;
+        .dash-bottombar-right {
+          gap: 6px !important;
+        }
+        .dash-bottombar-btn {
+          width: 38px !important;
+          height: 38px !important;
+          padding: 0 !important;
+          gap: 0 !important;
+          justify-content: center !important;
+          flex-shrink: 0 !important;
+        }
+        .dash-bottombar-btn .dash-btn-label {
+          display: none;
+        }
+        .dash-bottombar-btn .material-symbols-outlined {
+          font-size: 18px !important;
         }
 
         /* Toast: full-width pill, no edge clipping */
@@ -2910,9 +2923,21 @@
           font-size: 14px !important;
         }
 
-        /* Sleep button */
-        #btn-go-idle {
-          font-size: 13px !important;
+        /* Bottom bar — wrap to a second row instead of overflowing,
+           and shrink padding/font so more buttons fit per row */
+        .dash-bottombar {
+          flex-wrap: wrap !important;
+          row-gap: 8px !important;
+        }
+        .dash-bottombar-right {
+          flex-wrap: wrap !important;
+          row-gap: 8px !important;
+          justify-content: flex-end !important;
+        }
+        .dash-bottombar-btn {
+          font-size: 12px !important;
+          padding: 9px 16px !important;
+          gap: 6px !important;
         }
       }
 

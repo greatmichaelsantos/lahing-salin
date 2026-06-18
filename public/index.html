@@ -417,6 +417,7 @@
 
           <!-- Bottom bar: Admin (left) | QR + Sleep (right) -->
           <div
+            class="dash-bottombar"
             style="
               flex-shrink: 0;
               display: flex;
@@ -429,6 +430,7 @@
             <!-- Admin button — muted so it doesn't draw casual visitor attention -->
             <button
               id="btn-admin"
+              class="dash-bottombar-btn"
               style="
                 background: #fff;
                 border: 1px solid #a8a9ad;
@@ -451,13 +453,14 @@
               <span class="material-symbols-outlined" style="font-size: 16px"
                 >lock</span
               >
-              Admin
+              <span class="dash-btn-label">Admin</span>
             </button>
 
-            <div style="display: flex; align-items: center; gap: 10px">
+            <div class="dash-bottombar-right" style="display: flex; align-items: center; gap: 10px">
               <!-- Auto Play -->
               <button
                 id="btn-autoplay"
+                class="dash-bottombar-btn"
                 style="
                   background: #fff;
                   border: 1px solid #a8a9ad;
@@ -478,12 +481,13 @@
                 "
               >
                 <span class="material-symbols-outlined" style="font-size:16px">slideshow</span>
-                Auto Play
+                <span class="dash-btn-label">Auto Play</span>
               </button>
 
               <!-- Mute toggle -->
               <button
                 id="btn-mute"
+                class="dash-bottombar-btn"
                 style="
                   background: #fff;
                   border: 1px solid #a8a9ad;
@@ -506,12 +510,13 @@
                 <span class="material-symbols-outlined" style="font-size: 16px"
                   >volume_up</span
                 >
-                Music
+                <span class="dash-btn-label">Music</span>
               </button>
 
               <!-- Scan QR button -->
               <button
                 id="btn-qr"
+                class="dash-bottombar-btn"
                 style="
                   background: #fff;
                   border: 1px solid #a8a9ad;
@@ -541,11 +546,12 @@
                   style="font-size: 18px; color: #0038a8"
                   >qr_code_scanner</span
                 >
-                Scan QR
+                <span class="dash-btn-label">Scan QR</span>
               </button>
 
               <button
                 id="btn-go-idle"
+                class="dash-bottombar-btn"
                 style="
                   background: #fff;
                   border: 1px solid #a8a9ad;
@@ -565,7 +571,7 @@
                   gap: 8px;
                 "
               >
-                <span style="font-size: 16px">⏻</span> Sleep / Idle
+                <span style="font-size: 16px">⏻</span> <span class="dash-btn-label">Sleep / Idle</span>
               </button>
             </div>
           </div>
