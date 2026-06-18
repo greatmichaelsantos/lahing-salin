@@ -4482,3 +4482,329 @@
       .cty-mayor-card:active {
         opacity: 0.82;
       }
+
+      /* ══════════════════════════════════════════
+         INDIGENOUS CULTURE TILE (City Overview)
+      ══════════════════════════════════════════ */
+      .cty-indig-tile {
+        background: linear-gradient(135deg, #1b3a27 0%, #2d5a3d 100%) !important;
+        color: #fff !important;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 4px 16px rgba(27, 58, 39, 0.35) !important;
+      }
+      .cty-indig-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(27,58,39,0.45) !important; }
+      .cty-indig-tile:active { transform: translateY(0); }
+      .cty-indig-tile .cty-facts-title { color: #7dd3a8; }
+      .cty-indig-desc {
+        font-size: clamp(12px, 1vw, 15px);
+        color: rgba(255,255,255,0.8);
+        line-height: 1.6;
+        flex: 1;
+        margin-top: 6px;
+      }
+      .cty-indig-cta {
+        margin-top: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.25);
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #a7f3c7;
+        flex-shrink: 0;
+        width: fit-content;
+      }
+
+      /* ══════════════════════════════════════════
+         INDIGENOUS CULTURE MODAL
+      ══════════════════════════════════════════ */
+      #indig-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 8500;
+        background: rgba(0,0,0,0.78);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 24px 16px 48px;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .indm-box {
+        background: #f8f7f4;
+        border-radius: 22px;
+        width: 100%;
+        max-width: 780px;
+        overflow: hidden;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      }
+
+      /* Header */
+      .indm-header {
+        background: linear-gradient(140deg, #1b3a27 0%, #2e6b44 60%, #3a7a52 100%);
+        padding: 28px 28px 26px;
+        position: relative;
+      }
+      .indm-close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #fff;
+        transition: background 0.15s;
+      }
+      .indm-close-btn:hover { background: rgba(255,255,255,0.3); }
+      .indm-close-btn .material-symbols-outlined { font-size: 18px; }
+      .indm-eyebrow {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #7dd3a8;
+        margin-bottom: 8px;
+      }
+      .indm-title {
+        font-family: "Fraunces", serif;
+        font-size: clamp(24px, 3.5vw, 36px);
+        font-weight: 900;
+        color: #fff;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .indm-subtitle {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: clamp(13px, 1.3vw, 16px);
+        color: rgba(255,255,255,0.75);
+        margin-top: 6px;
+        font-style: italic;
+      }
+      .indm-source-tag {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 11px;
+        color: rgba(255,255,255,0.5);
+        margin-top: 12px;
+      }
+
+      /* Body */
+      .indm-body {
+        padding: 24px 20px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .indm-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      /* Cards */
+      .indm-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 0 0 1px #e8e5e1;
+      }
+      .indm-card-icon {
+        font-size: 26px;
+        margin-bottom: 8px;
+        line-height: 1;
+      }
+      .indm-card-tag {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #2d5a3d;
+        margin-bottom: 4px;
+      }
+      .indm-card-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: clamp(15px, 1.6vw, 19px);
+        font-weight: 800;
+        color: #1b1c1b;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .indm-card-text {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: clamp(12.5px, 1.1vw, 14.5px);
+        line-height: 1.65;
+        color: #3d3c39;
+      }
+
+      /* Expandable type cards */
+      .indm-card-type { cursor: pointer; }
+      .indm-card-type:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 0 0 1px #d0cdc8; }
+      .indm-type-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .indm-type-badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        color: #fff;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .indm-type-info { flex: 1; min-width: 0; }
+      .indm-chevron {
+        font-size: 22px;
+        color: #9a9690;
+        transition: transform 0.25s;
+        flex-shrink: 0;
+      }
+      .indm-type-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+      .indm-card-type.indm-open .indm-type-body { /* height set by JS */ }
+      .indm-type-body .indm-card-text { margin-top: 14px; }
+      .indm-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .indm-chip {
+        background: #f0ede8;
+        border: 1px solid #ddd9d3;
+        border-radius: 999px;
+        padding: 4px 11px;
+        font-size: 12px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: #3d3c39;
+        font-weight: 500;
+      }
+
+      /* Section headings */
+      .indm-section-heading {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #6b6860;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 4px 0 2px;
+        border-bottom: 2px solid #e8e5e1;
+      }
+      .indm-section-heading .material-symbols-outlined { font-size: 18px; }
+
+      /* Themes grid */
+      .indm-themes-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .indm-theme {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px #e8e5e1;
+      }
+      .indm-theme-icon { font-size: 24px; margin-bottom: 6px; }
+      .indm-theme-title {
+        font-family: "Bricolage Grotesque", sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        color: #1b1c1b;
+        margin-bottom: 5px;
+      }
+      .indm-theme-text {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #5a5852;
+      }
+
+      /* Faith card */
+      .indm-card-faith {
+        background: linear-gradient(135deg, #fdf6e3 0%, #fef9ec 100%);
+        border-left: 4px solid #f5a623;
+        box-shadow: 0 2px 8px rgba(245,166,35,0.12), 0 0 0 1px #f0e8cc;
+      }
+      .indm-card-faith .indm-card-tag { color: #b07a00; }
+
+      /* Risk card */
+      .indm-card-risk {
+        background: linear-gradient(135deg, #fff5f5 0%, #fff8f7 100%);
+        border-left: 4px solid #bd001a;
+        box-shadow: 0 2px 8px rgba(189,0,26,0.08), 0 0 0 1px #f5d5d5;
+      }
+      .indm-card-risk .indm-card-tag { color: #bd001a; }
+      .indm-quote {
+        margin-top: 14px;
+        background: rgba(189,0,26,0.06);
+        border-left: 3px solid #bd001a;
+        padding: 10px 14px;
+        border-radius: 0 10px 10px 0;
+        font-family: "Fraunces", serif;
+        font-size: clamp(13px, 1.2vw, 15px);
+        font-style: italic;
+        color: #bd001a;
+        font-weight: 700;
+      }
+
+      /* Citation */
+      .indm-citation {
+        background: #f0ede8;
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+      .indm-citation-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b6860;
+        margin-bottom: 8px;
+      }
+      .indm-citation p {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 12px;
+        line-height: 1.65;
+        color: #5a5852;
+      }
+
+      /* Mobile responsive */
+      @media (max-width: 600px) {
+        #indig-modal { padding: 12px 10px 40px; }
+        .indm-header { padding: 22px 18px 20px; }
+        .indm-body { padding: 16px 14px 20px; gap: 12px; }
+        .indm-row-2 { grid-template-columns: 1fr; }
+        .indm-themes-grid { grid-template-columns: 1fr 1fr; }
+        .indm-card { padding: 16px; }
+        .indm-card-title { font-size: 15px; }
+      }
+      @media (max-width: 400px) {
+        .indm-themes-grid { grid-template-columns: 1fr; }
+      }

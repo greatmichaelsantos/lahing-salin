@@ -1504,5 +1504,162 @@
         });
       }
     </script>
+
+    <!-- INDIGENOUS CULTURE MODAL -->
+    <div id="indig-modal" onclick="if(event.target===this)closeIndigModal()">
+      <div class="indm-box">
+
+        <!-- Header -->
+        <div class="indm-header">
+          <button class="indm-close-btn" onclick="closeIndigModal()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+          <div class="indm-eyebrow">Indigenous Culture · Olongapo City</div>
+          <div class="indm-title">The Dororo of the Ayta Ambala</div>
+          <div class="indm-subtitle">A Living Prayer, A Living People</div>
+          <div class="indm-source-tag">Based on research by Aeron James R. De Leon · Lakandayang Journal, 2024</div>
+        </div>
+
+        <!-- Body -->
+        <div class="indm-body">
+
+          <!-- Intro cards row -->
+          <div class="indm-row-2">
+            <div class="indm-card indm-card-intro">
+              <div class="indm-card-icon">🏔️</div>
+              <div class="indm-card-tag">About the Ayta Ambala</div>
+              <div class="indm-card-title">20,000 Years of Resilience</div>
+              <p class="indm-card-text">Deep in the mountains of <strong>Sitio Mampuweng, Olongapo City, Zambales</strong>, lives one of the Philippines' oldest and most resilient indigenous communities — the <strong>Ayta Ambala</strong>. Believed to have settled in the archipelago <strong>20,000 to 30,000 years ago</strong>, they carry within them a culture so rich and so beautifully human that every prayer they whisper tells a story worth hearing.</p>
+            </div>
+            <div class="indm-card indm-card-what">
+              <div class="indm-card-icon">🙏</div>
+              <div class="indm-card-tag">Definition</div>
+              <div class="indm-card-title">What is a Dororo?</div>
+              <p class="indm-card-text">The Dororo is far more than a prayer. It is a <strong>living record</strong> of the Ayta Ambala's experiences, dreams, and unshakeable faith. Every word, every tone, every whispered syllable carries the weight of generations — their joys and struggles, their hopes and losses, their deep reverence for nature and the divine.</p>
+            </div>
+          </div>
+
+          <!-- Section heading -->
+          <div class="indm-section-heading">
+            <span class="material-symbols-outlined">library_books</span>
+            The Three Types of Dororo
+          </div>
+
+          <!-- Type 1 -->
+          <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
+            <div class="indm-type-header">
+              <div class="indm-type-badge" style="background:#bd001a">01</div>
+              <div class="indm-type-info">
+                <div class="indm-card-tag" style="color:#bd001a">Communal Prayer</div>
+                <div class="indm-card-title">Dororong Ritwal</div>
+              </div>
+              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+            </div>
+            <div class="indm-type-body">
+              <p class="indm-card-text">A powerful communal prayer lasting <strong>up to an hour</strong>, led by a specially chosen elder who trains for <strong>two full years</strong> before performing it. It is chanted with melody, punctuated by sudden shouts, and witnessed in complete reverence — even smiling during the ritual is forbidden. Remarkably, this prayer exists in <strong>no written form</strong> — it lives only in the memory of those chosen to carry it.</p>
+              <div class="indm-chip-row">
+                <span class="indm-chip">⏱ Up to 1 hour</span>
+                <span class="indm-chip">📜 No written form</span>
+                <span class="indm-chip">👴 2-year training</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Type 2 -->
+          <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
+            <div class="indm-type-header">
+              <div class="indm-type-badge" style="background:#1a6e3a">02</div>
+              <div class="indm-type-info">
+                <div class="indm-card-tag" style="color:#1a6e3a">Healing Prayer</div>
+                <div class="indm-card-title">Dororong Panganganito</div>
+              </div>
+              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+            </div>
+            <div class="indm-type-body">
+              <p class="indm-card-text">A healing prayer performed by the <strong>kagun</strong> — a spiritual healer chosen not by humans but by the <strong>spirits themselves</strong>. When illness cannot be explained by ordinary means, the kagun wraps the patient in <strong>red cloth</strong> and forcefully recites prayers to drive away the bad spirits causing harm.</p>
+              <div class="indm-chip-row">
+                <span class="indm-chip">🌿 Spirit healer (Kagun)</span>
+                <span class="indm-chip">🔴 Red cloth ritual</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Type 3 -->
+          <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
+            <div class="indm-type-header">
+              <div class="indm-type-badge" style="background:#2d5a8e">03</div>
+              <div class="indm-type-info">
+                <div class="indm-card-tag" style="color:#2d5a8e">Personal Prayer</div>
+                <div class="indm-card-title">Pansariling Dororo</div>
+              </div>
+              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+            </div>
+            <div class="indm-type-body">
+              <p class="indm-card-text">The most personal of the three — a quiet, intimate prayer whispered by an individual at <strong>any time, in any place</strong>. It asks for a good harvest, protection on mountain trails, gratitude for even the smallest blessings, and remembrance of loved ones who have passed.</p>
+              <div class="indm-chip-row">
+                <span class="indm-chip">🌾 Good harvest</span>
+                <span class="indm-chip">🛡 Protection</span>
+                <span class="indm-chip">🙌 Gratitude</span>
+                <span class="indm-chip">🕯 Remembrance</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Themes -->
+          <div class="indm-section-heading">
+            <span class="material-symbols-outlined">hub</span>
+            Four Themes in Their Prayers
+          </div>
+          <div class="indm-themes-grid">
+            <div class="indm-theme">
+              <div class="indm-theme-icon">🌾</div>
+              <div class="indm-theme-title">Abundant Harvests</div>
+              <div class="indm-theme-text">They pray before planting, believing that a blessed land will yield generously.</div>
+            </div>
+            <div class="indm-theme">
+              <div class="indm-theme-icon">🛡️</div>
+              <div class="indm-theme-title">Protection</div>
+              <div class="indm-theme-text">They pray before climbing mountains to trade — asking to be kept safe from snakes and unseen dangers.</div>
+            </div>
+            <div class="indm-theme">
+              <div class="indm-theme-icon">🙏</div>
+              <div class="indm-theme-title">Deep Gratitude</div>
+              <div class="indm-theme-text">They express thankfulness even for the smallest portion of food, seeing every meal as a divine gift.</div>
+            </div>
+            <div class="indm-theme">
+              <div class="indm-theme-icon">🕯️</div>
+              <div class="indm-theme-title">Remembrance</div>
+              <div class="indm-theme-text">They lovingly remember their dead — lighting candles, leaving food, asking departed loved ones to pray for them.</div>
+            </div>
+          </div>
+
+          <!-- Faith card -->
+          <div class="indm-card indm-card-faith">
+            <div class="indm-card-icon">✨</div>
+            <div class="indm-card-tag">Spirituality</div>
+            <div class="indm-card-title">A People of Remarkable Faith</div>
+            <p class="indm-card-text">The Ayta Ambala believe in <strong>Apo Namalyari</strong> — the supreme god who controls all of nature — whom many now also recognize as <strong>Apong Hesus</strong>, a beautiful blending of their ancient spirituality with Christianity. Rather than abandoning one for the other, they have woven both together into a faith uniquely and powerfully their own.</p>
+            <p class="indm-card-text" style="margin-top:10px">They believe spirits dwell in mountains, rivers, and forests. They follow strict food rules — never mixing forest meat with river food — as a form of deep ecological respect. They never take more from nature than they need. And before every journey into the mountains, they pray.</p>
+          </div>
+
+          <!-- Preservation card -->
+          <div class="indm-card indm-card-risk">
+            <div class="indm-card-icon">⚠️</div>
+            <div class="indm-card-tag">Preservation</div>
+            <div class="indm-card-title">A Culture Worth Saving</div>
+            <p class="indm-card-text">Despite their incredible resilience, the Ayta Ambala face very real threats. Modernization, urbanization, and the rapid spread of technology put their traditions at serious risk. The <strong>Dororong Ritwal</strong>, with no written record, could disappear forever if its last keeper is gone.</p>
+            <p class="indm-card-text" style="margin-top:10px">Through <strong>Aeron James R. De Leon's</strong> research — using the <em>Maka-Pilipinong Pananaliksik</em>, a Filipino-centered approach that respects indigenous ways of knowing — these prayers, and the people behind them, will not be forgotten.</p>
+            <div class="indm-quote">"Hay! Apu' Kung Kayêk" — Ay! Lord, have mercy on me.</div>
+          </div>
+
+          <!-- Citation -->
+          <div class="indm-citation">
+            <div class="indm-citation-label">📚 Source Citation</div>
+            <p>De Leon, A. J. R. (2024). <em>Hay! Apu' Kung Kayêk: Pagbabakas, Pagpopook, at Pagbubuo sa Dororo Bilang Tagpuan ng Danas, Pangarap, at Pananampalataya ng Katutubong Ayta Ambala.</em> Lakandayang Journal of Cultural Studies, 1(1), 53–67. ISSN 3082-3226.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </body>
 </html>

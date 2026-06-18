@@ -850,6 +850,24 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         resumeIdleTimer();
       }
 
+      function openIndigModal() {
+        var m = g("indig-modal");
+        if (m) m.style.display = "flex";
+        pauseIdleTimer();
+      }
+      function closeIndigModal() {
+        var m = g("indig-modal");
+        if (m) m.style.display = "none";
+        resumeIdleTimer();
+      }
+      function toggleIndmCard(card) {
+        var body = card.querySelector(".indm-type-body");
+        var chevron = card.querySelector(".indm-chevron");
+        var open = card.classList.toggle("indm-open");
+        if (body) body.style.maxHeight = open ? body.scrollHeight + "px" : "0";
+        if (chevron) chevron.style.transform = open ? "rotate(180deg)" : "";
+      }
+
       function buildCity() {
         var c = DATA.city;
         var regionParts = (c.region || "").split("—");
@@ -891,27 +909,11 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         html += '<div class="cty-about-text">' + c.description + "</div>";
         html += "</div>";
 
-        html += '<div class="cty-card cty-facts">';
-        html +=
-          '<div class="cty-facts-title"><span class="material-symbols-outlined">checklist</span> Quick Facts</div>';
-        html += '<div class="cty-facts-list">';
-        var facts = [
-          ["Founded", c.founded],
-          ["Province", c.province],
-          ["Region", c.region],
-          ["Area", c.area],
-          ["City Type", "Independent"],
-          ["Mayor", c.mayor],
-        ];
-        facts.forEach(function (f) {
-          html +=
-            '<div class="cty-fact-row"><span class="cty-fact-k">' +
-            f[0] +
-            '</span><span class="cty-fact-v">' +
-            f[1] +
-            "</span></div>";
-        });
-        html += "</div></div>";
+        html += '<div class="cty-card cty-facts cty-indig-tile" onclick="openIndigModal()">';
+        html += '<div class="cty-facts-title"><span class="material-symbols-outlined">forest</span> Indigenous Culture</div>';
+        html += '<p class="cty-indig-desc">The Ayta Ambala of Sitio Mampuweng — 20,000 years of faith, prayer, and resilience.</p>';
+        html += '<div class="cty-indig-cta">Explore <span class="material-symbols-outlined" style="font-size:14px">arrow_forward</span></div>';
+        html += '</div>';
 
         html += '<div class="cty-mapcol">';
         html += '<div class="cty-card cty-maptile">';
