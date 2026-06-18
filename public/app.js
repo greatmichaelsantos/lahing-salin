@@ -276,6 +276,7 @@
         });
 
       function init() {
+        apLoadConfig();
         buildCityPreview();
         buildGuidePreview();
         buildCity();
@@ -298,6 +299,418 @@
 
       function g(id) {
         return document.getElementById(id);
+      }
+
+      // ── Auto Play ──
+      var AP_DEFAULTS = {
+        initialWait: 0,
+        loop: false,
+        steps: [
+          { type: "idle",    duration: 5000 },
+          { type: "station", id: "aeta-history", waitAfter: 3000 }
+        ]
+      };
+
+      var AP_SCREENS = [
+        { value: "idle",                 label: "Idle Screen"              },
+        { value: "dashboard",            label: "Dashboard"                },
+        { value: "guide",                label: "Heritage Guide"           },
+        { value: "station:aeta-history", label: "Station A — Aeta History" },
+        { value: "station:livelihood",   label: "Station B — Livelihood"   },
+        { value: "station:music",        label: "Station C — Music"        },
+        { value: "station:tools",        label: "Station D — Tools"        },
+        { value: "station:values",       label: "Station E — Values"       },
+        { value: "station:origins",      label: "Station F — Origins"      },
+        { value: "station:naval",        label: "Station G — Naval"        },
+        { value: "station:culture",      label: "Station H — Culture"      },
+        { value: "timeline",             label: "Timeline"                 },
+        { value: "quiz",                 label: "Quiz"                     },
+      ];
+
+      var _apState    = "stopped"; // "stopped" | "running" | "paused"
+      var _apConfig   = null;
+      var _apTimer    = null;
+      var _apStepIdx  = 0;
+      var _apEndedHandler = null; // ref for station-audio "ended" listener
+
+      function apLoadConfig() {
+        try {
+          var saved = localStorage.getItem("salin-lahi-ap-config");
+          if (saved) { _apConfig = JSON.parse(saved); return; }
+        } catch (e) {}
+        _apConfig = JSON.parse(JSON.stringify(AP_DEFAULTS));
+      }
+
+      function apSaveConfig(obj) {
+        _apConfig = obj;
+        try { localStorage.setItem("salin-lahi-ap-config", JSON.stringify(obj)); } catch (e) {}
+      }
+
+      function _apGetStationId() {
+        var step = (_apConfig.steps || []).find(function(s) { return s.type === "station"; });
+        if (step && step.id) return step.id;
+        return DATA && DATA.sections && DATA.sections[0] ? DATA.sections[0].id : null;
+      }
+
+      function apStart() {
+        if (_apState === "running" || _apState === "paused") return;
+        if (!_apConfig) apLoadConfig();
+        _apState = "running";
+        _apStepIdx = 0;
+        _apShowOverlay(true);
+        _apSetStatus("Starting…");
+        _apSyncAdminBtns();
+        _apUpdateBtn();
+        clearTimeout(idleTimer);
+        var wait = (_apConfig.initialWait != null) ? _apConfig.initialWait : 5000;
+        _apSetStatus("Starting in " + (wait / 1000).toFixed(1).replace(".0","") + "s");
+        _apTimer = setTimeout(function () { _apRunStep(0); }, wait);
+      }
+
+      function apPause() {
+        if (_apState !== "running") return;
+        _apState = "paused";
+        clearTimeout(_apTimer);
+        _apTimer = null;
+        var audio = g("station-audio");
+        if (audio && !audio.paused) audio.pause();
+        _apSetStatus("Paused");
+        _apSyncOverlayBtns();
+        _apSyncAdminBtns();
+      }
+
+      function apResume() {
+        if (_apState !== "paused") return;
+        _apState = "running";
+        _apSyncOverlayBtns();
+        _apSyncAdminBtns();
+        var step = (_apConfig.steps || [])[_apStepIdx];
+        if (step && step.type === "station") {
+          // Re-attach ended handler and resume audio
+          var audio = g("station-audio");
+          if (audio) {
+            if (_apEndedHandler) { audio.removeEventListener("ended", _apEndedHandler); }
+            _apEndedHandler = _apMakeEndedHandler(_apStepIdx);
+            audio.addEventListener("ended", _apEndedHandler);
+            audio.play().catch(function () {});
+          }
+          _apSetStatus("Station: " + (step.id || ""));
+        } else {
+          // Re-run the current timed step from scratch
+          _apRunStep(_apStepIdx);
+        }
+      }
+
+      function apStop() {
+        _apState = "stopped";
+        clearTimeout(_apTimer);
+        _apTimer = null;
+        if (_apEndedHandler) {
+          var audio = g("station-audio");
+          if (audio) audio.removeEventListener("ended", _apEndedHandler);
+          _apEndedHandler = null;
+        }
+        _apShowOverlay(false);
+        document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+        stationAudioStop();
+        ttsStop();
+        goTo(1);
+        bgAudioUpdate();
+        resetIdle();
+        _apUpdateBtn();
+        _apSyncAdminBtns();
+      }
+
+      function _apMakeEndedHandler(idx) {
+        return function () {
+          var audio = g("station-audio");
+          if (audio) audio.removeEventListener("ended", _apEndedHandler);
+          _apEndedHandler = null;
+          if (_apState !== "running") return;
+          var step = (_apConfig.steps || [])[idx];
+          var waitAfter = (step && step.waitAfter != null) ? step.waitAfter : 3000;
+          _apTimer = setTimeout(function () { _apRunStep(idx + 1); }, waitAfter);
+        };
+      }
+
+      function _apRunStep(idx) {
+        if (_apState !== "running") return;
+        clearTimeout(_apTimer);
+        var steps = _apConfig.steps || [];
+        if (idx >= steps.length) {
+          apStop();
+          return;
+        }
+        _apStepIdx = idx;
+        var step = steps[idx];
+
+        function advance() { _apRunStep(idx + 1); }
+
+        if (step.type === "idle") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(0, true);
+          _apSetStatus("Idle Screen");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+
+        } else if (step.type === "dashboard") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(1, true);
+          _apSetStatus("Dashboard");
+          _apTimer = setTimeout(advance, step.duration || 300);
+
+        } else if (step.type === "guide") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
+          g("ov-guide").classList.add("open");
+          bgAudioUpdate();
+          _apSetStatus("Heritage Guide");
+          _apTimer = setTimeout(advance, step.duration || 300);
+
+        } else if (step.type === "station") {
+          var sectionId = step.id || _apGetStationId();
+          if (!sectionId) { advance(); return; }
+          goTo(1, true);
+          if (!g("ov-guide").classList.contains("open")) { g("ov-guide").classList.add("open"); }
+          openSection(sectionId);
+          _apSetStatus("Station: " + sectionId);
+          var audio = g("station-audio");
+          if (audio) {
+            if (_apEndedHandler) audio.removeEventListener("ended", _apEndedHandler);
+            _apEndedHandler = _apMakeEndedHandler(idx);
+            audio.addEventListener("ended", _apEndedHandler);
+          }
+
+        } else if (step.type === "timeline") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          openOverlay("ov-timeline");
+          _apSetStatus("Timeline");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+
+        } else if (step.type === "quiz") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          resetQuizSelect();
+          openOverlay("ov-quiz");
+          _apSetStatus("Quiz");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+
+        } else if (step.type === "wait") {
+          _apSetStatus("Waiting…");
+          _apTimer = setTimeout(advance, step.duration || 1000);
+        }
+      }
+
+      function _apShowOverlay(show) {
+        var el = g("ap-overlay");
+        if (!el) return;
+        el.style.display = show ? "flex" : "none";
+      }
+
+      function _apSetStatus(text) {
+        var el = g("ap-status-text");
+        if (el) el.textContent = "Presentation — " + text;
+        var adminEl = g("ap-admin-status");
+        if (adminEl) { adminEl.textContent = text; adminEl.className = "settings-msg ok"; }
+      }
+
+      function _apSyncOverlayBtns() {
+        var pause  = g("ap-pause-btn");
+        var resume = g("ap-resume-btn");
+        if (pause)  pause.style.display  = _apState === "running" ? "" : "none";
+        if (resume) resume.style.display = _apState === "paused"  ? "" : "none";
+      }
+
+      function _apSyncAdminBtns() {
+        var startBtn  = g("ap-admin-start-btn");
+        var pauseBtn  = g("ap-admin-pause-btn");
+        var resumeBtn = g("ap-admin-resume-btn");
+        var stopBtn   = g("ap-admin-stop-btn");
+        var running   = _apState === "running";
+        var paused    = _apState === "paused";
+        var active    = running || paused;
+        if (startBtn)  startBtn.disabled  = active;
+        if (pauseBtn)  { pauseBtn.disabled = !running; pauseBtn.style.display = paused ? "none" : ""; }
+        if (resumeBtn) { resumeBtn.disabled = !paused;  resumeBtn.style.display = paused ? "" : "none"; }
+        if (stopBtn)   stopBtn.disabled  = !active;
+      }
+
+      function _apUpdateBtn() {
+        var btn = g("btn-autoplay");
+        if (!btn) return;
+        var active = _apState === "running" || _apState === "paused";
+        btn.innerHTML = active
+          ? '<span class="material-symbols-outlined" style="font-size:16px">stop_circle</span> Stop'
+          : '<span class="material-symbols-outlined" style="font-size:16px">slideshow</span> Auto Play';
+        btn.style.color       = active ? "#bd001a" : "#1a6e3a";
+        btn.style.borderColor = active ? "#bd001a" : "#a8a9ad";
+      }
+
+      // ── Flow Builder helpers ──
+
+      function _apStepToScreenVal(step) {
+        if (step.type === "station") return "station:" + (step.id || "aeta-history");
+        return step.type;
+      }
+
+      function _apStepWaitSec(step) {
+        if (step.type === "station") return Math.round((step.waitAfter || 0) / 1000);
+        return Math.round((step.duration || 0) / 1000);
+      }
+
+      function _apScreenToStep(screenVal, waitSec) {
+        if (screenVal.startsWith("station:")) {
+          return { type: "station", id: screenVal.split(":")[1], waitAfter: waitSec * 1000 };
+        }
+        return { type: screenVal, duration: waitSec * 1000 };
+      }
+
+      function _apOptionsHTML(selectedVal) {
+        return AP_SCREENS.map(function (s) {
+          return '<option value="' + s.value + '"' + (s.value === selectedVal ? " selected" : "") + '>' + s.label + '</option>';
+        }).join("");
+      }
+
+      function _apMakeStepRow(step, idx, total) {
+        var screenVal = _apStepToScreenVal(step);
+        var waitSec   = _apStepWaitSec(step);
+        var isStation = step.type === "station";
+        var div = document.createElement("div");
+        div.className = "ap-step-row";
+        div.setAttribute("data-idx", idx);
+        div.style.cssText = "display:flex;align-items:center;gap:8px;background:#f8f9fb;border:1.5px solid #e2e5ec;border-radius:12px;padding:10px 12px;flex-wrap:wrap;transition:border-color 0.15s";
+        div.innerHTML =
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:11px;color:#aaa;min-width:20px;text-align:center">' + (idx + 1) + '</span>' +
+          '<select class="ap-step-screen" style="flex:1;min-width:160px;padding:8px 10px;border-radius:8px;border:1.5px solid #d0d4df;font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:600;background:#fff;cursor:pointer">' +
+            _apOptionsHTML(screenVal) +
+          '</select>' +
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#888;white-space:nowrap">⏱ ' + (isStation ? "wait after" : "stay for") + '</span>' +
+          '<input type="number" class="ap-step-wait" min="0" max="9999" value="' + waitSec + '" style="width:64px;padding:8px 8px;border-radius:8px;border:1.5px solid #d0d4df;font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:700;text-align:center">' +
+          '<span style="font-family:\'Space Grotesk\',sans-serif;font-size:12px;color:#888">sec</span>' +
+          '<button class="ap-step-up" title="Move up" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #d0d4df;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;' + (idx === 0 ? "opacity:0.3;pointer-events:none" : "") + '">↑</button>' +
+          '<button class="ap-step-down" title="Move down" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #d0d4df;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;' + (idx === total - 1 ? "opacity:0.3;pointer-events:none" : "") + '">↓</button>' +
+          '<button class="ap-step-remove" title="Remove step" style="width:30px;height:30px;border-radius:8px;border:1.5px solid #f0b0b0;background:#fff6f6;color:#bd001a;cursor:pointer;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center">×</button>';
+
+        // Update label when screen changes
+        div.querySelector(".ap-step-screen").onchange = function () {
+          var isS = this.value.startsWith("station:");
+          var label = div.querySelector("span:nth-child(3)");
+          if (label) label.textContent = "⏱ " + (isS ? "wait after" : "stay for");
+        };
+        div.querySelector(".ap-step-up").onclick = function () { _apMoveStep(idx, -1); };
+        div.querySelector(".ap-step-down").onclick = function () { _apMoveStep(idx, 1); };
+        div.querySelector(".ap-step-remove").onclick = function () { _apRemoveStep(idx); };
+        return div;
+      }
+
+      function _apReadFlowFromUI() {
+        var countdown = parseInt((g("ap-countdown-input") || {}).value || "0", 10) || 0;
+        var list = g("ap-steps-list");
+        var rows = list ? list.querySelectorAll(".ap-step-row") : [];
+        var steps = [];
+        rows.forEach(function (row) {
+          var screenEl = row.querySelector(".ap-step-screen");
+          var waitEl   = row.querySelector(".ap-step-wait");
+          var screenVal = screenEl ? screenEl.value : "idle";
+          var waitSec   = parseInt(waitEl ? waitEl.value : "0", 10) || 0;
+          steps.push(_apScreenToStep(screenVal, waitSec));
+        });
+        return { initialWait: countdown * 1000, loop: false, steps: steps };
+      }
+
+      function _apBuildFlowUI() {
+        if (!_apConfig) apLoadConfig();
+        var countdownEl = g("ap-countdown-input");
+        if (countdownEl) countdownEl.value = Math.round((_apConfig.initialWait || 0) / 1000);
+        var list = g("ap-steps-list");
+        if (!list) return;
+        list.innerHTML = "";
+        var steps = _apConfig.steps || [];
+        steps.forEach(function (step, idx) {
+          list.appendChild(_apMakeStepRow(step, idx, steps.length));
+        });
+        _apBuildNavGrid();
+      }
+
+      function _apRemoveStep(idx) {
+        var config = _apReadFlowFromUI();
+        config.steps.splice(idx, 1);
+        _apConfig = config;
+        _apBuildFlowUI();
+      }
+
+      function _apMoveStep(idx, dir) {
+        var config = _apReadFlowFromUI();
+        var steps = config.steps;
+        var newIdx = idx + dir;
+        if (newIdx < 0 || newIdx >= steps.length) return;
+        var tmp = steps[idx]; steps[idx] = steps[newIdx]; steps[newIdx] = tmp;
+        _apConfig = config;
+        _apBuildFlowUI();
+      }
+
+      function _apBuildNavGrid() {
+        var grid = g("ap-nav-grid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        var colors = {
+          idle:      { bg: "#f0f0f0", color: "#444",    border: "#d0d0d0" },
+          dashboard: { bg: "#e8eeff", color: "#1a3488",  border: "#b0bce8" },
+          guide:     { bg: "#e8eeff", color: "#1a3488",  border: "#b0bce8" },
+          station:   { bg: "#e8f5ee", color: "#1a6e3a",  border: "#a0d4b0" },
+          timeline:  { bg: "#fff8e0", color: "#7a5800",  border: "#e8d080" },
+          quiz:      { bg: "#f0e8ff", color: "#5a1a8a",  border: "#c0a0e0" },
+        };
+        AP_SCREENS.forEach(function (screen) {
+          var category = screen.value.startsWith("station:") ? "station" : screen.value;
+          var c = colors[category] || colors.idle;
+          var btn = document.createElement("button");
+          btn.textContent = screen.label;
+          btn.title = "Navigate to " + screen.label;
+          btn.style.cssText = "background:" + c.bg + ";color:" + c.color + ";border:1.5px solid " + c.border + ";border-radius:10px;padding:10px 12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;letter-spacing:0.04em;cursor:pointer;text-align:left;transition:all 0.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";
+          btn.onclick = function () { apNavigateTo(screen.value); };
+          grid.appendChild(btn);
+        });
+      }
+
+      function apNavigateTo(screenVal) {
+        if (screenVal === "idle") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(0, true);
+        } else if (screenVal === "dashboard") {
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          stationAudioStop(); ttsStop();
+          goTo(1, true);
+        } else if (screenVal === "guide") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
+          g("ov-guide").classList.add("open");
+        } else if (screenVal.startsWith("station:")) {
+          var sId = screenVal.split(":")[1];
+          goTo(1, true);
+          if (!g("ov-guide").classList.contains("open")) g("ov-guide").classList.add("open");
+          openSection(sId);
+        } else if (screenVal === "timeline") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          openOverlay("ov-timeline");
+          setTimeout(function () {
+            var car = g("tl-carousel");
+            if (!car) return;
+            tlAudioToggle(Math.round(car.scrollLeft / car.clientWidth));
+          }, 120);
+        } else if (screenVal === "quiz") {
+          goTo(1, true);
+          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+          resetQuizSelect();
+          openOverlay("ov-quiz");
+        }
+        bgAudioUpdate();
+        resetIdle();
+        closeOverlay("ov-admin");
       }
 
       // ── Wire buttons ──
@@ -327,6 +740,13 @@
           await buildLeaderboard();
         };
         g("btn-mute").onclick = BGAudio.toggleMute;
+        g("btn-autoplay").onclick = function () {
+          if (_apState === "running" || _apState === "paused") { apStop(); }
+          else { apStart(); }
+        };
+        g("ap-pause-btn").onclick  = apPause;
+        g("ap-resume-btn").onclick = apResume;
+        g("ap-stop-btn").onclick   = apStop;
         g("q-next").onclick = nextQ;
         g("save-btn").onclick = saveScore;
         g("skip-btn").onclick = function () {
@@ -1559,16 +1979,16 @@
         ["timeline-1a.png","timeline-1b.jpg","timeline-1c.jpg","timeline-1d.jpg","timeline-1e.jpg","timeline-1f.jpg","timeline-1g.jpg","timeline-1h.jpg","timeline-1i.jpg","timeline-1j.jpg"],
         // timeline-2: all jpg
         ["timeline-2a.jpg","timeline-2b.jpg","timeline-2c.jpg","timeline-2d.jpg","timeline-2e.jpg","timeline-2f.jpg","timeline-2g.jpg","timeline-2h.jpg","timeline-2i.jpg","timeline-2j.jpg"],
-        // timeline-3: all jpg except h=png
-        ["timeline-3a.jpg","timeline-3b.jpg","timeline-3c.jpg","timeline-3d.jpg","timeline-3e.jpg","timeline-3f.jpg","timeline-3g.jpg","timeline-3h.png","timeline-3i.jpg","timeline-3j.jpg"],
+        // timeline-3: all jpg
+        ["timeline-3a.jpg","timeline-3b.jpg","timeline-3c.jpg","timeline-3d.jpg","timeline-3e.jpg","timeline-3f.jpg","timeline-3g.jpg","timeline-3h.jpg","timeline-3i.jpg","timeline-3j.jpg"],
         // timeline-4: all jpg
         ["timeline-4a.jpg","timeline-4b.jpg","timeline-4c.jpg","timeline-4d.jpg","timeline-4e.jpg","timeline-4f.jpg","timeline-4g.jpg","timeline-4h.jpg","timeline-4i.jpg","timeline-4j.jpg"],
-        // timeline-5: all jpg except b,c,h,i=png
-        ["timeline-5a.jpg","timeline-5b.png","timeline-5c.png","timeline-5d.jpg","timeline-5e.jpg","timeline-5f.jpg","timeline-5g.jpg","timeline-5h.png","timeline-5i.png","timeline-5j.jpg"],
-        // timeline-6: a,c=jpg, rest=png
-        ["timeline-6a.jpg","timeline-6b.png","timeline-6c.jpg","timeline-6d.png","timeline-6e.png","timeline-6f.png","timeline-6g.png","timeline-6h.png","timeline-6i.png","timeline-6j.png"],
-        // timeline-7: h=png, rest=jpg
-        ["timeline-7a.jpg","timeline-7b.jpg","timeline-7c.jpg","timeline-7d.jpg","timeline-7e.jpg","timeline-7f.jpg","timeline-7g.jpg","timeline-7h.png","timeline-7i.jpg","timeline-7j.jpg"],
+        // timeline-5: all jpg
+        ["timeline-5a.jpg","timeline-5b.jpg","timeline-5c.jpg","timeline-5d.jpg","timeline-5e.jpg","timeline-5f.jpg","timeline-5g.jpg","timeline-5h.jpg","timeline-5i.jpg","timeline-5j.jpg"],
+        // timeline-6: a-e=jpg, f=png, g-j=jpg
+        ["timeline-6a.jpg","timeline-6b.jpg","timeline-6c.jpg","timeline-6d.jpg","timeline-6e.jpg","timeline-6f.png","timeline-6g.jpg","timeline-6h.jpg","timeline-6i.jpg","timeline-6j.jpg"],
+        // timeline-7: a=png, b-d=jpg, e=filename typo on disk, f-g=jpg, h=jpeg, i-j=jpg
+        ["timeline-7a.png","timeline-7b.jpg","timeline-7c.jpg","timeline-7d.jpg","timetine-7e.jpg","timeline-7f.jpg","timeline-7g.jpg","timeline-7h.jpg","timeline-7i.jpg","timeline-7j.jpg"],
       ];
 
       function _tlSlide(index) {
@@ -2212,7 +2632,7 @@
       }
 
       function showAdminTab(tab) {
-        ["scores", "stats", "settings"].forEach(function (t) {
+        ["scores", "stats", "settings", "presentation"].forEach(function (t) {
           g("admin-tab-" + t).style.display = t === tab ? "" : "none";
         });
         document.querySelectorAll(".admin-tab-btn").forEach(function (btn) {
@@ -2224,6 +2644,10 @@
             ? adminLastSync.toLocaleString("en-PH")
             : "—";
           g("idle-input").value = Math.round(IDLE_TIMEOUT / 1000);
+        }
+        if (tab === "presentation") {
+          _apBuildFlowUI();
+          _apSyncAdminBtns();
         }
       }
 
@@ -2568,6 +2992,40 @@
             if (msg) { msg.textContent = "Idle timeout set to " + val + "s."; msg.className = "settings-msg ok"; }
           };
         });
+
+        // ── Presentation tab ──
+        safe("ap-admin-start-btn",  function(el) { el.onclick = apStart; });
+        safe("ap-admin-pause-btn",  function(el) { el.onclick = apPause; });
+        safe("ap-admin-resume-btn", function(el) { el.onclick = apResume; });
+        safe("ap-admin-stop-btn",   function(el) { el.onclick = apStop; });
+
+        safe("ap-add-step-btn", function(el) {
+          el.onclick = function () {
+            var config = _apReadFlowFromUI();
+            config.steps.push({ type: "idle", duration: 3000 });
+            _apConfig = config;
+            _apBuildFlowUI();
+          };
+        });
+
+        safe("ap-flow-save-btn", function(el) {
+          el.onclick = function () {
+            var config = _apReadFlowFromUI();
+            apSaveConfig(config);
+            var msg = g("ap-flow-msg");
+            if (msg) { msg.textContent = "Flow saved!"; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+          };
+        });
+
+        safe("ap-flow-reset-btn", function(el) {
+          el.onclick = function () {
+            apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
+            _apBuildFlowUI();
+            var msg = g("ap-flow-msg");
+            if (msg) { msg.textContent = "Reset to default."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
+          };
+        });
+
       }
 
       startIdleCycle();
