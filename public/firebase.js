@@ -8,15 +8,7 @@ import {
   getDoc, setDoc,
 }                               from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey:            "AIzaSyBCSZqfmrDAF4SfCE3g7ygqBybSW3PEFM4",
-  authDomain:        "salin-lahi-apsd.firebaseapp.com",
-  projectId:         "salin-lahi-apsd",
-  storageBucket:     "salin-lahi-apsd.firebasestorage.app",
-  messagingSenderId: "675734624320",
-  appId:             "1:675734624320:web:3403a2ae844ce6d3dba7a5",
-  measurementId:     "G-7RES3DC832",
-};
+const firebaseConfig = window.FIREBASE_CONFIG;
 
 const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
