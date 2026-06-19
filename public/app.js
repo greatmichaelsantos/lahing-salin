@@ -22,7 +22,7 @@
 
       // ── Background Audio Controller ──
       var BGAudio = (function () {
-        var VOLS = { idle: 0.40, active: 0.20, tts: 0.05 };
+        var VOLS = { idle: 0.40, active: 0.20, tts: 0.05, off: 0 };
         var _state = "idle";
         var _muted = false;
         var _ready = false;
@@ -70,7 +70,7 @@
         }
 
         function _applyVolume() {
-          var target = _muted ? 0 : (VOLS[_state] || 0.50);
+          var target = _muted ? 0 : (VOLS[_state] != null ? VOLS[_state] : 0.50);
           if (_gain && _actx) {
             if (_state === "tts") {
               // iOS suspends AudioContext when SpeechSynthesis starts, so a scheduled
@@ -145,10 +145,14 @@
         return { start: start, setState: setState, toggleMute: toggleMute };
       }());
 
-      // Recalculates which BGAudio volume level is appropriate for current state
+      // Recalculates which BGAudio volume level is appropriate for current state.
+      // Music plays only on the idle screen (cur=0) and clean dashboard (cur=1, no overlay).
+      // Any open overlay silences it completely; mute state is independent and preserved.
       function bgAudioUpdate() {
+        if (cur === 0) { BGAudio.setState("idle"); return; }
+        if (document.querySelector(".overlay.open")) { BGAudio.setState("off"); return; }
         if (ttsActive) { BGAudio.setState("tts"); return; }
-        BGAudio.setState(cur === 0 ? "idle" : "active");
+        BGAudio.setState("active");
       }
 
       // ── Slider ──
@@ -1800,6 +1804,8 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           correct: ok,
           chosen: idx,
           expected: q.ans,
+          chosenText: q.opts[idx],
+          expectedText: q.opts[q.ans],
         });
         var fb = g("q-fb");
         if (ok) {
@@ -1845,6 +1851,9 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         var name  = g("v-name").value.trim()  || "Anonymous";
         var grade = g("v-grade").value.trim() || "-";
         var now   = new Date();
+        var wrong = quizState.answers
+          .filter(function (a) { return !a.correct; })
+          .map(function (a) { return { q: a.q, chosen: a.chosenText, correct: a.expectedText }; });
         var entry = {
           name:    name,
           grade:   grade,
@@ -1856,6 +1865,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           date:    now.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }),
           ts:      now.getTime(),
         };
+        if (wrong.length > 0) entry.wrong = wrong;
         var btn = g("save-btn");
         btn.textContent = "Saving…";
         btn.disabled = true;
