@@ -1705,17 +1705,13 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       // ── Quiz ──
       function buildQuizSelect() {
         var h = "";
-        DATA.sections.forEach(function (s) {
+        DATA.sections.forEach(function (s, i) {
+          var c = COLORS[i % COLORS.length];
+          h += '<div class="exp-card-wrap" style="background:' + c + '">';
           h +=
-            '<button class="quiz-topic-btn" data-id="' +
-            s.id +
-            '" style="border-color:' +
-            s.color +
-            '44">';
+            '<button class="quiz-topic-btn" data-id="' + s.id + '">';
           h +=
-            '<div class="quiz-topic-name" style="color:' +
-            s.color +
-            '">' +
+            '<div class="quiz-topic-name">' +
             sectionEmoji(s.id) +
             " " +
             s.title +
@@ -1723,7 +1719,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           h +=
             '<div class="quiz-topic-count">' +
             s.questions.length +
-            " questions</div></button>";
+            " questions</div></button></div>";
         });
         g("quiz-select-btns").innerHTML = h;
         g("quiz-select-btns")

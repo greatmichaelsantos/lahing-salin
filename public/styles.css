@@ -167,7 +167,7 @@
         flex-direction: column;
         align-items: center;
         gap: 1px;
-        transform: rotate(2.5deg);
+        transform: none;
         pointer-events: none;
         z-index: 0;
         max-width: 38vw;
@@ -963,6 +963,7 @@
       .exp-card-wrap {
         border-radius: 20px;
         padding: 6px;
+        box-shadow: 0 0 0 1.5px rgba(0,0,0,0.22);
       }
       .exp-card-stripe {
         height: 5px;
@@ -1226,17 +1227,19 @@
       }
       /* topic button — plaka panel */
       .quiz-topic-btn {
-        border-radius: 16px;
+        border-radius: 14px;
         padding: 16px 14px;
         background: #fff;
-        border: 1px solid #a8a9ad;
+        border: none;
+        box-shadow: none;
         cursor: pointer;
         color: #1b1c1b;
         transition: all 0.15s;
         user-select: none;
         text-align: left;
         font-family: "Plus Jakarta Sans", sans-serif;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+        width: 100%;
+        display: block;
       }
       .quiz-topic-btn:active {
         transform: scale(0.97);
