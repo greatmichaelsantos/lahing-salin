@@ -1020,115 +1020,92 @@
       <div id="admin-tabs">
         <button class="admin-tab-btn on" data-tab="scores">Scores</button>
         <button class="admin-tab-btn" data-tab="stats">Stats</button>
+        <button class="admin-tab-btn" data-tab="analytics">Analytics</button>
         <button class="admin-tab-btn" data-tab="settings">Settings</button>
       </div>
 
       <!-- Scrollable tab content -->
       <div id="admin-tab-content-wrap">
-        <!-- AI Insights Hero — inside scroll area so it doesn't compete for fixed height -->
+        <!-- AI Insights hero — always visible above all tabs -->
         <div id="admin-ai-hero">
           <div id="admin-ai-hero-header">
             <div>
               <div id="admin-ai-hero-title">🤖 AI Insights</div>
-              <div id="admin-ai-hero-sub">
-                Groq-powered analysis of student quiz performance
-              </div>
+              <div id="admin-ai-hero-sub">Groq-powered analysis of student quiz performance</div>
             </div>
             <div id="admin-ai-hero-controls">
-              <!-- Topic scope dropdown -->
               <div class="groq-dd" id="groq-scope-dd">
                 <div class="groq-dd-trigger">
                   <span class="groq-dd-label">All Topics</span>
                   <span class="groq-dd-arrow"></span>
                 </div>
                 <div class="groq-dd-menu">
-                  <div class="groq-dd-item selected" data-value="all">
-                    All Topics
-                  </div>
-                  <div class="groq-dd-item" data-value="aeta-history">
-                    Station A — Aeta History
-                  </div>
-                  <div class="groq-dd-item" data-value="livelihood">
-                    Station B — Traditional Livelihood
-                  </div>
-                  <div class="groq-dd-item" data-value="music">
-                    Station C — Indigenous Music
-                  </div>
-                  <div class="groq-dd-item" data-value="tools">
-                    Station D — Traditional Tools
-                  </div>
-                  <div class="groq-dd-item" data-value="values">
-                    Station E — Cultural Values
-                  </div>
-                  <div class="groq-dd-item" data-value="origins">
-                    Station F — Olongapo Origins
-                  </div>
-                  <div class="groq-dd-item" data-value="naval">
-                    Station G — Naval Heritage
-                  </div>
-                  <div class="groq-dd-item" data-value="culture">
-                    Station H — People &amp; Culture
-                  </div>
+                  <div class="groq-dd-item selected" data-value="all">All Topics</div>
+                  <div class="groq-dd-item" data-value="aeta-history">Station A — Aeta History</div>
+                  <div class="groq-dd-item" data-value="livelihood">Station B — Traditional Livelihood</div>
+                  <div class="groq-dd-item" data-value="music">Station C — Indigenous Music</div>
+                  <div class="groq-dd-item" data-value="tools">Station D — Traditional Tools</div>
+                  <div class="groq-dd-item" data-value="values">Station E — Cultural Values</div>
+                  <div class="groq-dd-item" data-value="origins">Station F — Olongapo Origins</div>
+                  <div class="groq-dd-item" data-value="naval">Station G — Naval Heritage</div>
+                  <div class="groq-dd-item" data-value="culture">Station H — People &amp; Culture</div>
                 </div>
               </div>
-              <!-- Analysis type dropdown -->
               <div class="groq-dd" id="groq-type-dd">
                 <div class="groq-dd-trigger">
-                  <span class="groq-dd-label">General Overview</span>
+                  <span class="groq-dd-label">Where Students Struggle</span>
                   <span class="groq-dd-arrow"></span>
                 </div>
                 <div class="groq-dd-menu">
-                  <div class="groq-dd-item selected" data-value="general">
-                    General Overview
-                  </div>
-                  <div class="groq-dd-item" data-value="struggling">
-                    Where Students Struggle
-                  </div>
-                  <div class="groq-dd-item" data-value="grade">
-                    By Grade Level
-                  </div>
+                  <div class="groq-dd-item" data-value="general">General Overview</div>
+                  <div class="groq-dd-item selected" data-value="struggling">Where Students Struggle</div>
+                  <div class="groq-dd-item" data-value="grade">By Grade Level</div>
                   <div class="groq-dd-item" data-value="trends">Score Trends</div>
-                  <div class="groq-dd-item" data-value="recommendations">
-                    Teaching Recommendations
-                  </div>
+                  <div class="groq-dd-item" data-value="recommendations">Teaching Recommendations</div>
                 </div>
               </div>
-              <button id="groq-analyze-btn" onclick="generateInsights()">
-                ✨ Generate
-              </button>
+              <button id="groq-analyze-btn">✨ Generate</button>
             </div>
           </div>
           <div id="groq-output">
-            <div id="groq-placeholder">
-              Click ✨ Generate to analyze student scores with AI.
-            </div>
-            <div id="groq-loading" style="display: none">
-              🤖 Analyzing scores… <span class="groq-spinner"></span>
-            </div>
-            <div id="groq-cards" style="display: none">
+            <div id="groq-placeholder">Click ✨ Generate to analyze student scores with AI.</div>
+            <div id="groq-loading" style="display:none">🤖 Analyzing scores… <span class="groq-spinner"></span></div>
+            <div id="groq-cards" style="display:none">
               <div class="groq-card groq-card-strengths">
-                <div class="groq-card-header">
-                  <span class="groq-card-icon">💪</span>
-                  <span class="groq-card-title">Strengths</span>
-                </div>
+                <div class="groq-card-header"><span class="groq-card-icon">💪</span><span class="groq-card-title">Strengths</span></div>
                 <div class="groq-card-body" id="groq-card-strengths"></div>
               </div>
               <div class="groq-card groq-card-weaknesses">
-                <div class="groq-card-header">
-                  <span class="groq-card-icon">⚠️</span>
-                  <span class="groq-card-title">Weaknesses</span>
-                </div>
+                <div class="groq-card-header"><span class="groq-card-icon">⚠️</span><span class="groq-card-title">Weaknesses</span></div>
                 <div class="groq-card-body" id="groq-card-weaknesses"></div>
               </div>
               <div class="groq-card groq-card-improve">
-                <div class="groq-card-header">
-                  <span class="groq-card-icon">🎯</span>
-                  <span class="groq-card-title">Areas to Improve</span>
-                </div>
+                <div class="groq-card-header"><span class="groq-card-icon">🎯</span><span class="groq-card-title">Areas to Improve</span></div>
                 <div class="groq-card-body" id="groq-card-improve"></div>
               </div>
             </div>
-            <div id="groq-error" style="display: none"></div>
+            <div id="groq-error" style="display:none"></div>
+          </div>
+        </div>
+
+        <!-- ══ ANALYTICS TAB ══ -->
+        <div class="admin-tab-content" id="admin-tab-analytics" style="display:none">
+          <div class="analytics-topic-bar">
+            <label for="analytics-topic-select">Topic</label>
+            <select class="analytics-topic-select" id="analytics-topic-select">
+              <option value="all">All Topics</option>
+              <option value="aeta-history">Station A — Aeta History</option>
+              <option value="livelihood">Station B — Traditional Livelihood</option>
+              <option value="music">Station C — Indigenous Music</option>
+              <option value="tools">Station D — Traditional Tools</option>
+              <option value="values">Station E — Cultural Values</option>
+              <option value="origins">Station F — Olongapo Origins</option>
+              <option value="naval">Station G — Naval Heritage</option>
+              <option value="culture">Station H — People &amp; Culture</option>
+            </select>
+          </div>
+          <div id="analytics-content">
+            <div class="analytics-empty">Switch to the Scores tab first to load data, then come back here.</div>
           </div>
         </div>
 

@@ -2549,13 +2549,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         openOverlay("ov-admin");
         showAdminTab("scores");
         await loadAdminScores();
-        if (window._adminScores && window._adminScores.length > 0) {
-          generateInsights();
-        } else {
-          setTimeout(function () {
-            if (window._adminScores && window._adminScores.length > 0) generateInsights();
-          }, 1500);
-        }
       }
 
       async function loadAdminScores() {
@@ -2799,7 +2792,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       }
 
       function showAdminTab(tab) {
-        ["scores", "stats", "settings"].forEach(function (t) {
+        ["scores", "stats", "analytics", "settings"].forEach(function (t) {
           g("admin-tab-" + t).style.display = t === tab ? "" : "none";
         });
         document.querySelectorAll(".admin-tab-btn").forEach(function (btn) {
@@ -2812,59 +2805,246 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             : "—";
           g("idle-input").value = Math.round(IDLE_TIMEOUT / 1000);
         }
+        if (tab === "analytics") {
+          buildAnalytics();
+        }
+      }
+
+      // ── Analytics Tab ──
+      var analyticsTopicVal = "all";
+
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function buildAnalytics() {
+        var el = g("analytics-content");
+        if (!el) return;
+        var scores = window._adminScores || adminScores || [];
+        if (!scores.length) {
+          el.innerHTML = '<div class="analytics-empty">Switch to the Scores tab first to load data, then come back here.</div>';
+          return;
+        }
+
+        var filtered = analyticsTopicVal === "all"
+          ? scores
+          : scores.filter(function (s) { return s.topicId === analyticsTopicVal; });
+
+        if (!filtered.length) {
+          el.innerHTML = '<div class="analytics-empty">No attempts recorded for this topic yet.</div>';
+          return;
+        }
+
+        var total = filtered.length;
+        var avgScore = (filtered.reduce(function (a, s) { return a + (s.pct || 0); }, 0) / total).toFixed(1);
+        var perfect = filtered.filter(function (s) { return s.pct >= 100; }).length;
+
+        var html = "";
+
+        // ── Stat chips ──
+        html += '<div class="analytics-stat-chips">';
+        html += '<div class="analytics-chip"><div class="analytics-chip-val">' + total + '</div><div class="analytics-chip-label">Total Attempts</div></div>';
+        html += '<div class="analytics-chip"><div class="analytics-chip-val">' + avgScore + '%</div><div class="analytics-chip-label">Average Score</div></div>';
+        html += '<div class="analytics-chip"><div class="analytics-chip-val">' + perfect + '</div><div class="analytics-chip-label">Perfect Scores</div></div>';
+        html += '</div>';
+
+        // ── Per-question breakdown (topic-specific only) ──
+        if (analyticsTopicVal !== "all" && DATA && DATA.sections) {
+          var section = DATA.sections.find(function (s) { return s.id === analyticsTopicVal; });
+          if (section && section.questions && section.questions.length) {
+            html += '<div class="analytics-section-title">Question Breakdown</div>';
+
+            section.questions.forEach(function (q, idx) {
+              // Collect all wrong-answer entries for this question
+              var wrongEntries = [];
+              filtered.forEach(function (score) {
+                if (score.wrong && Array.isArray(score.wrong)) {
+                  score.wrong.forEach(function (w) {
+                    if (w.q === q.q) wrongEntries.push(w);
+                  });
+                }
+              });
+
+              var wrongCount = wrongEntries.length;
+              var correctCount = total - wrongCount;
+              var pct = total > 0 ? Math.round(correctCount / total * 100) : 0;
+              var correctText = q.opts[q.ans];
+
+              // Build per-option counts
+              var dist = {};
+              q.opts.forEach(function (opt) { dist[opt] = 0; });
+              dist[correctText] += correctCount;
+              wrongEntries.forEach(function (w) {
+                if (dist.hasOwnProperty(w.chosen)) {
+                  dist[w.chosen]++;
+                }
+              });
+
+              var maxCount = Math.max.apply(null, q.opts.map(function (o) { return dist[o] || 0; }));
+              var pctColor = pct >= 80 ? "#16a34a" : pct >= 60 ? "#d97706" : "#dc2626";
+
+              html += '<div class="analytics-q-card">';
+              html += '<div class="analytics-q-header">';
+              html += '<span class="analytics-q-label">Q' + (idx + 1) + ' of ' + section.questions.length + '</span>';
+              html += '<span class="analytics-q-pct" style="color:' + pctColor + '">' + pct + '% correct</span>';
+              html += '</div>';
+              html += '<div class="analytics-q-text">' + escHtml(q.q) + '</div>';
+
+              q.opts.forEach(function (opt, oi) {
+                var count = dist[opt] || 0;
+                var barPct = maxCount > 0 ? Math.round(count / maxCount * 100) : 0;
+                var isCorrect = oi === q.ans;
+                var letter = String.fromCharCode(65 + oi);
+
+                html += '<div class="analytics-bar-row' + (isCorrect ? " is-correct" : "") + '">';
+                html += '<span class="analytics-bar-letter">' + letter + '</span>';
+                html += '<div class="analytics-bar-wrap">';
+                html += '<div class="analytics-bar-fill ' + (isCorrect ? "analytics-bar-fill-correct" : "analytics-bar-fill-wrong") + '" style="width:' + barPct + '%"></div>';
+                html += '<span class="analytics-bar-label">' + escHtml(opt) + (isCorrect ? " ✓" : "") + '</span>';
+                html += '</div>';
+                html += '<span class="analytics-bar-count">' + count + '</span>';
+                html += '</div>';
+              });
+
+              html += '<div class="analytics-q-foot">' + correctCount + ' of ' + total + ' answered correctly</div>';
+              html += '</div>';
+            });
+          }
+        }
+
+        // ── Overall Summary ──
+        html += '<div class="analytics-section-title" style="margin-top:20px">Overall Summary</div>';
+        html += '<div class="analytics-overall">';
+
+        var excellent = filtered.filter(function (s) { return s.pct >= 80; }).length;
+        var good      = filtered.filter(function (s) { return s.pct >= 60 && s.pct < 80; }).length;
+        var needs     = filtered.filter(function (s) { return s.pct < 60; }).length;
+
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key">Total Attempts</span><span class="analytics-overall-val">' + total + '</span></div>';
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key">Average Score</span><span class="analytics-overall-val">' + avgScore + '%</span></div>';
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key">Perfect Scores (100%)</span><span class="analytics-overall-val">' + perfect + ' (' + (total > 0 ? Math.round(perfect / total * 100) : 0) + '%)</span></div>';
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key" style="color:#16a34a">Excellent (80–100%)</span><span class="analytics-overall-val" style="color:#16a34a">' + excellent + '</span></div>';
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key" style="color:#d97706">Good (60–79%)</span><span class="analytics-overall-val" style="color:#d97706">' + good + '</span></div>';
+        html += '<div class="analytics-overall-row"><span class="analytics-overall-key" style="color:#dc2626">Needs Improvement (&lt;60%)</span><span class="analytics-overall-val" style="color:#dc2626">' + needs + '</span></div>';
+
+        // By grade
+        var byGrade = {};
+        filtered.forEach(function (s) {
+          var gr = s.grade || "Unknown";
+          if (!byGrade[gr]) byGrade[gr] = { count: 0, totalPct: 0 };
+          byGrade[gr].count++;
+          byGrade[gr].totalPct += (s.pct || 0);
+        });
+        var gradeEntries = Object.entries(byGrade).sort(function (a, b) { return b[1].count - a[1].count; });
+        if (gradeEntries.length) {
+          html += '<div class="analytics-overall-row" style="padding-bottom:4px"><span class="analytics-overall-key">By Grade Level</span></div>';
+          html += '<div class="analytics-subrows">';
+          gradeEntries.forEach(function (e) {
+            var gr = e[0], gd = e[1];
+            html += '<div class="analytics-grade-row"><span class="analytics-grade-key">' + escHtml(gr) + '</span><span class="analytics-grade-val">' + gd.count + ' attempt' + (gd.count !== 1 ? "s" : "") + " · avg " + (gd.totalPct / gd.count).toFixed(1) + "%</span></div>";
+          });
+          html += '</div>';
+        }
+
+        // By topic (All Topics view only)
+        if (analyticsTopicVal === "all") {
+          var byTopic = {};
+          filtered.forEach(function (s) {
+            var tid = s.topicId || "unknown";
+            if (!byTopic[tid]) byTopic[tid] = { topic: s.topic || tid, count: 0, totalPct: 0 };
+            byTopic[tid].count++;
+            byTopic[tid].totalPct += (s.pct || 0);
+          });
+          var topicEntries = Object.entries(byTopic).sort(function (a, b) {
+            return (b[1].totalPct / b[1].count) - (a[1].totalPct / a[1].count);
+          });
+          if (topicEntries.length) {
+            html += '<div class="analytics-overall-row" style="padding-bottom:4px"><span class="analytics-overall-key">By Topic (avg score)</span></div>';
+            html += '<div class="analytics-subrows">';
+            topicEntries.forEach(function (e) {
+              var td = e[1];
+              html += '<div class="analytics-grade-row"><span class="analytics-grade-key">' + escHtml(td.topic) + '</span><span class="analytics-grade-val">' + td.count + ' attempt' + (td.count !== 1 ? "s" : "") + " · avg " + (td.totalPct / td.count).toFixed(1) + "%</span></div>";
+            });
+            html += '</div>';
+          }
+        }
+
+        html += '</div>'; // analytics-overall
+
+        el.innerHTML = html;
       }
 
       // ── AI Insights (Groq) ──
-      function buildQuestionStats(filtered, topicId) {
-        var section = DATA && DATA.sections ? DATA.sections.find(function (s) { return s.id === topicId; }) : null;
+      var GROQ_API_KEY = window.GROQ_API_KEY || "";
+      var groqScopeVal = "all";
+      var groqAnalysisTypeVal = "struggling";
+
+      function buildWrongStats(filtered, topicId) {
+        var isAllTopics = !topicId || topicId === "all";
         var totalAttempts = filtered.length;
 
-        // Count wrong answers per question text
+        // Collect wrong counts per question; track topic label for all-topics view
         var wrongCounts = {};
         filtered.forEach(function (score) {
-          if (score.wrong && Array.isArray(score.wrong)) {
-            score.wrong.forEach(function (w) {
-              if (!wrongCounts[w.q]) wrongCounts[w.q] = { count: 0, topChoices: {}, correct: w.correct };
-              wrongCounts[w.q].count++;
-              var chosen = w.chosen;
-              wrongCounts[w.q].topChoices[chosen] = (wrongCounts[w.q].topChoices[chosen] || 0) + 1;
-            });
-          }
+          if (!score.wrong || !Array.isArray(score.wrong)) return;
+          score.wrong.forEach(function (w) {
+            var key = w.q;
+            if (!wrongCounts[key]) {
+              wrongCounts[key] = { count: 0, topChoices: {}, correct: w.correct, topic: score.topic || score.topicId || "" };
+            }
+            wrongCounts[key].count++;
+            wrongCounts[key].topChoices[w.chosen] = (wrongCounts[key].topChoices[w.chosen] || 0) + 1;
+          });
         });
 
+        if (isAllTopics) {
+          // Sort by wrong count descending, return top 12 most-missed questions
+          var sorted = Object.entries(wrongCounts).sort(function (a, b) { return b[1].count - a[1].count; }).slice(0, 12);
+          if (!sorted.length) return "  (no wrong-answer data recorded yet)";
+          return sorted.map(function (e) {
+            var q = e[0], d = e[1];
+            var pct = totalAttempts > 0 ? Math.round((1 - d.count / totalAttempts) * 100) : 0;
+            var topWrong = Object.entries(d.topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
+            return "  [" + d.topic + "] \"" + q + "\" — " + d.count + " wrong (" + pct + "% correct)" +
+              (topWrong ? " | Most chosen wrong: \"" + topWrong[0] + "\"" : "");
+          }).join("\n");
+        }
+
+        // Topic-specific: use DATA questions so 100%-correct ones appear too
+        var section = DATA && DATA.sections ? DATA.sections.find(function (s) { return s.id === topicId; }) : null;
         var lines = [];
         if (section && section.questions && section.questions.length) {
-          // Use DATA questions to include questions nobody got wrong (100% accuracy)
           section.questions.forEach(function (q, idx) {
-            var stats = wrongCounts[q.q];
-            var wrongCount = stats ? stats.count : 0;
-            var correctCount = totalAttempts - wrongCount;
-            var pct = totalAttempts > 0 ? Math.round(correctCount / totalAttempts * 100) : 0;
-            var line = "  Q" + (idx + 1) + " (" + pct + "% correct, " + correctCount + "/" + totalAttempts + "): \"" + q.q + "\"";
-            if (stats && stats.count > 0) {
-              var topWrong = Object.entries(stats.topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
-              line += " | Most common wrong: \"" + topWrong[0] + "\"";
+            var d = wrongCounts[q.q];
+            var wrongCount = d ? d.count : 0;
+            var pct = totalAttempts > 0 ? Math.round((totalAttempts - wrongCount) / totalAttempts * 100) : 0;
+            var line = "  Q" + (idx + 1) + " (" + pct + "% correct, " + wrongCount + " wrong out of " + totalAttempts + "): \"" + q.q + "\"";
+            if (d && d.count > 0) {
+              var topWrong = Object.entries(d.topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
+              line += " | Most chosen wrong: \"" + topWrong[0] + "\"";
             }
             lines.push(line);
           });
         } else {
-          // Fallback: reconstruct from wrong arrays only (100%-correct questions won't appear)
-          Object.entries(wrongCounts).forEach(function (e) {
-            var wrongCount = e[1].count;
-            var correctCount = totalAttempts - wrongCount;
-            var pct = totalAttempts > 0 ? Math.round(correctCount / totalAttempts * 100) : 0;
-            var topWrong = Object.entries(e[1].topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
-            var line = "  (" + pct + "% correct, " + correctCount + "/" + totalAttempts + "): \"" + e[0] + "\"";
-            if (topWrong) line += " | Most common wrong: \"" + topWrong[0] + "\"";
+          Object.entries(wrongCounts).sort(function (a, b) { return b[1].count - a[1].count; }).forEach(function (e) {
+            var d = e[1];
+            var pct = totalAttempts > 0 ? Math.round((totalAttempts - d.count) / totalAttempts * 100) : 0;
+            var topWrong = Object.entries(d.topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
+            var line = "  (" + pct + "% correct, " + d.count + " wrong): \"" + e[0] + "\"";
+            if (topWrong) line += " | Most chosen wrong: \"" + topWrong[0] + "\"";
             lines.push(line);
           });
         }
-        return lines.length ? lines.join("\n") : "  (no per-question data available)";
+        return lines.length ? lines.join("\n") : "  (no wrong-answer data recorded yet)";
       }
 
       function buildScoreSummary(scores, scope) {
         var filtered = scope === "all" ? scores : scores.filter(function (s) { return s.topicId === scope; });
-        if (!filtered.length) return "No score data available for the selected topic.";
+        if (!filtered.length) return "No score data available for the selected scope.";
         var total = filtered.length;
         var avg = (filtered.reduce(function (a, s) { return a + (s.pct || 0); }, 0) / total).toFixed(1);
         var perfect = filtered.filter(function (s) { return s.pct >= 100; }).length;
@@ -2875,11 +3055,9 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           byGrade[gr].count++;
           byGrade[gr].totalPct += (s.pct || 0);
         });
-        var gradeLines = Object.values(byGrade).length
-          ? Object.entries(byGrade).map(function (e) {
-              return "  - " + e[0] + ": " + e[1].count + " attempts, avg " + (e[1].totalPct / e[1].count).toFixed(1) + "%";
-            }).join("\n")
-          : "  (no grade data)";
+        var gradeLines = Object.entries(byGrade).map(function (e) {
+          return "  - " + e[0] + ": " + e[1].count + " attempts, avg " + (e[1].totalPct / e[1].count).toFixed(1) + "%";
+        }).join("\n") || "  (no grade data)";
 
         var parts = [
           "Total attempts: " + total,
@@ -2890,9 +3068,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
         if (scope !== "all") {
           var section = DATA && DATA.sections ? DATA.sections.find(function (s) { return s.id === scope; }) : null;
-          var topicName = section ? section.title : scope;
-          parts.unshift("Topic: " + topicName);
-          parts.push("Per-question accuracy:\n" + buildQuestionStats(filtered, scope));
+          parts.unshift("Topic: " + (section ? section.title : scope));
         } else {
           var byTopic = {};
           filtered.forEach(function (s) {
@@ -2901,11 +3077,13 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             byTopic[tid].count++;
             byTopic[tid].totalPct += (s.pct || 0);
           });
-          var topicLines = Object.values(byTopic).map(function (t) {
+          parts.push("By topic (avg score):\n" + Object.values(byTopic).map(function (t) {
             return "  - " + t.topic + ": " + t.count + " attempts, avg " + (t.totalPct / t.count).toFixed(1) + "%";
-          }).join("\n");
-          parts.push("By topic:\n" + topicLines);
+          }).join("\n"));
         }
+
+        // Always include wrong-answer breakdown
+        parts.push("Questions students got wrong most (sorted by wrong count):\n" + buildWrongStats(filtered, scope === "all" ? "all" : scope));
 
         return parts.join("\n");
       }
@@ -2913,150 +3091,94 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       function buildGroqPrompt(summary, analysisType) {
         var isTopicScope = groqScopeVal !== "all";
         var focusMap = {
-          general:         isTopicScope
-            ? "Analyze student understanding of this specific topic. Group your findings by concept or idea — not by question number. Which concepts did students grasp well? Which ones confused them?"
-            : "Provide a general overview of student performance across all topics.",
-          struggling:      isTopicScope
-            ? "Identify which specific concepts or facts within this topic students struggled with most, based on the per-question accuracy data."
-            : "Identify which topics have the lowest average scores and where students struggle most.",
-          grade:           "Analyze performance differences across grade levels.",
-          trends:          "Analyze score trends and patterns.",
-          recommendations: isTopicScope
-            ? "Based on the per-question accuracy data, give concrete teaching recommendations. Name the specific concepts to revisit."
-            : "Provide concrete teaching recommendations based on this data."
+          general:         "Summarize overall performance. Highlight which questions or topics had the most wrong answers and what misconceptions those reveal.",
+          struggling:      "Focus specifically on where students got the most answers wrong. For each high-miss question, name the concept being tested and explain the likely misconception based on the most common wrong answer chosen.",
+          grade:           "Analyze how wrong-answer rates differ across grade levels. Which grade struggles most and on which topics?",
+          trends:          "Analyze score trends and wrong-answer patterns over time.",
+          recommendations: "Based on the questions students got wrong most, give concrete teaching recommendations. Name the specific concepts to re-teach and suggest how to address the most common misconception for each."
         };
-        var focus = focusMap[analysisType] || focusMap.general;
+        var focus = focusMap[analysisType] || focusMap.struggling;
         var systemMsg = "You are an educational data analyst for SALIN-LAHI, a cultural heritage quiz kiosk about Olongapo City, Philippines. " +
-          "You will receive student quiz performance data" + (isTopicScope ? ", including per-question accuracy with the exact question text and most common wrong answers." : ".") + " " +
+          "You will receive student quiz performance data including the questions students missed most, wrong-answer counts, and the most common incorrect answer chosen for each question. " +
           "Respond ONLY with a valid JSON object in this exact format (no markdown, no extra text):\n" +
           '{"strengths":["point 1","point 2","point 3"],"weaknesses":["point 1","point 2","point 3"],"improvements":["point 1","point 2","point 3"]}\n' +
-          (isTopicScope
-            ? "Group insights by concept or idea (e.g. 'Students understand X but confuse Y with Z'). Do NOT say 'Q1' or 'Q3' — describe the concept the question tested. Each point under 25 words. 2–4 points per array."
-            : "Each array must have 2–4 short, practical bullet points. Keep each point under 20 words.");
-        var userMsg = focus + "\n\nDATA:\n" + summary;
-        return { system: systemMsg, user: userMsg };
+          "Focus weaknesses on the specific concepts behind the most-missed questions — describe the concept, not the question number. " +
+          "Each point under 28 words. 2–4 points per array.";
+        return { system: systemMsg, user: focus + "\n\nDATA:\n" + summary };
       }
 
-      var GROQ_API_KEY = window.GROQ_API_KEY || "";
-      var groqScopeVal = "all";
-      var groqAnalysisTypeVal = "general";
-
       function showGroqLoading() {
-        var ph = g("groq-placeholder");
-        var ld = g("groq-loading");
-        var err = g("groq-error");
-        var cards = g("groq-cards");
+        var ph = g("groq-placeholder"), ld = g("groq-loading"), err = g("groq-error"), cards = g("groq-cards");
         if (ph) ph.style.display = "none";
         if (ld) ld.style.display = "block";
         if (err) err.style.display = "none";
         if (cards) {
           cards.style.display = "none";
-          var s = g("groq-card-strengths");
-          var w = g("groq-card-weaknesses");
-          var i = g("groq-card-improve");
-          if (s) s.innerHTML = "";
-          if (w) w.innerHTML = "";
-          if (i) i.innerHTML = "";
+          ["groq-card-strengths","groq-card-weaknesses","groq-card-improve"].forEach(function(id) {
+            var el = g(id); if (el) el.innerHTML = "";
+          });
         }
       }
 
       function showGroqError(msg) {
-        console.error("[Groq] Error:", msg);
-        var ph = g("groq-placeholder");
-        var ld = g("groq-loading");
-        var cards = g("groq-cards");
-        var err = g("groq-error");
+        var ph = g("groq-placeholder"), ld = g("groq-loading"), cards = g("groq-cards"), err = g("groq-error");
         if (ph) ph.style.display = "none";
         if (ld) ld.style.display = "none";
         if (cards) cards.style.display = "none";
-        if (err) {
-          err.style.display = "block";
-          err.textContent = "⚠ " + msg;
-        }
+        if (err) { err.style.display = "block"; err.textContent = "⚠ " + msg; }
       }
 
       function showGroqCards(rawText) {
-        console.log("[Groq] Raw response:", rawText.substring(0, 200));
-        var ld = g("groq-loading");
-        var err = g("groq-error");
-        var ph = g("groq-placeholder");
-        var cards = g("groq-cards");
+        var ld = g("groq-loading"), err = g("groq-error"), ph = g("groq-placeholder"), cards = g("groq-cards");
         if (ld) ld.style.display = "none";
         if (err) err.style.display = "none";
         if (ph) ph.style.display = "none";
-
         var parsed;
         try {
-          var clean = rawText.replace(/^```[a-z]*\n?/gim, "").replace(/```$/gim, "").trim();
-          parsed = JSON.parse(clean);
+          parsed = JSON.parse(rawText.replace(/^```[a-z]*\n?/gim, "").replace(/```$/gim, "").trim());
         } catch (e) {
-          console.error("[Groq] JSON parse failed. Raw text:", rawText);
           showGroqError("AI returned unexpected format. Try again.");
           return;
         }
-
         function renderList(arr) {
           if (!Array.isArray(arr) || !arr.length) return "<li>No data.</li>";
-          return arr.map(function (item) {
-            return "<li>" + String(item).replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</li>";
-          }).join("");
+          return arr.map(function (item) { return "<li>" + String(item).replace(/</g,"&lt;").replace(/>/g,"&gt;") + "</li>"; }).join("");
         }
-
-        var s = g("groq-card-strengths");
-        var w = g("groq-card-weaknesses");
-        var i = g("groq-card-improve");
+        var s = g("groq-card-strengths"), w = g("groq-card-weaknesses"), i = g("groq-card-improve");
         if (s) s.innerHTML = "<ul>" + renderList(parsed.strengths) + "</ul>";
         if (w) w.innerHTML = "<ul>" + renderList(parsed.weaknesses) + "</ul>";
         if (i) i.innerHTML = "<ul>" + renderList(parsed.improvements) + "</ul>";
-
         if (cards) cards.style.display = "flex";
       }
 
       async function generateInsights() {
-        console.log("[Groq] generateInsights() called");
         var scores = window._adminScores || adminScores;
-        console.log("[Groq] Score count:", scores ? scores.length : 0);
-
         if (!scores || !scores.length) {
           showGroqError("No scores loaded yet. Open the Scores tab first, then click Generate.");
           return;
         }
-
-        var scope = groqScopeVal;
-        var analysisType = groqAnalysisTypeVal;
-        var summary = buildScoreSummary(scores, scope);
-        var prompt = buildGroqPrompt(summary, analysisType);
-
+        var summary = buildScoreSummary(scores, groqScopeVal);
+        var prompt = buildGroqPrompt(summary, groqAnalysisTypeVal);
         showGroqLoading();
-        console.log("[Groq] Sending request to Groq API… model: llama-3.1-8b-instant");
-
         try {
           var res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + GROQ_API_KEY
-            },
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + GROQ_API_KEY },
             body: JSON.stringify({
               model: "llama-3.1-8b-instant",
-              messages: [
-                { role: "system", content: prompt.system },
-                { role: "user",   content: prompt.user   }
-              ],
+              messages: [{ role: "system", content: prompt.system }, { role: "user", content: prompt.user }],
               max_tokens: groqScopeVal !== "all" ? 600 : 400,
               temperature: 0.6
             })
           });
-          console.log("[Groq] HTTP status:", res.status);
           if (!res.ok) {
             var errData = await res.json().catch(function () { return {}; });
             throw new Error(errData.error && errData.error.message ? errData.error.message : "HTTP " + res.status);
           }
           var data = await res.json();
-          var text = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content
+          showGroqCards(data.choices && data.choices[0] && data.choices[0].message
             ? data.choices[0].message.content.trim()
-            : '{"strengths":[],"weaknesses":[],"improvements":[]}';
-          showGroqCards(text);
+            : '{"strengths":[],"weaknesses":[],"improvements":[]}');
         } catch (e) {
           showGroqError(e.message);
         }
@@ -3224,22 +3346,26 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           };
         });
 
-        // Generate button — also wired via onclick= in HTML as backup
-        safe("groq-analyze-btn", function(el) { el.onclick = generateInsights; });
+        // Analytics topic select
+        safe("analytics-topic-select", function(el) {
+          el.onchange = function () {
+            analyticsTopicVal = this.value;
+            buildAnalytics();
+          };
+        });
 
-        // Custom dropdowns
+        // AI Insights
+        safe("groq-analyze-btn", function(el) { el.onclick = generateInsights; });
         function wireGroqDropdown(ddId, onSelect) {
           var dd = g(ddId);
-          if (!dd) { console.warn("[wireAdmin] missing dropdown #" + ddId); return; }
+          if (!dd) return;
           var trigger = dd.querySelector(".groq-dd-trigger");
-          var label = dd.querySelector(".groq-dd-label");
-          var items = dd.querySelectorAll(".groq-dd-item");
+          var label   = dd.querySelector(".groq-dd-label");
+          var items   = dd.querySelectorAll(".groq-dd-item");
           if (trigger) {
             trigger.onclick = function(e) {
               e.stopPropagation();
-              document.querySelectorAll(".groq-dd.open").forEach(function(el) {
-                if (el !== dd) el.classList.remove("open");
-              });
+              document.querySelectorAll(".groq-dd.open").forEach(function(el) { if (el !== dd) el.classList.remove("open"); });
               dd.classList.toggle("open");
             };
           }
@@ -3248,18 +3374,16 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
               e.stopPropagation();
               items.forEach(function(i) { i.classList.remove("selected"); });
               item.classList.add("selected");
-              if (label) label.textContent = item.textContent;
+              if (label) label.textContent = item.textContent.trim();
               onSelect(item.getAttribute("data-value"));
               dd.classList.remove("open");
             };
           });
         }
         wireGroqDropdown("groq-scope-dd", function(val) { groqScopeVal = val; });
-        wireGroqDropdown("groq-type-dd", function(val) { groqAnalysisTypeVal = val; });
+        wireGroqDropdown("groq-type-dd",  function(val) { groqAnalysisTypeVal = val; });
         document.addEventListener("click", function() {
-          document.querySelectorAll(".groq-dd.open").forEach(function(el) {
-            el.classList.remove("open");
-          });
+          document.querySelectorAll(".groq-dd.open").forEach(function(el) { el.classList.remove("open"); });
         });
 
         // Idle timer

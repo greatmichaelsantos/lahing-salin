@@ -3236,7 +3236,7 @@
         background: #faf9f7;
       }
 
-      /* ── AI Insights Hero Panel ── */
+      /* ── AI Insights Tab ── */
       #admin-ai-hero {
         background: linear-gradient(135deg, #1b1c1b 0%, #2d2d2b 100%);
         border-radius: 16px;
@@ -3270,10 +3270,7 @@
         align-items: center;
         flex-wrap: wrap;
       }
-      /* Custom dropdowns */
-      .groq-dd {
-        position: relative;
-      }
+      .groq-dd { position: relative; }
       .groq-dd-trigger {
         display: flex;
         align-items: center;
@@ -3287,34 +3284,18 @@
         transition: border-color 0.15s, background 0.15s;
         white-space: nowrap;
       }
-      .groq-dd-trigger:hover {
-        border-color: rgba(255,255,255,0.35);
-        background: rgba(255,255,255,0.11);
-      }
-      .groq-dd.open .groq-dd-trigger {
-        border-color: #fcd400;
-        background: rgba(252,212,0,0.08);
-      }
-      .groq-dd-label {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 12px;
-        font-weight: 600;
-        color: #fff;
-      }
+      .groq-dd-trigger:hover { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.11); }
+      .groq-dd.open .groq-dd-trigger { border-color: #fcd400; background: rgba(252,212,0,0.08); }
+      .groq-dd-label { font-family: "Space Grotesk", sans-serif; font-size: 12px; font-weight: 600; color: #fff; }
       .groq-dd-arrow {
-        width: 6px;
-        height: 6px;
+        width: 6px; height: 6px;
         border-right: 2px solid rgba(255,255,255,0.45);
         border-bottom: 2px solid rgba(255,255,255,0.45);
         transform: rotate(45deg) translateY(-2px);
         transition: transform 0.15s, border-color 0.15s;
-        flex-shrink: 0;
-        margin-top: -2px;
+        flex-shrink: 0; margin-top: -2px;
       }
-      .groq-dd.open .groq-dd-arrow {
-        transform: rotate(-135deg) translateY(0px);
-        border-color: #fcd400;
-      }
+      .groq-dd.open .groq-dd-arrow { transform: rotate(-135deg) translateY(0px); border-color: #fcd400; }
       .groq-dd-menu {
         display: none;
         position: absolute;
@@ -3339,15 +3320,8 @@
         cursor: pointer;
         transition: background 0.1s, color 0.1s;
       }
-      .groq-dd-item:hover {
-        background: rgba(255,255,255,0.07);
-        color: #fff;
-      }
-      .groq-dd-item.selected {
-        background: rgba(252,212,0,0.12);
-        color: #fcd400;
-        font-weight: 600;
-      }
+      .groq-dd-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+      .groq-dd-item.selected { background: rgba(252,212,0,0.12); color: #fcd400; font-weight: 600; }
       #groq-analyze-btn {
         font-family: "Space Grotesk", sans-serif;
         font-size: 12px;
@@ -3362,32 +3336,11 @@
         box-shadow: 0 3px 0 #b89e00;
         transition: all 0.15s;
       }
-      #groq-analyze-btn:active {
-        box-shadow: none;
-        transform: translateY(2px);
-      }
-      #groq-output {
-        min-height: 60px;
-      }
-      #groq-placeholder {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
-        color: rgba(255,255,255,0.35);
-        text-align: center;
-        padding: 16px 0 4px;
-      }
-      #groq-error {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
-        color: #ff6b6b;
-        padding: 8px 0;
-      }
-      #groq-loading {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
-        color: rgba(255,255,255,0.6);
-        padding: 12px 0;
-      }
+      #groq-analyze-btn:active { box-shadow: none; transform: translateY(2px); }
+      #groq-output { min-height: 60px; }
+      #groq-placeholder { font-family: "Plus Jakarta Sans", sans-serif; font-size: 13px; color: rgba(255,255,255,0.35); text-align: center; padding: 16px 0 4px; }
+      #groq-error { font-family: "Plus Jakarta Sans", sans-serif; font-size: 13px; color: #ff6b6b; padding: 8px 0; }
+      #groq-loading { font-family: "Plus Jakarta Sans", sans-serif; font-size: 13px; color: rgba(255,255,255,0.6); padding: 12px 0; }
       .groq-spinner {
         display: inline-block;
         width: 13px; height: 13px;
@@ -3398,66 +3351,222 @@
         vertical-align: middle;
         margin-left: 6px;
       }
-      @keyframes spin { to { transform: rotate(360deg); } }
-
-      /* ── AI Insights 3-card output ── */
-      #groq-cards {
-        display: flex;
-        gap: 12px;
-        margin-top: 12px;
-        flex-wrap: wrap;
-      }
-      .groq-card {
-        flex: 1 1 0;
-        min-width: 180px;
-        border-radius: 12px;
-        padding: 14px 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      .groq-card-strengths {
-        background: rgba(34, 197, 94, 0.10);
-        border: 1px solid rgba(34, 197, 94, 0.25);
-      }
-      .groq-card-weaknesses {
-        background: rgba(239, 68, 68, 0.10);
-        border: 1px solid rgba(239, 68, 68, 0.25);
-      }
-      .groq-card-improve {
-        background: rgba(252, 212, 0, 0.10);
-        border: 1px solid rgba(252, 212, 0, 0.30);
-      }
-      .groq-card-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 4px;
-      }
+      #groq-cards { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+      .groq-card { flex: 1 1 0; min-width: 180px; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+      .groq-card-strengths { background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.25); }
+      .groq-card-weaknesses { background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.25); }
+      .groq-card-improve { background: rgba(252,212,0,0.10); border: 1px solid rgba(252,212,0,0.30); }
+      .groq-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
       .groq-card-icon { font-size: 18px; line-height: 1; }
-      .groq-card-title {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
+      .groq-card-title { font-family: "Space Grotesk", sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
       .groq-card-strengths  .groq-card-title { color: #4ade80; }
       .groq-card-weaknesses .groq-card-title { color: #f87171; }
       .groq-card-improve    .groq-card-title { color: #fcd400; }
-      .groq-card-body {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 12.5px;
-        line-height: 1.7;
-        color: rgba(255, 255, 255, 0.80);
-      }
-      .groq-card-body ul {
-        padding-left: 16px;
-        margin: 0;
-        list-style: disc;
-      }
+      .groq-card-body { font-family: "Plus Jakarta Sans", sans-serif; font-size: 12.5px; line-height: 1.7; color: rgba(255,255,255,0.80); }
+      .groq-card-body ul { padding-left: 16px; margin: 0; list-style: disc; }
       .groq-card-body li { margin-bottom: 5px; }
       .groq-card-body li:last-child { margin-bottom: 0; }
+
+      /* ── Analytics Tab ── */
+      #admin-tab-analytics { padding: 16px 16px 24px; }
+      .analytics-topic-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+      .analytics-topic-bar label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .analytics-topic-select {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1c1c28;
+        background: #efeeec;
+        border: 1.5px solid #c8c9cf;
+        border-radius: 9px;
+        padding: 7px 12px;
+        outline: none;
+        cursor: pointer;
+        flex: 1;
+        min-width: 160px;
+      }
+      .analytics-stat-chips {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .analytics-chip {
+        background: #f5f4f2;
+        border: 1.5px solid #dddcda;
+        border-radius: 12px;
+        padding: 10px 16px;
+        min-width: 90px;
+      }
+      .analytics-chip-val {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: #1c1c28;
+      }
+      .analytics-chip-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        color: #888;
+        margin-top: 1px;
+      }
+      .analytics-section-title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        margin: 0 0 10px;
+      }
+      .analytics-q-card {
+        background: #fff;
+        border: 1.5px solid #e0dedd;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .analytics-q-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+      }
+      .analytics-q-label {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .analytics-q-pct {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .analytics-q-text {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1c1c28;
+        margin-bottom: 14px;
+        line-height: 1.45;
+      }
+      .analytics-bar-row {
+        display: grid;
+        grid-template-columns: 18px 1fr 36px;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 7px;
+      }
+      .analytics-bar-letter {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #aaa;
+      }
+      .analytics-bar-wrap {
+        background: #eeecea;
+        border-radius: 5px;
+        height: 26px;
+        position: relative;
+        overflow: hidden;
+      }
+      .analytics-bar-fill {
+        height: 100%;
+        border-radius: 5px;
+        transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+        min-width: 0;
+      }
+      .analytics-bar-fill-wrong { background: #d6d4d1; }
+      .analytics-bar-fill-correct { background: #bbf7d0; }
+      .analytics-bar-label {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: calc(100% - 16px);
+        pointer-events: none;
+      }
+      .analytics-bar-count {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: #888;
+        text-align: right;
+      }
+      .analytics-bar-row.is-correct .analytics-bar-letter { color: #16a34a; }
+      .analytics-bar-row.is-correct .analytics-bar-fill-correct { background: #22c55e; }
+      .analytics-bar-row.is-correct .analytics-bar-label { color: #14532d; font-weight: 700; }
+      .analytics-bar-row.is-correct .analytics-bar-count { color: #16a34a; }
+      .analytics-q-foot {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        color: #888;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #eeecea;
+      }
+      .analytics-overall {
+        background: #fff;
+        border: 1.5px solid #e0dedd;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .analytics-overall-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 16px;
+        border-bottom: 1px solid #f0efed;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .analytics-overall-row:last-child { border-bottom: none; }
+      .analytics-overall-key { font-size: 13px; color: #666; font-weight: 500; }
+      .analytics-overall-val { font-size: 13px; color: #1c1c28; font-weight: 700; }
+      .analytics-subrows { border-bottom: 1px solid #f0efed; }
+      .analytics-grade-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 16px 7px 28px;
+        font-family: "Space Grotesk", sans-serif;
+        border-bottom: 1px solid #f7f6f5;
+      }
+      .analytics-grade-row:last-child { border-bottom: none; }
+      .analytics-grade-key { font-size: 12px; color: #888; }
+      .analytics-grade-val { font-size: 12px; color: #444; font-weight: 600; }
+      .analytics-empty {
+        text-align: center;
+        padding: 48px 20px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 14px;
+        color: #888;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
 
       /* Scores tab */
       .admin-toolbar {
