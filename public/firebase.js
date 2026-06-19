@@ -9,13 +9,13 @@ import {
 }                               from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey:            "AIzaSyC4GmFQDacZftYZaJvh8g6tYF7PDLtzVrU",
-  authDomain:        "saln-lhi-5de80.firebaseapp.com",
-  projectId:         "saln-lhi-5de80",
-  storageBucket:     "saln-lhi-5de80.firebasestorage.app",
-  messagingSenderId: "838506980633",
-  appId:             "1:838506980633:web:48c8b3410c3418bde99188",
-  measurementId:     "G-EZD4V0MXLS",
+  apiKey:            "AIzaSyBCSZqfmrDAF4SfCE3g7ygqBybSW3PEFM4",
+  authDomain:        "salin-lahi-apsd.firebaseapp.com",
+  projectId:         "salin-lahi-apsd",
+  storageBucket:     "salin-lahi-apsd.firebasestorage.app",
+  messagingSenderId: "675734624320",
+  appId:             "1:675734624320:web:3403a2ae844ce6d3dba7a5",
+  measurementId:     "G-7RES3DC832",
 };
 
 const app  = initializeApp(firebaseConfig);

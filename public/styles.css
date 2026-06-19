@@ -170,9 +170,10 @@
         transform: rotate(2.5deg);
         pointer-events: none;
         z-index: 0;
+        max-width: 38vw;
       }
       .credit-stamp-star {
-        font-size: 22px;
+        font-size: clamp(12px, 3.5vw, 22px);
         color: #fcd400;
         line-height: 1;
         filter: drop-shadow(0 1px 3px rgba(0,0,0,0.22));
@@ -180,20 +181,22 @@
       .credit-stamp-title {
         font-family: "Fraunces", serif;
         font-weight: 900;
-        font-size: 30px;
+        font-size: clamp(14px, 5vw, 30px);
         letter-spacing: 0.12em;
         color: #bd001a;
         line-height: 1;
         text-shadow: 0 2px 8px rgba(189,0,26,0.18);
+        white-space: nowrap;
       }
       .credit-stamp-by {
         font-family: "Space Grotesk", sans-serif;
         font-weight: 600;
-        font-size: 18px;
+        font-size: clamp(9px, 3vw, 18px);
         letter-spacing: 0.04em;
         color: #8a8b8f;
         line-height: 1;
         text-transform: lowercase;
+        white-space: nowrap;
       }
       .greeting-title {
         font-family: "Fraunces", serif;
@@ -203,6 +206,7 @@
         color: #bd001a;
         letter-spacing: -0.02em;
         flex-shrink: 0;
+        padding-right: clamp(100px, 38vw, 180px);
       }
       .greeting-sub {
         font-family: "Plus Jakarta Sans", sans-serif;
@@ -211,6 +215,7 @@
         color: #5d3f3c;
         margin-top: 4px;
         flex-shrink: 0;
+        padding-right: clamp(100px, 38vw, 180px);
       }
 
       /* ── Bento grid ── */
@@ -927,6 +932,15 @@
         gap: 14px;
         padding: 8px 28px 32px;
       }
+      .ai-disclosure {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 11px;
+        color: #b0b0b0;
+        text-align: center;
+        margin: 6px 0 0;
+        letter-spacing: 0.03em;
+        pointer-events: none;
+      }
       /* exp-card — plaka panel */
       .exp-card {
         border-radius: 16px;
@@ -937,14 +951,18 @@
           box-shadow 0.15s;
         user-select: none;
         background: #fff;
-        border: 1px solid #a8a9ad;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        border: none;
+        box-shadow: none;
         display: flex;
         flex-direction: column;
       }
       .exp-card:active {
         transform: scale(0.97);
         box-shadow: none;
+      }
+      .exp-card-wrap {
+        border-radius: 20px;
+        padding: 6px;
       }
       .exp-card-stripe {
         height: 5px;

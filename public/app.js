@@ -1083,45 +1083,39 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
       // ── Heritage Guide ──
       var COLORS = [
-        "#38BDF8",
-        "#F5A623",
-        "#EF6C5C",
-        "#8B5CF6",
-        "#22C55E",
-        "#06B6A4",
-        "#F472B6",
-        "#FB923C",
-        "#A3E635",
+        "#FAEE04", // A — Aeta History
+        "#9D231E", // B — Traditional Livelihood
+        "#4262AD", // C — Indigenous Music
+        "#18A549", // D — Traditional Tools
+        "#55C8F4", // E — Cultural Values
+        "#B64499", // F — Olongapo Origins
+        "#E1E1E1", // G — Naval Heritage
+        "#FFD400", // H — People & Local Culture
       ];
       function buildGuide() {
         var html = "";
         DATA.sections.forEach(function (s, i) {
           var c = COLORS[i % COLORS.length];
           var preview = s.content.split("\n\n")[0].substring(0, 90) + "...";
+          html += '<div class="exp-card-wrap" style="background:' + c + '">';
           html += '<div class="exp-card" data-id="' + s.id + '">';
           html +=
-            '<div class="exp-card-stripe" style="background:' + c + '"></div>';
+            '<div class="exp-card-stripe" style="background:#fff"></div>';
           html += '<div class="exp-card-inner">';
           html +=
-            '<div class="exp-card-icon" style="background:' +
-            c +
-            "22;color:" +
-            c +
-            '">' +
+            '<div class="exp-card-icon" style="background:#fff;color:#555">' +
             sectionEmoji(s.id) +
             "</div>";
           html += '<div class="exp-card-body">';
           html +=
-            '<div class="exp-card-station" style="color:' +
-            c +
-            '">' +
+            '<div class="exp-card-station" style="color:#555">' +
             s.station +
             "</div>";
           html += '<div class="exp-card-title">' + s.title + "</div>";
           html += '<div class="exp-card-preview">' + preview + "</div>";
           html += "</div></div>";
           html +=
-            '<div class="exp-card-footer"><span class="exp-card-cta">Read More</span><span class="exp-card-arrow">›</span></div></div>';
+            '<div class="exp-card-footer"><span class="exp-card-cta">Read More</span><span class="exp-card-arrow">›</span></div></div></div>';
         });
         g("guide-body").innerHTML = html;
         g("guide-body")
@@ -2825,22 +2819,59 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       }
 
       // ── AI Insights (Groq) ──
+      function buildQuestionStats(filtered, topicId) {
+        var section = DATA && DATA.sections ? DATA.sections.find(function (s) { return s.id === topicId; }) : null;
+        var totalAttempts = filtered.length;
+
+        // Count wrong answers per question text
+        var wrongCounts = {};
+        filtered.forEach(function (score) {
+          if (score.wrong && Array.isArray(score.wrong)) {
+            score.wrong.forEach(function (w) {
+              if (!wrongCounts[w.q]) wrongCounts[w.q] = { count: 0, topChoices: {}, correct: w.correct };
+              wrongCounts[w.q].count++;
+              var chosen = w.chosen;
+              wrongCounts[w.q].topChoices[chosen] = (wrongCounts[w.q].topChoices[chosen] || 0) + 1;
+            });
+          }
+        });
+
+        var lines = [];
+        if (section && section.questions && section.questions.length) {
+          // Use DATA questions to include questions nobody got wrong (100% accuracy)
+          section.questions.forEach(function (q, idx) {
+            var stats = wrongCounts[q.q];
+            var wrongCount = stats ? stats.count : 0;
+            var correctCount = totalAttempts - wrongCount;
+            var pct = totalAttempts > 0 ? Math.round(correctCount / totalAttempts * 100) : 0;
+            var line = "  Q" + (idx + 1) + " (" + pct + "% correct, " + correctCount + "/" + totalAttempts + "): \"" + q.q + "\"";
+            if (stats && stats.count > 0) {
+              var topWrong = Object.entries(stats.topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
+              line += " | Most common wrong: \"" + topWrong[0] + "\"";
+            }
+            lines.push(line);
+          });
+        } else {
+          // Fallback: reconstruct from wrong arrays only (100%-correct questions won't appear)
+          Object.entries(wrongCounts).forEach(function (e) {
+            var wrongCount = e[1].count;
+            var correctCount = totalAttempts - wrongCount;
+            var pct = totalAttempts > 0 ? Math.round(correctCount / totalAttempts * 100) : 0;
+            var topWrong = Object.entries(e[1].topChoices).sort(function (a, b) { return b[1] - a[1]; })[0];
+            var line = "  (" + pct + "% correct, " + correctCount + "/" + totalAttempts + "): \"" + e[0] + "\"";
+            if (topWrong) line += " | Most common wrong: \"" + topWrong[0] + "\"";
+            lines.push(line);
+          });
+        }
+        return lines.length ? lines.join("\n") : "  (no per-question data available)";
+      }
+
       function buildScoreSummary(scores, scope) {
         var filtered = scope === "all" ? scores : scores.filter(function (s) { return s.topicId === scope; });
         if (!filtered.length) return "No score data available for the selected topic.";
         var total = filtered.length;
         var avg = (filtered.reduce(function (a, s) { return a + (s.pct || 0); }, 0) / total).toFixed(1);
         var perfect = filtered.filter(function (s) { return s.pct >= 100; }).length;
-        var byTopic = {};
-        filtered.forEach(function (s) {
-          var tid = s.topicId || "unknown";
-          if (!byTopic[tid]) byTopic[tid] = { topic: s.topic || tid, count: 0, totalPct: 0 };
-          byTopic[tid].count++;
-          byTopic[tid].totalPct += (s.pct || 0);
-        });
-        var topicLines = Object.values(byTopic).map(function (t) {
-          return "  - " + t.topic + ": " + t.count + " attempts, avg " + (t.totalPct / t.count).toFixed(1) + "%";
-        }).join("\n");
         var byGrade = {};
         filtered.forEach(function (s) {
           var gr = s.grade || "Unknown";
@@ -2850,31 +2881,62 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         });
         var gradeLines = Object.values(byGrade).length
           ? Object.entries(byGrade).map(function (e) {
-              return "  - Grade " + e[0] + ": " + e[1].count + " attempts, avg " + (e[1].totalPct / e[1].count).toFixed(1) + "%";
+              return "  - " + e[0] + ": " + e[1].count + " attempts, avg " + (e[1].totalPct / e[1].count).toFixed(1) + "%";
             }).join("\n")
           : "  (no grade data)";
-        return [
+
+        var parts = [
           "Total attempts: " + total,
           "Average score: " + avg + "%",
           "Perfect scores: " + perfect,
-          "By topic:\n" + topicLines,
           "By grade level:\n" + gradeLines
-        ].join("\n");
+        ];
+
+        if (scope !== "all") {
+          var section = DATA && DATA.sections ? DATA.sections.find(function (s) { return s.id === scope; }) : null;
+          var topicName = section ? section.title : scope;
+          parts.unshift("Topic: " + topicName);
+          parts.push("Per-question accuracy:\n" + buildQuestionStats(filtered, scope));
+        } else {
+          var byTopic = {};
+          filtered.forEach(function (s) {
+            var tid = s.topicId || "unknown";
+            if (!byTopic[tid]) byTopic[tid] = { topic: s.topic || tid, count: 0, totalPct: 0 };
+            byTopic[tid].count++;
+            byTopic[tid].totalPct += (s.pct || 0);
+          });
+          var topicLines = Object.values(byTopic).map(function (t) {
+            return "  - " + t.topic + ": " + t.count + " attempts, avg " + (t.totalPct / t.count).toFixed(1) + "%";
+          }).join("\n");
+          parts.push("By topic:\n" + topicLines);
+        }
+
+        return parts.join("\n");
       }
 
       function buildGroqPrompt(summary, analysisType) {
+        var isTopicScope = groqScopeVal !== "all";
         var focusMap = {
-          general: "Provide a general overview of student performance.",
-          struggling: "Identify where students struggle most. Which topics have the lowest average scores?",
-          grade: "Analyze performance differences across grade levels.",
-          trends: "Analyze score trends and patterns.",
-          recommendations: "Provide concrete teaching recommendations based on this data."
+          general:         isTopicScope
+            ? "Analyze student understanding of this specific topic. Group your findings by concept or idea — not by question number. Which concepts did students grasp well? Which ones confused them?"
+            : "Provide a general overview of student performance across all topics.",
+          struggling:      isTopicScope
+            ? "Identify which specific concepts or facts within this topic students struggled with most, based on the per-question accuracy data."
+            : "Identify which topics have the lowest average scores and where students struggle most.",
+          grade:           "Analyze performance differences across grade levels.",
+          trends:          "Analyze score trends and patterns.",
+          recommendations: isTopicScope
+            ? "Based on the per-question accuracy data, give concrete teaching recommendations. Name the specific concepts to revisit."
+            : "Provide concrete teaching recommendations based on this data."
         };
-        var focus = focusMap[analysisType] || "Provide a general overview.";
-        var systemMsg = "You are an educational data analyst for SALIN-LAHI, a cultural heritage quiz kiosk about Olongapo City. " +
-          "You will receive student quiz performance data. Respond ONLY with a valid JSON object in this exact format (no markdown, no extra text):\n" +
+        var focus = focusMap[analysisType] || focusMap.general;
+        var systemMsg = "You are an educational data analyst for SALIN-LAHI, a cultural heritage quiz kiosk about Olongapo City, Philippines. " +
+          "You will receive student quiz performance data" + (isTopicScope ? ", including per-question accuracy with the exact question text and most common wrong answers." : ".") + " " +
+          "Respond ONLY with a valid JSON object in this exact format (no markdown, no extra text):\n" +
           '{"strengths":["point 1","point 2","point 3"],"weaknesses":["point 1","point 2","point 3"],"improvements":["point 1","point 2","point 3"]}\n' +
-          "Each array must have 2–4 short, practical bullet points. Keep each point under 20 words.";
+          (isTopicScope
+            ? "Group insights by concept or idea (e.g. 'Students understand X but confuse Y with Z'). Do NOT say 'Q1' or 'Q3' — describe the concept the question tested. Each point under 25 words. 2–4 points per array."
+            : "Each array must have 2–4 short, practical bullet points. Keep each point under 20 words.");
         var userMsg = focus + "\n\nDATA:\n" + summary;
         return { system: systemMsg, user: userMsg };
       }
@@ -2985,7 +3047,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
                 { role: "system", content: prompt.system },
                 { role: "user",   content: prompt.user   }
               ],
-              max_tokens: 400,
+              max_tokens: groqScopeVal !== "all" ? 600 : 400,
               temperature: 0.6
             })
           });
