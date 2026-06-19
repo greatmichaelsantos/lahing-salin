@@ -68,5 +68,8 @@ node_modules/
 # Local config with API keys — do not commit
 public/config.js
 
+# One-time migration tool — do not commit
+public/migrate.html
+
 # dataconnect generated files
 .dataconnect
