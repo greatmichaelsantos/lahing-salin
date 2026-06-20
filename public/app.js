@@ -861,13 +861,17 @@
       var EVENT_WRITE_STDOUT = 0x01;
 
       var COLOR_TO_SCREEN = {
-        red: "station:aeta-history", // Station A
-        blue: "station:livelihood",  // Station B
-        green: "timeline",
-        yellow: "quiz",
+        yellow: "station:aeta-history", // Station A
+        red: "station:livelihood",      // Station B
+        blue: "station:music",          // Station C
+        green: "station:tools",         // Station D
+        cyan: "station:values",         // Station E — Pybricks prints "Light Blue" as Color.CYAN
+        white: "station:origins",       // Station F
       };
 
+      var HUB_COOLDOWN_MS = 20000; // mirrors the rover's own 20s stop — ignore repeats here too
       var _hubLineBuf = "";
+      var _hubCooldownUntil = 0;
 
       function _hubSetStatus(text) {
         var el = g("hub-status");
@@ -882,9 +886,12 @@
       }
 
       function _hubHandleLine(line) {
+        var now = Date.now();
+        if (now < _hubCooldownUntil) return; // ignore repeats while the rover should be stopped
         var lower = line.toLowerCase();
         for (var color in COLOR_TO_SCREEN) {
           if (lower.indexOf(color) !== -1) {
+            _hubCooldownUntil = now + HUB_COOLDOWN_MS;
             _hubSetStatus("Detected: " + color + " → navigating");
             apNavigateTo(COLOR_TO_SCREEN[color]);
             return;
