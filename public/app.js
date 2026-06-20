@@ -1008,7 +1008,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           ["Region", c.region],
           ["Area", c.area],
           ["City Type", "Independent"],
-          ["Mayor", c.mayor],
         ];
         facts.forEach(function (f) {
           html +=
@@ -2184,6 +2183,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           slides += '<section class="tl-slide" aria-label="' + item.year + '">';
           slides += strip;
           slides += '<div class="tl-info' + (i % 2 ? " tl-info-red" : "") + '">';
+          slides += '<div class="tl-scrollable">';
           slides += '<div class="tl-year">' + item.year + "</div>";
           slides += '<div class="tl-rule"></div>';
           slides +=
@@ -2196,6 +2196,8 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           slides +=
             '<div class="tl-fact"><div class="tl-fact-label">Did You Know?</div>';
           slides += '<div class="tl-fact-text">' + item.did + "</div></div>";
+          slides += "</div>"; // end tl-scrollable
+          slides += '<div class="tl-footer">';
           slides +=
             '<button class="hs-listen-btn tl-listen-btn" type="button">' +
             '<span class="tl-listen-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>' +
@@ -2209,6 +2211,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             '<input type="range" class="hs-audio-seek tl-audio-seek" value="0" min="0" max="100" step="0.1" aria-label="Audio seek">' +
             '<span class="hs-audio-time tl-audio-time">0:00</span>' +
             "</div>";
+          slides += "</div>"; // end tl-footer
           slides += "</div></section>";
           dots +=
             '<button class="tl-dot' +

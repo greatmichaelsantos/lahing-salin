@@ -286,6 +286,11 @@
           height: 100%;
         }
       }
+      /* Quiz tile: always auto-height so content stacks tightly regardless of grid row height */
+      .t-quiz .tile-inner {
+        height: auto !important;
+        justify-content: flex-start !important;
+      }
       @media (max-width: 900px) {
         .tile-inner {
           height: auto;
@@ -642,6 +647,7 @@
       }
       .cty-fact-row:last-child {
         border-bottom: none;
+        padding-bottom: 10px;
       }
       .cty-fact-k {
         font-family: "Space Grotesk", sans-serif;
@@ -769,7 +775,7 @@
       .cty-stat {
         flex: 1;
         border-radius: 16px;
-        padding: clamp(8px, 1vw, 14px);
+        padding: clamp(16px, 2vw, 22px) clamp(12px, 1.4vw, 18px);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 0 0 1px #d6d4d1;
         display: flex;
         flex-direction: column;
@@ -1860,28 +1866,34 @@
         inset: 0 auto 0 0;
         z-index: 2;
         width: min(440px, 42vw);
-        padding: 28px 42px 32px;
+        padding: 0;
+        gap: 0;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
-        gap: 14px;
-        overflow-y: auto;
+        overflow: hidden;
         background: rgba(46, 84, 194, 0.88);
         border-right: 1px solid rgba(255, 255, 255, 0.18);
         box-shadow: 10px 0 30px rgba(0, 0, 0, 0.28);
         backdrop-filter: blur(4px);
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+      }
+      .tl-scrollable {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px 36px 12px;
+      }
+      .tl-footer {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px 36px 20px;
       }
       .tl-info-red {
         background: rgba(230, 30, 42, 0.88);
-      }
-      .tl-info::-webkit-scrollbar {
-        width: 4px;
-      }
-      .tl-info::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.28);
-        border-radius: 9999px;
       }
       .tl-kicker {
         font-family: "Space Grotesk", sans-serif;
@@ -1894,7 +1906,7 @@
       }
       .tl-year {
         font-family: "Fraunces", serif;
-        font-size: clamp(34px, 4.2vw, 54px);
+        font-size: clamp(28px, 3.5vw, 44px);
         line-height: 1;
         font-weight: 900;
         letter-spacing: 0;
@@ -1908,7 +1920,7 @@
       }
       .tl-title {
         font-family: "Fraunces", serif;
-        font-size: 25px;
+        font-size: 28px;
         line-height: 1.12;
         font-weight: 800;
         color: #fcd400;
@@ -1917,22 +1929,43 @@
       .tl-sub {
         margin-top: 6px;
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 15px;
+        font-size: 17px;
         line-height: 1.45;
         font-weight: 600;
         color: rgba(255, 255, 255, 0.86);
       }
       .tl-body {
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 14px;
+        font-size: 17px;
         line-height: 1.55;
         color: rgba(255, 255, 255, 0.92);
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+      }
+      .tl-body::-webkit-scrollbar {
+        width: 3px;
+      }
+      .tl-body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.22);
+        border-radius: 9999px;
       }
       .tl-fact {
         border: 1px solid rgba(252, 212, 0, 0.64);
         border-radius: 0;
-        overflow: hidden;
+        overflow: visible;
         background: rgba(0, 0, 0, 0.12);
+        flex-shrink: 0;
+      }
+      .tl-fact-text {
+        overflow-y: auto;
+        max-height: 110px;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
       }
       .tl-fact-label {
         padding: 8px 12px;
@@ -1949,13 +1982,12 @@
       .tl-fact-text {
         padding: 9px 12px 11px;
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
+        font-size: 15px;
         line-height: 1.45;
         color: rgba(255, 255, 255, 0.88);
       }
       .tl-listen-btn {
         align-self: flex-start;
-        margin-top: 4px;
       }
       .tl-info-red .tl-listen-btn {
         background: #fff;
@@ -2074,6 +2106,12 @@
       @media (max-width: 1050px) and (min-width: 761px) {
         .tl-info {
           width: min(400px, 46vw);
+        }
+        .tl-scrollable {
+          padding-left: 34px;
+          padding-right: 34px;
+        }
+        .tl-footer {
           padding-left: 34px;
           padding-right: 34px;
         }
@@ -2089,16 +2127,18 @@
           inset: auto 0 0 0;
           width: 100%;
           max-height: 78%;
-          padding: 16px 16px 20px;
-          justify-content: flex-start;
-          gap: 8px;
-          overflow-y: auto;
-          overflow-x: hidden;
+          overflow: hidden;
           border-right: 0;
           border-top: 1px solid rgba(168, 169, 173, 0.38);
+        }
+        .tl-scrollable {
+          padding: 16px 16px 8px;
+          gap: 8px;
           touch-action: pan-y;
-          -webkit-overflow-scrolling: touch;
           overscroll-behavior-y: contain;
+        }
+        .tl-footer {
+          padding: 8px 16px 20px;
         }
         .tl-year {
           font-size: 28px;
@@ -2172,9 +2212,12 @@
         }
       }
       @media (max-height: 620px) and (min-width: 761px) {
-        .tl-info {
-          padding: 24px 34px;
-          gap: 12px;
+        .tl-scrollable {
+          padding: 16px 34px 8px;
+          gap: 8px;
+        }
+        .tl-footer {
+          padding: 8px 34px 16px;
         }
         .tl-year {
           font-size: 38px;
@@ -3973,7 +4016,7 @@
       .hs-left {
         min-height: 0;
         display: grid;
-        grid-template-rows: minmax(0, 1.35fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1.1fr) minmax(0, 1fr);
         gap: 16px;
       }
 
@@ -4114,8 +4157,8 @@
       .hs-about-title {
         margin: 0;
         font-family: "Bricolage Grotesque", sans-serif;
-        font-size: 19px;
-        font-weight: 800;
+        font-size: 22px;
+        font-weight: 900;
         letter-spacing: -0.01em;
         color: #1A1A1A;
         overflow: hidden;
@@ -4145,15 +4188,48 @@
         color: #C0152E;
         flex-shrink: 0;
       }
+      .hs-about-body {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+        flex: 1 1 auto;
+        min-height: 0;
+        align-items: flex-start;
+        overflow: hidden;
+      }
+      .hs-about-body > #detail-indig-block {
+        flex-shrink: 0;
+        width: 110px;
+        align-self: stretch;
+      }
+      .hs-about-body > #detail-indig-block .hs-indig-tile {
+        height: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 10px;
+        gap: 6px;
+      }
+      .hs-about-body > #detail-indig-block .hs-indig-tile-title {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        font-size: 11px;
+      }
       .hs-about-text {
         margin: 9px 0 0;
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
+        font-size: 16px;
         line-height: 1.6;
         color: #4A4744;
         flex: 1 1 auto;
-        min-height: 0;
+        min-height: 60px;
         overflow-y: auto;
+      }
+      .hs-about-body > .hs-about-text {
+        margin: 0;
+        min-height: 0;
+        -webkit-overflow-scrolling: touch;
       }
       .hs-tts-word {
         display: inline;
@@ -4289,7 +4365,7 @@
       .hs-ff-title {
         font-family: "Space Grotesk", sans-serif;
         font-weight: 800;
-        font-size: 10.5px;
+        font-size: 13px;
         letter-spacing: 0.1em;
         text-transform: uppercase;
         color: #8A6D00;
@@ -4298,12 +4374,12 @@
       .hs-ff-text {
         margin: 4px 0 0;
         font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 13px;
+        font-size: 15px;
         line-height: 1.45;
         color: #4A4744;
         overflow: hidden;
         display: -webkit-box;
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 5;
         -webkit-box-orient: vertical;
       }
 
@@ -4661,14 +4737,15 @@
          INDIGENOUS CULTURE BLOCK (Station A)
       ══════════════════════════════════════════ */
       #detail-indig-block {
-        margin-top: 14px;
+        margin-top: 8px;
+        flex-shrink: 0;
       }
       .hs-indig-link {
         display: inline-block;
         background: none;
         border: none;
         padding: 0;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         font-family: "Plus Jakarta Sans", sans-serif;
         font-size: clamp(12.5px, 1.05vw, 14px);
         color: #2563eb;
@@ -4685,10 +4762,10 @@
       .hs-indig-tile {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 10px;
         background: linear-gradient(135deg, #1b3a27 0%, #2d5a3d 100%);
-        border-radius: 14px;
-        padding: 14px 16px;
+        border-radius: 10px;
+        padding: 8px 12px;
         cursor: pointer;
         transition: transform 0.15s, box-shadow 0.15s;
         box-shadow: 0 3px 12px rgba(27,58,39,0.3);
@@ -4696,33 +4773,27 @@
       .hs-indig-tile:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(27,58,39,0.4); }
       .hs-indig-tile:active { transform: translateY(0); }
       .hs-indig-tile-icon {
-        font-size: 28px;
+        font-size: 20px;
         flex-shrink: 0;
         line-height: 1;
       }
       .hs-indig-tile-content { flex: 1; min-width: 0; }
       .hs-indig-tile-tag {
-        font-family: "Space Grotesk", sans-serif;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: #7dd3a8;
-        margin-bottom: 3px;
+        display: none;
       }
       .hs-indig-tile-title {
         font-family: "Bricolage Grotesque", sans-serif;
-        font-size: clamp(13px, 1.2vw, 15px);
+        font-size: 13px;
         font-weight: 800;
         color: #fff;
         line-height: 1.2;
-        margin-bottom: 3px;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       .hs-indig-tile-sub {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 11.5px;
-        color: rgba(255,255,255,0.65);
-        line-height: 1.4;
+        display: none;
       }
       .hs-indig-tile-arrow {
         font-size: 18px;
