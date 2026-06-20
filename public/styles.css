@@ -2123,10 +2123,29 @@
         }
       }
       @media (max-width: 760px) {
-        .tl-info {
-          inset: auto 0 0 0;
+        /* Stack photo above panel instead of overlapping it — the photo
+           gets its own flex-sized band at the top, the panel fills the
+           rest, so the full image is always visible before the panel starts */
+        .tl-slide {
+          display: flex;
+          flex-direction: column;
+        }
+        .tl-photo-strip {
+          position: relative;
+          inset: auto;
+          flex: 0 0 34%;
           width: 100%;
-          max-height: 78%;
+        }
+        .tl-slide::after {
+          display: none;
+        }
+        .tl-info {
+          position: relative;
+          inset: auto;
+          flex: 1 1 auto;
+          min-height: 0;
+          width: 100%;
+          max-height: none;
           overflow: hidden;
           border-right: 0;
           border-top: 1px solid rgba(168, 169, 173, 0.38);
