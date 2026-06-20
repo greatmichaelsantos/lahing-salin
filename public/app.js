@@ -869,7 +869,10 @@
         white: "station:origins",       // Station F
       };
 
-      var HUB_COOLDOWN_MS = 25000; // mirrors the rover's 20s stop + 5s blind drive — ignore repeats here too
+      // Short anti-duplicate window only — the rover's own stop/blind-drive cycle
+      // (tuned independently on the hub) already prevents real repeat detections,
+      // so this just guards against an accidental duplicate BLE notification.
+      var HUB_COOLDOWN_MS = 2000;
       var _hubLineBuf = "";
       var _hubCooldownUntil = 0;
 
