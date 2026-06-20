@@ -771,26 +771,25 @@
       }
 
       function apNavigateTo(screenVal) {
+        // Close every open overlay first (e.g. Admin / Presentation Settings),
+        // since this can be triggered while deep in another screen (hub color events).
+        document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
+        stationAudioStop(); ttsStop();
+
         if (screenVal === "idle") {
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
-          stationAudioStop(); ttsStop();
           goTo(0, true);
         } else if (screenVal === "dashboard") {
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
-          stationAudioStop(); ttsStop();
           goTo(1, true);
         } else if (screenVal === "guide") {
           goTo(1, true);
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
           g("ov-guide").classList.add("open");
         } else if (screenVal.startsWith("station:")) {
           var sId = screenVal.split(":")[1];
           goTo(1, true);
-          if (!g("ov-guide").classList.contains("open")) g("ov-guide").classList.add("open");
+          g("ov-guide").classList.add("open");
           openSection(sId);
         } else if (screenVal === "timeline") {
           goTo(1, true);
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           openOverlay("ov-timeline");
           setTimeout(function () {
             var car = g("tl-carousel");
@@ -799,13 +798,11 @@
           }, 120);
         } else if (screenVal === "quiz") {
           goTo(1, true);
-          document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           resetQuizSelect();
           openOverlay("ov-quiz");
         }
         bgAudioUpdate();
         resetIdle();
-        closeOverlay("ov-admin");
       }
 
       // ── Wire buttons ──
@@ -901,7 +898,11 @@
         if (eventId === EVENT_WRITE_STDOUT) {
           var bytes = new Uint8Array(value.buffer, value.byteOffset + 1, value.byteLength - 1);
           var text = new TextDecoder().decode(bytes);
+          console.log("[hub stdout]", JSON.stringify(text));
+          _hubSetStatus("Last raw: " + JSON.stringify(text));
           _hubHandleStdoutText(text);
+        } else {
+          console.log("[hub event]", eventId, value);
         }
       }
 
