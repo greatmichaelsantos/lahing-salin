@@ -184,13 +184,6 @@ If no interaction is detected for 60 seconds, the app automatically returns to t
 
 Any touch or click on the idle screen returns to the dashboard and restarts the idle timer.
 
----
-
-## Presentation Mode
-
-A separate **Presentation Settings** screen (accessed via the Presentation PIN, which is different from the Admin PIN) lets a teacher configure and run an automated slideshow through the kiosk content — stepping through stations, the timeline, and the quiz on a timer. This is useful for classroom walkthroughs or exhibit demonstrations.
-
-The presentation flow configuration is saved to Firestore so the same setup loads automatically on any device.
 
 ---
 
