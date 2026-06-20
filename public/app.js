@@ -359,7 +359,6 @@
 
       function init() {
         _loadAdminPin();
-        _loadPresPin();
         apLoadConfig();
         _loadPresFlow();
         buildCityPreview();
@@ -442,7 +441,6 @@
         if (!_apConfig) apLoadConfig();
         _apState = "running";
         _apStepIdx = 0;
-        // Close any open overlay (e.g. ov-presentation) before the countdown
         document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
         stationAudioStop(); ttsStop();
         goTo(1, true);
@@ -2517,7 +2515,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
       // ADMIN DASHBOARD
       // ════════════════════════════════════════════
       var ADMIN_PIN = "1234";        // fallback — overwritten by Firestore on load
-      var PRESENTATION_PIN = "4321"; // fallback — overwritten by Firestore on load
       var pinBuffer = "";
       var adminScores = [];
       var adminLastSync = null;
@@ -2530,23 +2527,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           if (!window.fbGetAdminPin) return;
           window.fbGetAdminPin().then(function (pin) {
             if (pin) ADMIN_PIN = pin;
-          }).catch(function () {});
-        }
-        if (window._fbReady) {
-          _fetch();
-        } else {
-          window.addEventListener("firebase-ready", function handler() {
-            window.removeEventListener("firebase-ready", handler);
-            _fetch();
-          });
-        }
-      }
-
-      function _loadPresPin() {
-        function _fetch() {
-          if (!window.fbGetPresPin) return;
-          window.fbGetPresPin().then(function (pin) {
-            if (pin) PRESENTATION_PIN = pin;
           }).catch(function () {});
         }
         if (window._fbReady) {
@@ -2622,9 +2602,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         if (pinBuffer === ADMIN_PIN) {
           closePinModal();
           openAdminDashboard();
-        } else if (pinBuffer === PRESENTATION_PIN) {
-          closePinModal();
-          openPresentationDashboard();
         } else {
           var dotsEl = g("pin-dots");
           dotsEl.classList.add("shake");
@@ -2636,12 +2613,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             g("pin-error").textContent = "";
           }, 800);
         }
-      }
-
-      function openPresentationDashboard() {
-        openOverlay("ov-presentation");
-        _apBuildFlowUI();
-        _apSyncAdminBtns();
       }
 
       // ── Admin overlay ──
@@ -3408,44 +3379,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           };
         });
 
-        // Presentation PIN change
-        safe("pres-pin-save-btn", function(el) {
-          el.onclick = async function () {
-            var spEl = g("pres-pin-secret-pw");
-            var npEl = g("pres-pin-new");
-            var cpEl = g("pres-pin-confirm");
-            var msg  = g("pres-pin-save-msg");
-            var sp = spEl ? spEl.value : "";
-            var np = npEl ? npEl.value.trim() : "";
-            var cp = cpEl ? cpEl.value.trim() : "";
-            if (sp !== "aplus") {
-              if (msg) { msg.textContent = "Incorrect secret password."; msg.className = "settings-msg err"; }
-              return;
-            }
-            if (!/^\d{4}$/.test(np)) {
-              if (msg) { msg.textContent = "PIN must be exactly 4 digits."; msg.className = "settings-msg err"; }
-              return;
-            }
-            if (np !== cp) {
-              if (msg) { msg.textContent = "PINs do not match."; msg.className = "settings-msg err"; }
-              return;
-            }
-            el.disabled = true;
-            try {
-              await window.fbSetPresPin(np);
-              PRESENTATION_PIN = np;
-              if (spEl) spEl.value = "";
-              if (npEl) npEl.value = "";
-              if (cpEl) cpEl.value = "";
-              if (msg) { msg.textContent = "Presentation PIN saved — active on all devices."; msg.className = "settings-msg ok"; }
-            } catch (e) {
-              if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
-            } finally {
-              el.disabled = false;
-            }
-          };
-        });
-
         // Analytics topic select
         safe("analytics-topic-select", function(el) {
           el.onchange = function () {
@@ -3498,68 +3431,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             IDLE_TIMEOUT = val * 1000;
             resetIdle();
             if (msg) { msg.textContent = "Idle timeout set to " + val + "s."; msg.className = "settings-msg ok"; }
-          };
-        });
-
-        // ── Presentation tab ──
-        safe("ap-admin-start-btn",  function(el) { el.onclick = apStart; });
-        safe("ap-admin-pause-btn",  function(el) { el.onclick = apPause; });
-        safe("ap-admin-resume-btn", function(el) { el.onclick = apResume; });
-        safe("ap-admin-stop-btn",   function(el) { el.onclick = apStop; });
-
-        safe("ap-add-step-btn", function(el) {
-          el.onclick = function () {
-            var config = _apReadFlowFromUI();
-            config.steps.push({ type: "idle", duration: 3000 });
-            _apConfig = config;
-            _apBuildFlowUI();
-          };
-        });
-
-        safe("ap-flow-save-btn", function(el) {
-          el.onclick = function () {
-            var config = _apReadFlowFromUI();
-            apSaveConfig(config);
-            var msg = g("ap-flow-msg");
-            if (msg) { msg.textContent = "Flow saved locally."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
-          };
-        });
-
-        safe("ap-flow-save-default-btn", function(el) {
-          el.onclick = async function () {
-            var config = _apReadFlowFromUI();
-            var msg = g("ap-flow-msg");
-            el.disabled = true;
-            try {
-              await window.fbSetPresFlow(config);
-              apSaveConfig(config);
-              if (msg) { msg.textContent = "Default flow saved — synced to all devices."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 3000); }
-            } catch (e) {
-              if (msg) { msg.textContent = "Save failed: " + e.message; msg.className = "settings-msg err"; }
-            } finally {
-              el.disabled = false;
-            }
-          };
-        });
-
-        safe("ap-flow-reset-btn", function(el) {
-          el.onclick = async function () {
-            var msg = g("ap-flow-msg");
-            el.disabled = true;
-            try {
-              var firestoreFlow = window.fbGetPresFlow ? await window.fbGetPresFlow() : null;
-              var flow = firestoreFlow || JSON.parse(JSON.stringify(AP_DEFAULTS));
-              apSaveConfig(flow);
-              _apBuildFlowUI();
-              var label = firestoreFlow ? "Loaded saved default flow." : "Reset to factory default.";
-              if (msg) { msg.textContent = label; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
-            } catch (e) {
-              apSaveConfig(JSON.parse(JSON.stringify(AP_DEFAULTS)));
-              _apBuildFlowUI();
-              if (msg) { msg.textContent = "Reset to factory default."; msg.className = "settings-msg ok"; setTimeout(function(){ msg.textContent = ""; }, 2500); }
-            } finally {
-              el.disabled = false;
-            }
           };
         });
 

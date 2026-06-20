@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How We Built SALIN-LAHI — Development Process</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: #f0f4ff;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #2e54c2 0%, #6b3fa0 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px 50px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .hero h1 span { color: #fcd400; }
+    .hero p {
+      font-size: clamp(14px, 2vw, 18px);
+      color: rgba(255,255,255,0.82);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── SECTION HEADING ── */
+    .section-heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .section-heading h2 {
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 800;
+      color: #2e54c2;
+    }
+    .section-heading p {
+      font-size: 15px;
+      color: #555;
+      margin-top: 8px;
+    }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      position: relative;
+    }
+
+    /* vertical connector line */
+    .step:not(:last-child) .step-line {
+      position: absolute;
+      left: 28px;
+      top: 60px;
+      bottom: -20px;
+      width: 2px;
+      background: linear-gradient(to bottom, #2e54c2 0%, #e0e7ff 100%);
+    }
+
+    .step-left {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-number {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2e54c2, #6b3fa0);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(46,84,194,0.35);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      flex: 1;
+      box-shadow: 0 2px 16px rgba(46,84,194,0.08);
+      border: 1.5px solid #e0e7ff;
+    }
+
+    .step-emoji {
+      font-size: 32px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .step-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #2e54c2;
+      margin-bottom: 8px;
+    }
+
+    .step-body {
+      font-size: 15px;
+      color: #444;
+      line-height: 1.65;
+    }
+
+    .step-body ul {
+      margin-top: 10px;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .step-body li {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #eef2ff;
+      color: #2e54c2;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 3px 10px;
+      margin-bottom: 10px;
+    }
+
+    /* ── TOOLS USED ── */
+    .tools-section {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      margin-top: 48px;
+      box-shadow: 0 2px 16px rgba(46,84,194,0.08);
+      border: 1.5px solid #e0e7ff;
+    }
+    .tools-section h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #2e54c2;
+      margin-bottom: 20px;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .tool-chip {
+      background: #f0f4ff;
+      border: 1.5px solid #d0d9ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tool-chip .icon { font-size: 22px; }
+    .tool-chip .name { font-size: 13px; font-weight: 700; color: #2e54c2; }
+    .tool-chip .desc { font-size: 11px; color: #777; margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 32px 24px;
+      background: linear-gradient(135deg, #2e54c2, #6b3fa0);
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+    }
+    .footer strong { color: #fcd400; }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Development Process</div>
+    <h1>How We Built<br /><span>SALIN-LAHI</span></h1>
+    <p>A step-by-step story of how our heritage kiosk app was created — from idea to finished product.</p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Our Development Journey</h2>
+      <p>Here is every step we took to build the SALIN-LAHI Heritage Interactive App.</p>
+    </div>
+
+    <div class="steps">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">1</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">📚</span>
+          <div class="tag">Research Phase</div>
+          <div class="step-title">Gathered References and Conducted Research</div>
+          <div class="step-body">
+            We started by learning about the heritage and culture of Olongapo City. We gathered information from books, websites, and local resources to make sure our content was accurate and meaningful.
+            <ul>
+              <li>Researched the history of each heritage station</li>
+              <li>Collected photos and important dates for the timeline</li>
+              <li>Studied the indigenous culture of the Ayta Ambala people</li>
+              <li>Gathered information about local music, livelihoods, and traditions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">2</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🤖</span>
+          <div class="tag">Building Phase</div>
+          <div class="step-title">Created the Program in HTML Using an AI Tool</div>
+          <div class="step-body">
+            We used an AI coding assistant (Claude Code by Anthropic) to help us write the code for our app. We described what we wanted and the AI helped turn our ideas into real working code using HTML, CSS, and JavaScript.
+            <ul>
+              <li>Designed the layout and color theme of the kiosk screen</li>
+              <li>Built the home dashboard with clickable heritage station tiles</li>
+              <li>Created the grid layout that fills the entire tablet screen</li>
+              <li>Used AI to speed up the coding process and fix errors</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">3</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🎨</span>
+          <div class="tag">Design Phase</div>
+          <div class="step-title">Designed the User Interface</div>
+          <div class="step-body">
+            We designed how the app looks and feels so it would be easy and fun for visitors to use at a kiosk. We chose colors, fonts, and layouts that matched the cultural theme of SALIN-LAHI.
+            <ul>
+              <li>Chose a blue and purple color scheme to represent culture and heritage</li>
+              <li>Added Google Fonts for a clean and modern look</li>
+              <li>Designed cards (tiles) for each heritage station on the home screen</li>
+              <li>Made sure everything fit nicely on a landscape tablet screen</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">4</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🗄️</span>
+          <div class="tag">Data Phase</div>
+          <div class="step-title">Added Content Using a Database</div>
+          <div class="step-body">
+            We used Firebase (a cloud database by Google) to store all the heritage content — the station descriptions, timeline events, quiz questions, and leaderboard scores. This means the content can be updated without changing the code.
+            <ul>
+              <li>Connected the app to Firebase Firestore (cloud database)</li>
+              <li>Stored heritage station info, timeline data, and quiz questions</li>
+              <li>Built an Admin Dashboard so content can be edited easily</li>
+              <li>Scores and leaderboard data saved in real time</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">5</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🧩</span>
+          <div class="tag">Features Phase</div>
+          <div class="step-title">Built the Interactive Features</div>
+          <div class="step-body">
+            We added special features to make the app interactive and engaging for users visiting the heritage kiosk.
+            <ul>
+              <li>Heritage station pages with photos, audio narration, and timelines</li>
+              <li>An interactive quiz where visitors can test their knowledge</li>
+              <li>A leaderboard to show top quiz scorers</li>
+              <li>Audio listening feature with a play button and progress bar</li>
+              <li>City Overview section with a map and key facts</li>
+              <li>Indigenous Culture modal with cultural stories and traditions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">6</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🧪</span>
+          <div class="tag">Testing Phase</div>
+          <div class="step-title">Tested on a Real Tablet</div>
+          <div class="step-body">
+            After building the app, we tested it on an actual Huawei tablet (the same one used in the kiosk) to make sure everything worked properly on the real device — not just on a computer screen.
+            <ul>
+              <li>Opened the deployed app on a Huawei tablet using Vivaldi browser</li>
+              <li>Checked that all buttons, tiles, and panels displayed correctly</li>
+              <li>Found and reported bugs (things that looked wrong on tablet)</li>
+              <li>Took photos of issues and described them to the AI for fixing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-left">
+          <div class="step-number">7</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🔧</span>
+          <div class="tag">Debugging Phase</div>
+          <div class="step-title">Fixed Bugs and Improved the App</div>
+          <div class="step-body">
+            Every time we found a bug during testing, we worked with the AI tool to fix it. We went through many rounds of testing and fixing to make the app look and work perfectly.
+            <ul>
+              <li>Fixed buttons that were hidden or cut off on the tablet screen</li>
+              <li>Fixed the audio controls so they always stay visible</li>
+              <li>Fixed layout issues so tiles and text displayed side by side correctly</li>
+              <li>Adjusted sizes and spacing for the exact tablet resolution</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step">
+        <div class="step-left">
+          <div class="step-number">8</div>
+        </div>
+        <div class="step-card">
+          <span class="step-emoji">🚀</span>
+          <div class="tag">Launch Phase</div>
+          <div class="step-title">Deployed and Launched the Kiosk App</div>
+          <div class="step-body">
+            Once we were happy with how everything looked and worked, we deployed (published) the app to Firebase Hosting so it could be accessed on the kiosk tablet anytime — even without a laptop connected.
+            <ul>
+              <li>Published the app using Firebase Hosting</li>
+              <li>The tablet now loads the app directly from the cloud</li>
+              <li>The kiosk runs fully standalone — no laptop or extra computer needed</li>
+              <li>Visitors can now explore Olongapo's heritage at the kiosk!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end .steps -->
+
+    <!-- TOOLS USED -->
+    <div class="tools-section">
+      <h3>🛠 Tools & Technologies We Used</h3>
+      <div class="tools-grid">
+        <div class="tool-chip">
+          <span class="icon">🌐</span>
+          <div>
+            <div class="name">HTML / CSS / JS</div>
+            <div class="desc">Core web languages</div>
+          </div>
+        </div>
+        <div class="tool-chip">
+          <span class="icon">🤖</span>
+          <div>
+            <div class="name">Claude Code (AI)</div>
+            <div class="desc">AI coding assistant</div>
+          </div>
+        </div>
+        <div class="tool-chip">
+          <span class="icon">🔥</span>
+          <div>
+            <div class="name">Firebase</div>
+            <div class="desc">Database & hosting</div>
+          </div>
+        </div>
+        <div class="tool-chip">
+          <span class="icon">🌀</span>
+          <div>
+            <div class="name">Vivaldi Browser</div>
+            <div class="desc">Runs on the tablet</div>
+          </div>
+        </div>
+        <div class="tool-chip">
+          <span class="icon">📱</span>
+          <div>
+            <div class="name">Huawei Tablet</div>
+            <div class="desc">Kiosk hardware</div>
+          </div>
+        </div>
+        <div class="tool-chip">
+          <span class="icon">🔤</span>
+          <div>
+            <div class="name">Google Fonts</div>
+            <div class="desc">Typography</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .container -->
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <strong>SALIN-LAHI</strong> — Preserving the Heritage of Olongapo City<br />
+    Built with research, creativity, and the help of AI tools.
+  </div>
+
+</body>
+</html>
