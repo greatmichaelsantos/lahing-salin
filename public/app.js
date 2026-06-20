@@ -94,11 +94,11 @@
           var btn = document.getElementById("btn-mute");
           if (!btn) return;
           if (_muted) {
-            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_off</span> Muted';
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_off</span><span class="dash-btn-label">Muted</span>';
             btn.style.color = "#bd001a";
             btn.style.borderColor = "#bd001a";
           } else {
-            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_up</span> Music';
+            btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">volume_up</span><span class="dash-btn-label">Music</span>';
             btn.style.color = "#926e6b";
             btn.style.borderColor = "#a8a9ad";
           }
