@@ -286,12 +286,12 @@
           height: 100%;
         }
       }
-      /* Quiz tile: always auto-height so content stacks tightly regardless of grid row height */
-      .t-quiz .tile-inner {
-        height: auto !important;
-        justify-content: flex-start !important;
-      }
       @media (max-width: 900px) {
+        /* Quiz tile: always auto-height so content stacks tightly regardless of grid row height */
+        .t-quiz .tile-inner {
+          height: auto !important;
+          justify-content: flex-start !important;
+        }
         .tile-inner {
           height: auto;
           padding: 16px;

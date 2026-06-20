@@ -251,8 +251,11 @@
               <!-- hidden: keeps JS player-count updates working without errors -->
               <span id="quiz-player-count" style="display:none">+0</span>
               <div class="tile-inner" style="gap: 12px;">
-                <!-- icon left, title+desc stacked right — mirrors Leaderboard structure exactly -->
-                <div style="display: flex; align-items: center; gap: 16px;">
+                <!-- icon left, title+desc stacked right — mirrors Leaderboard structure exactly.
+                     flex:1 lets this row fill the space above the button and center
+                     vertically within it on desktop (no-op on mobile, where the tile
+                     is auto-height with no extra space to distribute). -->
+                <div style="display: flex; align-items: center; gap: 16px; flex: 1;">
                   <div
                     style="
                       width: 54px;
