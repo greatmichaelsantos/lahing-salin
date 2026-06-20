@@ -869,7 +869,7 @@
         white: "station:origins",       // Station F
       };
 
-      var HUB_COOLDOWN_MS = 20000; // mirrors the rover's own 20s stop — ignore repeats here too
+      var HUB_COOLDOWN_MS = 25000; // mirrors the rover's 20s stop + 5s blind drive — ignore repeats here too
       var _hubLineBuf = "";
       var _hubCooldownUntil = 0;
 
