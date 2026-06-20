@@ -850,6 +850,92 @@
           clearTimeout(idleTimer);
           goTo(0);
         };
+        var hubBtn = g("hub-connect-btn");
+        if (hubBtn) hubBtn.onclick = hubConnect;
+      }
+
+      // ── SPIKE Prime hub (Pybricks) — color → screen ──
+      // Pybricks Communication Service: hub prints e.g. "Color.RED" via the
+      // running program; we read that over BLE notifications and map it to a screen.
+      // NOTE: the hub program must already be running (e.g. started from the hub's
+      // own menu) before connecting — only one BLE central can hold the connection.
+      var PYBRICKS_SERVICE_UUID = "c5f50001-8280-46da-89f4-6d8051e4aeef";
+      var PYBRICKS_CHAR_UUID = "c5f50002-8280-46da-89f4-6d8051e4aeef";
+      var EVENT_WRITE_STDOUT = 0x01;
+
+      var COLOR_TO_SCREEN = {
+        red: "station:aeta-history", // Station A
+        blue: "station:livelihood",  // Station B
+        green: "timeline",
+        yellow: "quiz",
+      };
+
+      var _hubLineBuf = "";
+
+      function _hubSetStatus(text) {
+        var el = g("hub-status");
+        if (el) el.textContent = text;
+      }
+
+      function _hubHandleStdoutText(text) {
+        _hubLineBuf += text;
+        var lines = _hubLineBuf.split("\n");
+        _hubLineBuf = lines.pop(); // keep any partial trailing line for next chunk
+        lines.forEach(_hubHandleLine);
+      }
+
+      function _hubHandleLine(line) {
+        var lower = line.toLowerCase();
+        for (var color in COLOR_TO_SCREEN) {
+          if (lower.indexOf(color) !== -1) {
+            _hubSetStatus("Detected: " + color + " → navigating");
+            apNavigateTo(COLOR_TO_SCREEN[color]);
+            return;
+          }
+        }
+      }
+
+      function _hubOnNotify(event) {
+        var value = event.target.value; // DataView
+        var eventId = value.getUint8(0);
+        if (eventId === EVENT_WRITE_STDOUT) {
+          var bytes = new Uint8Array(value.buffer, value.byteOffset + 1, value.byteLength - 1);
+          var text = new TextDecoder().decode(bytes);
+          _hubHandleStdoutText(text);
+        }
+      }
+
+      function hubConnect() {
+        if (!navigator.bluetooth) {
+          _hubSetStatus("Web Bluetooth not supported in this browser.");
+          return;
+        }
+        _hubSetStatus("Requesting device…");
+        navigator.bluetooth
+          .requestDevice({ filters: [{ services: [PYBRICKS_SERVICE_UUID] }] })
+          .then(function (device) {
+            _hubSetStatus("Connecting to " + device.name + "…");
+            device.addEventListener("gattserverdisconnected", function () {
+              _hubSetStatus("Disconnected");
+            });
+            return device.gatt.connect();
+          })
+          .then(function (server) {
+            return server.getPrimaryService(PYBRICKS_SERVICE_UUID);
+          })
+          .then(function (service) {
+            return service.getCharacteristic(PYBRICKS_CHAR_UUID);
+          })
+          .then(function (characteristic) {
+            characteristic.addEventListener("characteristicvaluechanged", _hubOnNotify);
+            return characteristic.startNotifications();
+          })
+          .then(function () {
+            _hubSetStatus("Connected — listening for colors");
+          })
+          .catch(function (err) {
+            _hubSetStatus("Error: " + err.message);
+          });
       }
 
       // ── City preview on dashboard tile ──
