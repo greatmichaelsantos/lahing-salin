@@ -863,8 +863,9 @@
         red: "station:livelihood",      // Station B
         blue: "station:music",          // Station C
         green: "station:tools",         // Station D
-        cyan: "station:values",         // Station E — Pybricks prints "Light Blue" as Color.CYAN
-        white: "station:origins",       // Station F
+        cyan: "station:values",         // Station E — Cultural Values
+        white: "station:naval",         // Station F — Naval Heritage
+        violet: "station:origins",      // Olongapo Origins and Ancestors
       };
 
       // Short anti-duplicate window only — the rover's own stop/blind-drive cycle
@@ -887,9 +888,14 @@
       }
 
       function _hubHandleLine(line) {
+        var lower = line.toLowerCase();
+        if (lower.indexOf("off") !== -1) {
+          _hubSetStatus("Rover OFF → returning to Idle");
+          apNavigateTo("idle");
+          return;
+        }
         var now = Date.now();
         if (now < _hubCooldownUntil) return; // ignore repeats while the rover should be stopped
-        var lower = line.toLowerCase();
         for (var color in COLOR_TO_SCREEN) {
           if (lower.indexOf(color) !== -1) {
             _hubCooldownUntil = now + HUB_COOLDOWN_MS;
