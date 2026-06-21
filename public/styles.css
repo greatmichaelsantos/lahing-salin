@@ -168,9 +168,13 @@
         align-items: center;
         gap: 1px;
         transform: none;
-        pointer-events: none;
-        z-index: 0;
+        pointer-events: auto;
+        cursor: pointer;
+        z-index: 5;
         max-width: 38vw;
+      }
+      .credit-stamp:active {
+        transform: scale(0.96);
       }
       .credit-stamp-star {
         font-size: clamp(12px, 3.5vw, 22px);
@@ -2102,6 +2106,64 @@
       .tl-dot.active {
         width: 26px;
         background: #fcd400;
+      }
+
+      /* ── Pio & Gelo Research Photo Journal carousel ── */
+      #ov-research {
+        background: #000;
+      }
+      .research-back-btn {
+        position: absolute;
+        top: 18px;
+        left: 22px;
+        z-index: 3;
+        background: rgba(0, 0, 0, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        box-shadow: none;
+      }
+      .research-carousel {
+        position: absolute;
+        inset: 0;
+      }
+      .research-slide {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center bottom;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: 0;
+      }
+      .research-slide.visible {
+        opacity: 1;
+        z-index: 1;
+      }
+      .research-gradient {
+        position: absolute;
+        inset: 0;
+        top: auto;
+        height: 42%;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.88),
+          rgba(0, 0, 0, 0)
+        );
+        z-index: 2;
+        pointer-events: none;
+        display: flex;
+        align-items: flex-end;
+        padding: 0 32px max(28px, env(safe-area-inset-bottom));
+      }
+      .research-title {
+        font-family: "Fraunces", serif;
+        font-weight: 900;
+        font-size: clamp(26px, 4vw, 46px);
+        line-height: 1.1;
+        color: #fff;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
       }
       @media (max-width: 1050px) and (min-width: 761px) {
         .tl-info {

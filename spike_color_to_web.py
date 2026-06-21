@@ -63,6 +63,24 @@ OFF_ICON = [
 ]  # X = stopped
 
 
+def _hue_diff(a, b):
+    d = abs(a - b) % 360
+    return min(d, 360 - d)
+
+
+def resolve_red_violet(detected):
+    """RED (h=354) and VIOLET (h=340) are only 14 degrees apart in hue, close
+    enough that sensor noise can flip the built-in match either way. Brightness
+    is the more reliable signal between these two specifically (RED measured
+    v=30, VIOLET measured v=40), so re-check with it before committing."""
+    if detected is not CUSTOM_RED and detected is not CUSTOM_VIOLET:
+        return COLOR_LABELS[detected]
+    raw = color_sensor.hsv()
+    dist_red = abs(raw.v - 30) * 2 + _hue_diff(raw.h, 354)
+    dist_violet = abs(raw.v - 40) * 2 + _hue_diff(raw.h, 340)
+    return "RED" if dist_red <= dist_violet else "VIOLET"
+
+
 def interruptible_wait(duration_ms):
     """Wait up to duration_ms, but check the ultrasonic sensor every 100ms
     instead of blocking — returns True early if someone/something is detected."""
@@ -97,7 +115,7 @@ while True:
         detected = color_sensor.color()
         if detected in COLOR_LABELS:
             motor.stop()
-            print(COLOR_LABELS[detected])  # web app picks this up and navigates
+            print(resolve_red_violet(detected))  # web app picks this up and navigates
 
             if interruptible_wait(STOP_DURATION_MS):
                 turned_off = True

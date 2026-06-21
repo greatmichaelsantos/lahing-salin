@@ -273,6 +273,7 @@
       function closeOverlay(id) {
         ttsStop();
         if (id === "ov-detail") { stationAudioStop(); stopCarousel(); }
+        if (id === "ov-research") stopResearchCycle();
         document.getElementById(id).classList.remove("open");
         bgAudioUpdate();
       }
@@ -298,10 +299,11 @@
       var IDLE_TIMEOUT = 60000; // 60 seconds
 
       var ttsActive = false; // tracks whether TTS is currently speaking
+      var researchActive = false; // tracks whether the research photo journal slideshow is open
 
       function resetIdle() {
         clearTimeout(idleTimer);
-        if (ttsActive) return; // don't start countdown while audio is playing
+        if (ttsActive || researchActive) return; // don't start countdown while audio is playing or the research slideshow is open
         idleTimer = setTimeout(function () {
           document.querySelectorAll(".overlay.open").forEach(function (ov) {
             ov.classList.remove("open");
@@ -828,6 +830,10 @@
         g("btn-lb").onclick = async function () {
           openOverlay("ov-lb");
           await buildLeaderboard();
+        };
+        g("btn-research").onclick = function () {
+          openOverlay("ov-research");
+          startResearchCycle();
         };
         g("btn-mute").onclick = BGAudio.toggleMute;
         g("ap-pause-btn").onclick  = apPause;
@@ -2486,6 +2492,57 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
       var idleCur = 0;
       var idleImgs = [];
+
+      // ── Pio & Gelo Research Photo Journal — fullscreen crossfade carousel ──
+      var RESEARCH_IMAGES = [
+        "assets/research/research-1.jpg",
+        "assets/research/research-2.jpg",
+        "assets/research/research-3.jpg",
+        "assets/research/research-4.jpg",
+        "assets/research/research-5.jpg",
+        "assets/research/research-6.jpg",
+        "assets/research/research-7.jpg",
+        "assets/research/research-8.jpg",
+        "assets/research/research-9.jpg",
+        "assets/research/research-10.jpg",
+        "assets/research/research-11.jpg","assets/research/research-12.jpg","assets/research/research-13.jpg","assets/research/research-14.jpg","assets/research/research-15.jpg",
+      ];
+      var researchCur = 0;
+      var researchImgs = [];
+      var researchInterval = null;
+
+      function startResearchCycle() {
+        var container = g("research-carousel");
+        if (!container) return;
+        researchActive = true;
+        clearTimeout(idleTimer);
+        container.innerHTML = "";
+        researchImgs = [];
+        researchCur = 0;
+        RESEARCH_IMAGES.forEach(function (src, i) {
+          var img = document.createElement("img");
+          img.src = src;
+          img.alt = "";
+          img.className = "research-slide";
+          if (i === 0) img.classList.add("visible");
+          img.onerror = function () { img.style.display = "none"; };
+          container.appendChild(img);
+          researchImgs.push(img);
+        });
+        if (researchInterval) clearInterval(researchInterval);
+        researchInterval = setInterval(function () {
+          researchImgs[researchCur].classList.remove("visible");
+          researchCur = (researchCur + 1) % researchImgs.length;
+          researchImgs[researchCur].classList.add("visible");
+        }, 3500);
+      }
+
+      function stopResearchCycle() {
+        if (researchInterval) clearInterval(researchInterval);
+        researchInterval = null;
+        researchActive = false;
+        resetIdle();
+      }
 
       function startIdleCycle() {
         var container = document.getElementById("idle");

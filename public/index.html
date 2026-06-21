@@ -43,7 +43,7 @@
         <!-- PAGE 1: DASHBOARD -->
         <div class="page" id="dashboard">
           <!-- Credit stamp — top-right corner -->
-          <div class="credit-stamp" aria-hidden="true">
+          <div class="credit-stamp" id="btn-research">
             <span class="credit-stamp-title">SALIN-LAHI</span>
             <span class="credit-stamp-by">by Pio &amp; Gelo</span>
           </div>
@@ -201,7 +201,10 @@
                   z-index: 1;
                 "
               >
-                <div class="tile-title" style="font-size: 30px; color: #fff; margin-bottom: 4px">
+                <div
+                  class="tile-title"
+                  style="font-size: 30px; color: #fff; margin-bottom: 4px"
+                >
                   Timeline
                 </div>
                 <div
@@ -234,7 +237,7 @@
                   class="tile-btn"
                   style="
                     background: #fff;
-                    color: #E37F4E;
+                    color: #e37f4e;
                     width: 100%;
                     text-align: center;
                     display: block;
@@ -249,13 +252,15 @@
             <!-- TAKE QUIZ 4×2 -->
             <div class="tile t-quiz" id="btn-quiz">
               <!-- hidden: keeps JS player-count updates working without errors -->
-              <span id="quiz-player-count" style="display:none">+0</span>
-              <div class="tile-inner" style="gap: 12px;">
+              <span id="quiz-player-count" style="display: none">+0</span>
+              <div class="tile-inner" style="gap: 12px">
                 <!-- icon left, title+desc stacked right — mirrors Leaderboard structure exactly.
                      flex:1 lets this row fill the space above the button and center
                      vertically within it on desktop (no-op on mobile, where the tile
                      is auto-height with no extra space to distribute). -->
-                <div style="display: flex; align-items: center; gap: 16px; flex: 1;">
+                <div
+                  style="display: flex; align-items: center; gap: 16px; flex: 1"
+                >
                   <div
                     style="
                       width: 54px;
@@ -275,16 +280,20 @@
                       >quiz</span
                     >
                   </div>
-                  <div style="flex: 1;">
+                  <div style="flex: 1">
                     <div
                       class="tile-title"
-                      style="font-size: 26px; color: #fff;"
+                      style="font-size: 26px; color: #fff"
                     >
                       Take Quiz
                     </div>
                     <div
                       class="tile-desc"
-                      style="font-size: 16px; color: rgba(255, 255, 255, 0.75); margin-top: 3px;"
+                      style="
+                        font-size: 16px;
+                        color: rgba(255, 255, 255, 0.75);
+                        margin-top: 3px;
+                      "
                     >
                       Test your Olongapo knowledge!
                     </div>
@@ -334,15 +343,16 @@
                   >
                 </div>
                 <div style="flex: 1">
-                  <div
-                    class="tile-title"
-                    style="font-size: 26px; color: #fff"
-                  >
+                  <div class="tile-title" style="font-size: 26px; color: #fff">
                     Leaderboard
                   </div>
                   <div
                     class="tile-desc"
-                    style="font-size: 16px; color: rgba(255,255,255,0.75); margin-top: 3px"
+                    style="
+                      font-size: 16px;
+                      color: rgba(255, 255, 255, 0.75);
+                      margin-top: 3px;
+                    "
                     id="lb-preview"
                   >
                     Top scores
@@ -398,7 +408,10 @@
               <span class="dash-btn-label">Admin</span>
             </button>
 
-            <div class="dash-bottombar-right" style="display: flex; align-items: center; gap: 10px">
+            <div
+              class="dash-bottombar-right"
+              style="display: flex; align-items: center; gap: 10px"
+            >
               <!-- Mute toggle -->
               <button
                 id="btn-mute"
@@ -486,11 +499,15 @@
                   gap: 8px;
                 "
               >
-                <span style="font-size: 16px">⏻</span> <span class="dash-btn-label">Sleep / Idle</span>
+                <span style="font-size: 16px">⏻</span>
+                <span class="dash-btn-label">Sleep / Idle</span>
               </button>
             </div>
           </div>
-          <p class="ai-disclosure">Built with AI assistance · Content reflects Olongapo City's documented cultural heritage</p>
+          <p class="ai-disclosure">
+            Built with AI assistance · Content reflects Olongapo City's
+            documented cultural heritage
+          </p>
         </div>
       </div>
     </div>
@@ -523,14 +540,19 @@
     </div>
 
     <!-- CITY STAT MODAL -->
-    <div id="city-stat-modal" onclick="if(event.target===this)closeCityStat()">
+    <div
+      id="city-stat-modal"
+      onclick="if (event.target === this) closeCityStat();"
+    >
       <div class="csm-box">
         <div class="csm-emoji"></div>
         <div class="csm-title"></div>
         <div class="csm-sub"></div>
         <div class="csm-rule"></div>
         <div class="csm-body"></div>
-        <button class="csm-close-btn" onclick="closeCityStat()">Got it! ✓</button>
+        <button class="csm-close-btn" onclick="closeCityStat()">
+          Got it! ✓
+        </button>
       </div>
     </div>
 
@@ -660,15 +682,22 @@
               <p class="hs-about-text" id="detail-text"></p>
 
               <!-- Indigenous Culture block — shown only for Station A -->
-              <div id="detail-indig-block" style="display:none">
+              <div id="detail-indig-block" style="display: none">
                 <div class="hs-indig-tile" onclick="openIndigModal()">
                   <div class="hs-indig-tile-icon">🌿</div>
                   <div class="hs-indig-tile-content">
                     <div class="hs-indig-tile-tag">Indigenous Culture</div>
-                    <div class="hs-indig-tile-title">The Dororo of the Ayta Ambala</div>
-                    <div class="hs-indig-tile-sub">Explore the prayers and traditions of Olongapo's indigenous people</div>
+                    <div class="hs-indig-tile-title">
+                      The Dororo of the Ayta Ambala
+                    </div>
+                    <div class="hs-indig-tile-sub">
+                      Explore the prayers and traditions of Olongapo's
+                      indigenous people
+                    </div>
                   </div>
-                  <span class="material-symbols-outlined hs-indig-tile-arrow">arrow_forward</span>
+                  <span class="material-symbols-outlined hs-indig-tile-arrow"
+                    >arrow_forward</span
+                  >
                 </div>
               </div>
             </div>
@@ -928,6 +957,20 @@
       </div>
     </div>
 
+    <!-- PIO & GELO RESEARCH PHOTO JOURNAL OVERLAY -->
+    <div class="overlay" id="ov-research">
+      <button
+        class="back-btn research-back-btn"
+        onclick="closeOverlay('ov-research')"
+      >
+        ← Back
+      </button>
+      <div class="research-carousel" id="research-carousel"></div>
+      <div class="research-gradient">
+        <div class="research-title">Pio and Gelo's Research Photo Journal</div>
+      </div>
+    </div>
+
     <div id="toast" style="color: #fff"></div>
 
     <!-- ── Admin PIN Modal ── -->
@@ -990,7 +1033,9 @@
           <div id="admin-ai-hero-header">
             <div>
               <div id="admin-ai-hero-title">🤖 AI Insights</div>
-              <div id="admin-ai-hero-sub">Groq-powered analysis of student quiz performance</div>
+              <div id="admin-ai-hero-sub">
+                Groq-powered analysis of student quiz performance
+              </div>
             </div>
             <div id="admin-ai-hero-controls">
               <div class="groq-dd" id="groq-scope-dd">
@@ -999,15 +1044,33 @@
                   <span class="groq-dd-arrow"></span>
                 </div>
                 <div class="groq-dd-menu">
-                  <div class="groq-dd-item selected" data-value="all">All Topics</div>
-                  <div class="groq-dd-item" data-value="aeta-history">Station A — Aeta History</div>
-                  <div class="groq-dd-item" data-value="livelihood">Station B — Traditional Livelihood</div>
-                  <div class="groq-dd-item" data-value="music">Station C — Indigenous Music</div>
-                  <div class="groq-dd-item" data-value="tools">Station D — Traditional Tools</div>
-                  <div class="groq-dd-item" data-value="values">Station E — Cultural Values</div>
-                  <div class="groq-dd-item" data-value="origins">Station F — Olongapo Origins</div>
-                  <div class="groq-dd-item" data-value="naval">Station G — Naval Heritage</div>
-                  <div class="groq-dd-item" data-value="culture">Station H — People &amp; Culture</div>
+                  <div class="groq-dd-item selected" data-value="all">
+                    All Topics
+                  </div>
+                  <div class="groq-dd-item" data-value="aeta-history">
+                    Station A — Aeta History
+                  </div>
+                  <div class="groq-dd-item" data-value="livelihood">
+                    Station B — Traditional Livelihood
+                  </div>
+                  <div class="groq-dd-item" data-value="music">
+                    Station C — Indigenous Music
+                  </div>
+                  <div class="groq-dd-item" data-value="tools">
+                    Station D — Traditional Tools
+                  </div>
+                  <div class="groq-dd-item" data-value="values">
+                    Station E — Cultural Values
+                  </div>
+                  <div class="groq-dd-item" data-value="origins">
+                    Station F — Olongapo Origins
+                  </div>
+                  <div class="groq-dd-item" data-value="naval">
+                    Station G — Naval Heritage
+                  </div>
+                  <div class="groq-dd-item" data-value="culture">
+                    Station H — People &amp; Culture
+                  </div>
                 </div>
               </div>
               <div class="groq-dd" id="groq-type-dd">
@@ -1016,45 +1079,74 @@
                   <span class="groq-dd-arrow"></span>
                 </div>
                 <div class="groq-dd-menu">
-                  <div class="groq-dd-item" data-value="general">General Overview</div>
-                  <div class="groq-dd-item selected" data-value="struggling">Where Students Struggle</div>
-                  <div class="groq-dd-item" data-value="grade">By Grade Level</div>
-                  <div class="groq-dd-item" data-value="trends">Score Trends</div>
-                  <div class="groq-dd-item" data-value="recommendations">Teaching Recommendations</div>
+                  <div class="groq-dd-item" data-value="general">
+                    General Overview
+                  </div>
+                  <div class="groq-dd-item selected" data-value="struggling">
+                    Where Students Struggle
+                  </div>
+                  <div class="groq-dd-item" data-value="grade">
+                    By Grade Level
+                  </div>
+                  <div class="groq-dd-item" data-value="trends">
+                    Score Trends
+                  </div>
+                  <div class="groq-dd-item" data-value="recommendations">
+                    Teaching Recommendations
+                  </div>
                 </div>
               </div>
               <button id="groq-analyze-btn">✨ Generate</button>
             </div>
           </div>
           <div id="groq-output">
-            <div id="groq-placeholder">Click ✨ Generate to analyze student scores with AI.</div>
-            <div id="groq-loading" style="display:none">🤖 Analyzing scores… <span class="groq-spinner"></span></div>
-            <div id="groq-cards" style="display:none">
+            <div id="groq-placeholder">
+              Click ✨ Generate to analyze student scores with AI.
+            </div>
+            <div id="groq-loading" style="display: none">
+              🤖 Analyzing scores… <span class="groq-spinner"></span>
+            </div>
+            <div id="groq-cards" style="display: none">
               <div class="groq-card groq-card-strengths">
-                <div class="groq-card-header"><span class="groq-card-icon">💪</span><span class="groq-card-title">Strengths</span></div>
+                <div class="groq-card-header">
+                  <span class="groq-card-icon">💪</span
+                  ><span class="groq-card-title">Strengths</span>
+                </div>
                 <div class="groq-card-body" id="groq-card-strengths"></div>
               </div>
               <div class="groq-card groq-card-weaknesses">
-                <div class="groq-card-header"><span class="groq-card-icon">⚠️</span><span class="groq-card-title">Weaknesses</span></div>
+                <div class="groq-card-header">
+                  <span class="groq-card-icon">⚠️</span
+                  ><span class="groq-card-title">Weaknesses</span>
+                </div>
                 <div class="groq-card-body" id="groq-card-weaknesses"></div>
               </div>
               <div class="groq-card groq-card-improve">
-                <div class="groq-card-header"><span class="groq-card-icon">🎯</span><span class="groq-card-title">Areas to Improve</span></div>
+                <div class="groq-card-header">
+                  <span class="groq-card-icon">🎯</span
+                  ><span class="groq-card-title">Areas to Improve</span>
+                </div>
                 <div class="groq-card-body" id="groq-card-improve"></div>
               </div>
             </div>
-            <div id="groq-error" style="display:none"></div>
+            <div id="groq-error" style="display: none"></div>
           </div>
         </div>
 
         <!-- ══ ANALYTICS TAB ══ -->
-        <div class="admin-tab-content" id="admin-tab-analytics" style="display:none">
+        <div
+          class="admin-tab-content"
+          id="admin-tab-analytics"
+          style="display: none"
+        >
           <div class="analytics-topic-bar">
             <label for="analytics-topic-select">Topic</label>
             <select class="analytics-topic-select" id="analytics-topic-select">
               <option value="all">All Topics</option>
               <option value="aeta-history">Station A — Aeta History</option>
-              <option value="livelihood">Station B — Traditional Livelihood</option>
+              <option value="livelihood">
+                Station B — Traditional Livelihood
+              </option>
               <option value="music">Station C — Indigenous Music</option>
               <option value="tools">Station D — Traditional Tools</option>
               <option value="values">Station E — Cultural Values</option>
@@ -1064,7 +1156,9 @@
             </select>
           </div>
           <div id="analytics-content">
-            <div class="analytics-empty">Switch to the Scores tab first to load data, then come back here.</div>
+            <div class="analytics-empty">
+              Switch to the Scores tab first to load data, then come back here.
+            </div>
           </div>
         </div>
 
@@ -1302,32 +1396,144 @@
           <!-- SPIKE Prime Hub -->
           <div class="settings-section">
             <div class="settings-section-title">🤖 SPIKE Prime Hub</div>
-            <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:#926e6b;margin-bottom:12px">
-              Connect the LEGO SPIKE Prime via Bluetooth. Once connected, color-sensor detections automatically navigate to the matching heritage station.
+            <div
+              style="
+                font-family: &quot;Space Grotesk&quot;, sans-serif;
+                font-size: 12px;
+                color: #926e6b;
+                margin-bottom: 12px;
+              "
+            >
+              Connect the LEGO SPIKE Prime via Bluetooth. Once connected,
+              color-sensor detections automatically navigate to the matching
+              heritage station.
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
-              <button class="settings-btn" id="hub-connect-btn" style="background:#1a3488;color:#fff;display:flex;align-items:center;gap:6px">
-                <span class="material-symbols-outlined" style="font-size:15px">bluetooth</span> Connect Hub
+            <div
+              style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px"
+            >
+              <button
+                class="settings-btn"
+                id="hub-connect-btn"
+                style="
+                  background: #1a3488;
+                  color: #fff;
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                "
+              >
+                <span class="material-symbols-outlined" style="font-size: 15px"
+                  >bluetooth</span
+                >
+                Connect Hub
               </button>
             </div>
-            <div class="settings-msg" id="hub-status" style="margin-top:8px">Not connected</div>
+            <div class="settings-msg" id="hub-status" style="margin-top: 8px">
+              Not connected
+            </div>
           </div>
         </div>
         <!-- end settings tab -->
-
       </div>
       <!-- end #admin-tab-content-wrap -->
     </div>
     <!-- end #ov-admin -->
 
-
     <!-- ── Auto Play blocking overlay ── -->
-    <div id="ap-overlay" style="display:none;position:fixed;inset:0;z-index:9000;pointer-events:all;background:transparent;flex-direction:column;justify-content:flex-end">
-      <div id="ap-control-bar" style="background:rgba(10,10,10,0.84);backdrop-filter:blur(10px);padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-        <span id="ap-status-text" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:#fff;flex:1;min-width:140px">Presentation Running</span>
-        <button id="ap-pause-btn" style="background:#fcd400;color:#221b00;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">⏸ Pause</button>
-        <button id="ap-resume-btn" style="display:none;background:#22c55e;color:#fff;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">▶ Resume</button>
-        <button id="ap-stop-btn" style="background:#bd001a;color:#fff;border:none;border-radius:9999px;padding:10px 22px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">⏹ Stop</button>
+    <div
+      id="ap-overlay"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        pointer-events: all;
+        background: transparent;
+        flex-direction: column;
+        justify-content: flex-end;
+      "
+    >
+      <div
+        id="ap-control-bar"
+        style="
+          background: rgba(10, 10, 10, 0.84);
+          backdrop-filter: blur(10px);
+          padding: 14px 24px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+        "
+      >
+        <span
+          id="ap-status-text"
+          style="
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #fff;
+            flex: 1;
+            min-width: 140px;
+          "
+          >Presentation Running</span
+        >
+        <button
+          id="ap-pause-btn"
+          style="
+            background: #fcd400;
+            color: #221b00;
+            border: none;
+            border-radius: 9999px;
+            padding: 10px 22px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+          "
+        >
+          ⏸ Pause
+        </button>
+        <button
+          id="ap-resume-btn"
+          style="
+            display: none;
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            border-radius: 9999px;
+            padding: 10px 22px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+          "
+        >
+          ▶ Resume
+        </button>
+        <button
+          id="ap-stop-btn"
+          style="
+            background: #bd001a;
+            color: #fff;
+            border: none;
+            border-radius: 9999px;
+            padding: 10px 22px;
+            font-family: &quot;Space Grotesk&quot;, sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+          "
+        >
+          ⏹ Stop
+        </button>
       </div>
     </div>
 
@@ -1369,9 +1575,11 @@
     </script>
 
     <!-- INDIGENOUS CULTURE MODAL -->
-    <div id="indig-modal" onclick="if(event.target===this)closeIndigModal()">
+    <div
+      id="indig-modal"
+      onclick="if (event.target === this) closeIndigModal();"
+    >
       <div class="indm-box">
-
         <!-- Header -->
         <div class="indm-header">
           <button class="indm-close-btn" onclick="closeIndigModal()">
@@ -1380,25 +1588,43 @@
           <div class="indm-eyebrow">Indigenous Culture · Olongapo City</div>
           <div class="indm-title">The Dororo of the Ayta Ambala</div>
           <div class="indm-subtitle">A Living Prayer, A Living People</div>
-          <div class="indm-source-tag">Based on research by Aeron James R. De Leon · Lakandayang Journal, 2024</div>
+          <div class="indm-source-tag">
+            Based on research by Aeron James R. De Leon · Lakandayang Journal,
+            2024
+          </div>
         </div>
 
         <!-- Body -->
         <div class="indm-body">
-
           <!-- Intro cards row -->
           <div class="indm-row-2">
             <div class="indm-card indm-card-intro">
               <div class="indm-card-icon">🏔️</div>
               <div class="indm-card-tag">About the Ayta Ambala</div>
               <div class="indm-card-title">20,000 Years of Resilience</div>
-              <p class="indm-card-text">Deep in the mountains of <strong>Sitio Mampuweng, Olongapo City, Zambales</strong>, lives one of the Philippines' oldest and most resilient indigenous communities — the <strong>Ayta Ambala</strong>. Believed to have settled in the archipelago <strong>20,000 to 30,000 years ago</strong>, they carry within them a culture so rich and so beautifully human that every prayer they whisper tells a story worth hearing.</p>
+              <p class="indm-card-text">
+                Deep in the mountains of
+                <strong>Sitio Mampuweng, Olongapo City, Zambales</strong>, lives
+                one of the Philippines' oldest and most resilient indigenous
+                communities — the <strong>Ayta Ambala</strong>. Believed to have
+                settled in the archipelago
+                <strong>20,000 to 30,000 years ago</strong>, they carry within
+                them a culture so rich and so beautifully human that every
+                prayer they whisper tells a story worth hearing.
+              </p>
             </div>
             <div class="indm-card indm-card-what">
               <div class="indm-card-icon">🙏</div>
               <div class="indm-card-tag">Definition</div>
               <div class="indm-card-title">What is a Dororo?</div>
-              <p class="indm-card-text">The Dororo is far more than a prayer. It is a <strong>living record</strong> of the Ayta Ambala's experiences, dreams, and unshakeable faith. Every word, every tone, every whispered syllable carries the weight of generations — their joys and struggles, their hopes and losses, their deep reverence for nature and the divine.</p>
+              <p class="indm-card-text">
+                The Dororo is far more than a prayer. It is a
+                <strong>living record</strong> of the Ayta Ambala's experiences,
+                dreams, and unshakeable faith. Every word, every tone, every
+                whispered syllable carries the weight of generations — their
+                joys and struggles, their hopes and losses, their deep reverence
+                for nature and the divine.
+              </p>
             </div>
           </div>
 
@@ -1411,15 +1637,28 @@
           <!-- Type 1 -->
           <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
             <div class="indm-type-header">
-              <div class="indm-type-badge" style="background:#bd001a">01</div>
+              <div class="indm-type-badge" style="background: #bd001a">01</div>
               <div class="indm-type-info">
-                <div class="indm-card-tag" style="color:#bd001a">Communal Prayer</div>
+                <div class="indm-card-tag" style="color: #bd001a">
+                  Communal Prayer
+                </div>
                 <div class="indm-card-title">Dororong Ritwal</div>
               </div>
-              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+              <span class="indm-chevron material-symbols-outlined"
+                >expand_more</span
+              >
             </div>
             <div class="indm-type-body">
-              <p class="indm-card-text">A powerful communal prayer lasting <strong>up to an hour</strong>, led by a specially chosen elder who trains for <strong>two full years</strong> before performing it. It is chanted with melody, punctuated by sudden shouts, and witnessed in complete reverence — even smiling during the ritual is forbidden. Remarkably, this prayer exists in <strong>no written form</strong> — it lives only in the memory of those chosen to carry it.</p>
+              <p class="indm-card-text">
+                A powerful communal prayer lasting
+                <strong>up to an hour</strong>, led by a specially chosen elder
+                who trains for <strong>two full years</strong> before performing
+                it. It is chanted with melody, punctuated by sudden shouts, and
+                witnessed in complete reverence — even smiling during the ritual
+                is forbidden. Remarkably, this prayer exists in
+                <strong>no written form</strong> — it lives only in the memory
+                of those chosen to carry it.
+              </p>
               <div class="indm-chip-row">
                 <span class="indm-chip">⏱ Up to 1 hour</span>
                 <span class="indm-chip">📜 No written form</span>
@@ -1431,15 +1670,26 @@
           <!-- Type 2 -->
           <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
             <div class="indm-type-header">
-              <div class="indm-type-badge" style="background:#1a6e3a">02</div>
+              <div class="indm-type-badge" style="background: #1a6e3a">02</div>
               <div class="indm-type-info">
-                <div class="indm-card-tag" style="color:#1a6e3a">Healing Prayer</div>
+                <div class="indm-card-tag" style="color: #1a6e3a">
+                  Healing Prayer
+                </div>
                 <div class="indm-card-title">Dororong Panganganito</div>
               </div>
-              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+              <span class="indm-chevron material-symbols-outlined"
+                >expand_more</span
+              >
             </div>
             <div class="indm-type-body">
-              <p class="indm-card-text">A healing prayer performed by the <strong>kagun</strong> — a spiritual healer chosen not by humans but by the <strong>spirits themselves</strong>. When illness cannot be explained by ordinary means, the kagun wraps the patient in <strong>red cloth</strong> and forcefully recites prayers to drive away the bad spirits causing harm.</p>
+              <p class="indm-card-text">
+                A healing prayer performed by the <strong>kagun</strong> — a
+                spiritual healer chosen not by humans but by the
+                <strong>spirits themselves</strong>. When illness cannot be
+                explained by ordinary means, the kagun wraps the patient in
+                <strong>red cloth</strong> and forcefully recites prayers to
+                drive away the bad spirits causing harm.
+              </p>
               <div class="indm-chip-row">
                 <span class="indm-chip">🌿 Spirit healer (Kagun)</span>
                 <span class="indm-chip">🔴 Red cloth ritual</span>
@@ -1450,15 +1700,26 @@
           <!-- Type 3 -->
           <div class="indm-card indm-card-type" onclick="toggleIndmCard(this)">
             <div class="indm-type-header">
-              <div class="indm-type-badge" style="background:#2d5a8e">03</div>
+              <div class="indm-type-badge" style="background: #2d5a8e">03</div>
               <div class="indm-type-info">
-                <div class="indm-card-tag" style="color:#2d5a8e">Personal Prayer</div>
+                <div class="indm-card-tag" style="color: #2d5a8e">
+                  Personal Prayer
+                </div>
                 <div class="indm-card-title">Pansariling Dororo</div>
               </div>
-              <span class="indm-chevron material-symbols-outlined">expand_more</span>
+              <span class="indm-chevron material-symbols-outlined"
+                >expand_more</span
+              >
             </div>
             <div class="indm-type-body">
-              <p class="indm-card-text">The most personal of the three — a quiet, intimate prayer whispered by an individual at <strong>any time, in any place</strong>. It asks for a good harvest, protection on mountain trails, gratitude for even the smallest blessings, and remembrance of loved ones who have passed.</p>
+              <p class="indm-card-text">
+                The most personal of the three — a quiet, intimate prayer
+                whispered by an individual at
+                <strong>any time, in any place</strong>. It asks for a good
+                harvest, protection on mountain trails, gratitude for even the
+                smallest blessings, and remembrance of loved ones who have
+                passed.
+              </p>
               <div class="indm-chip-row">
                 <span class="indm-chip">🌾 Good harvest</span>
                 <span class="indm-chip">🛡 Protection</span>
@@ -1477,22 +1738,34 @@
             <div class="indm-theme">
               <div class="indm-theme-icon">🌾</div>
               <div class="indm-theme-title">Abundant Harvests</div>
-              <div class="indm-theme-text">They pray before planting, believing that a blessed land will yield generously.</div>
+              <div class="indm-theme-text">
+                They pray before planting, believing that a blessed land will
+                yield generously.
+              </div>
             </div>
             <div class="indm-theme">
               <div class="indm-theme-icon">🛡️</div>
               <div class="indm-theme-title">Protection</div>
-              <div class="indm-theme-text">They pray before climbing mountains to trade — asking to be kept safe from snakes and unseen dangers.</div>
+              <div class="indm-theme-text">
+                They pray before climbing mountains to trade — asking to be kept
+                safe from snakes and unseen dangers.
+              </div>
             </div>
             <div class="indm-theme">
               <div class="indm-theme-icon">🙏</div>
               <div class="indm-theme-title">Deep Gratitude</div>
-              <div class="indm-theme-text">They express thankfulness even for the smallest portion of food, seeing every meal as a divine gift.</div>
+              <div class="indm-theme-text">
+                They express thankfulness even for the smallest portion of food,
+                seeing every meal as a divine gift.
+              </div>
             </div>
             <div class="indm-theme">
               <div class="indm-theme-icon">🕯️</div>
               <div class="indm-theme-title">Remembrance</div>
-              <div class="indm-theme-text">They lovingly remember their dead — lighting candles, leaving food, asking departed loved ones to pray for them.</div>
+              <div class="indm-theme-text">
+                They lovingly remember their dead — lighting candles, leaving
+                food, asking departed loved ones to pray for them.
+              </div>
             </div>
           </div>
 
@@ -1501,8 +1774,21 @@
             <div class="indm-card-icon">✨</div>
             <div class="indm-card-tag">Spirituality</div>
             <div class="indm-card-title">A People of Remarkable Faith</div>
-            <p class="indm-card-text">The Ayta Ambala believe in <strong>Apo Namalyari</strong> — the supreme god who controls all of nature — whom many now also recognize as <strong>Apong Hesus</strong>, a beautiful blending of their ancient spirituality with Christianity. Rather than abandoning one for the other, they have woven both together into a faith uniquely and powerfully their own.</p>
-            <p class="indm-card-text" style="margin-top:10px">They believe spirits dwell in mountains, rivers, and forests. They follow strict food rules — never mixing forest meat with river food — as a form of deep ecological respect. They never take more from nature than they need. And before every journey into the mountains, they pray.</p>
+            <p class="indm-card-text">
+              The Ayta Ambala believe in <strong>Apo Namalyari</strong> — the
+              supreme god who controls all of nature — whom many now also
+              recognize as <strong>Apong Hesus</strong>, a beautiful blending of
+              their ancient spirituality with Christianity. Rather than
+              abandoning one for the other, they have woven both together into a
+              faith uniquely and powerfully their own.
+            </p>
+            <p class="indm-card-text" style="margin-top: 10px">
+              They believe spirits dwell in mountains, rivers, and forests. They
+              follow strict food rules — never mixing forest meat with river
+              food — as a form of deep ecological respect. They never take more
+              from nature than they need. And before every journey into the
+              mountains, they pray.
+            </p>
           </div>
 
           <!-- Preservation card -->
@@ -1510,17 +1796,38 @@
             <div class="indm-card-icon">⚠️</div>
             <div class="indm-card-tag">Preservation</div>
             <div class="indm-card-title">A Culture Worth Saving</div>
-            <p class="indm-card-text">Despite their incredible resilience, the Ayta Ambala face very real threats. Modernization, urbanization, and the rapid spread of technology put their traditions at serious risk. The <strong>Dororong Ritwal</strong>, with no written record, could disappear forever if its last keeper is gone.</p>
-            <p class="indm-card-text" style="margin-top:10px">Through <strong>Aeron James R. De Leon's</strong> research — using the <em>Maka-Pilipinong Pananaliksik</em>, a Filipino-centered approach that respects indigenous ways of knowing — these prayers, and the people behind them, will not be forgotten.</p>
-            <div class="indm-quote">"Hay! Apu' Kung Kayêk" — Ay! Lord, have mercy on me.</div>
+            <p class="indm-card-text">
+              Despite their incredible resilience, the Ayta Ambala face very
+              real threats. Modernization, urbanization, and the rapid spread of
+              technology put their traditions at serious risk. The
+              <strong>Dororong Ritwal</strong>, with no written record, could
+              disappear forever if its last keeper is gone.
+            </p>
+            <p class="indm-card-text" style="margin-top: 10px">
+              Through <strong>Aeron James R. De Leon's</strong> research — using
+              the <em>Maka-Pilipinong Pananaliksik</em>, a Filipino-centered
+              approach that respects indigenous ways of knowing — these prayers,
+              and the people behind them, will not be forgotten.
+            </p>
+            <div class="indm-quote">
+              "Hay! Apu' Kung Kayêk" — Ay! Lord, have mercy on me.
+            </div>
           </div>
 
           <!-- Citation -->
           <div class="indm-citation">
             <div class="indm-citation-label">📚 Source Citation</div>
-            <p>De Leon, A. J. R. (2024). <em>Hay! Apu' Kung Kayêk: Pagbabakas, Pagpopook, at Pagbubuo sa Dororo Bilang Tagpuan ng Danas, Pangarap, at Pananampalataya ng Katutubong Ayta Ambala.</em> Lakandayang Journal of Cultural Studies, 1(1), 53–67. ISSN 3082-3226.</p>
+            <p>
+              De Leon, A. J. R. (2024).
+              <em
+                >Hay! Apu' Kung Kayêk: Pagbabakas, Pagpopook, at Pagbubuo sa
+                Dororo Bilang Tagpuan ng Danas, Pangarap, at Pananampalataya ng
+                Katutubong Ayta Ambala.</em
+              >
+              Lakandayang Journal of Cultural Studies, 1(1), 53–67. ISSN
+              3082-3226.
+            </p>
           </div>
-
         </div>
       </div>
     </div>
