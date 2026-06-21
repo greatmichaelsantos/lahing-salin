@@ -15,21 +15,36 @@ START_DISTANCE_MM = 100   # person/object must be closer than this (mm) to toggl
 TOGGLE_GRACE_MS = 2000    # ignore the sensor briefly after toggling, so the same
                           # person standing there doesn't immediately toggle it back
 
-# Only these colors correspond to a station — anything else (e.g. Color.NONE,
-# the floor between tiles) is ignored so the rover keeps driving through it.
-VALID_COLORS = {
-    Color.YELLOW, Color.RED, Color.BLUE, Color.GREEN,
-    Color.CYAN, Color.WHITE, Color.VIOLET,
-}
+# Calibrated from actual readings of each tile (via color_sensor.hsv()) rather
+# than Pybricks' generic default hues — measured tiles can land far enough from
+# the "textbook" hue that default matching picks the wrong color entirely
+# (e.g. our green tile measured closer to default cyan than to default green).
+CUSTOM_YELLOW = Color(64, 40, 68)
+CUSTOM_RED = Color(354, 75, 30)
+CUSTOM_BLUE = Color(230, 70, 31)
+CUSTOM_GREEN = Color(164, 71, 35)
+CUSTOM_CYAN = Color(207, 84, 74)
+CUSTOM_VIOLET = Color(340, 80, 40)
+CUSTOM_WHITE = Color(221, 36, 76)
 
-# color_sensor.color() only ever returns a color from this candidate set — by
-# default that set is just {BLACK, WHITE, RED, YELLOW, GREEN, BLUE}, so CYAN and
-# VIOLET readings were being rounded to the nearest of those instead of matched
-# correctly. Explicitly registering all 8 colors fixes that.
 color_sensor.detectable_colors((
-    Color.BLACK, Color.WHITE, Color.RED, Color.YELLOW,
-    Color.GREEN, Color.BLUE, Color.CYAN, Color.VIOLET,
+    Color.BLACK,
+    CUSTOM_YELLOW, CUSTOM_RED, CUSTOM_BLUE,
+    CUSTOM_GREEN, CUSTOM_CYAN, CUSTOM_VIOLET, CUSTOM_WHITE,
 ))
+
+# color_sensor.color() now returns one of the calibrated objects above (not the
+# generic Color.GREEN etc.), so map each one to the text label the web app
+# matches on instead of relying on print()'s default representation.
+COLOR_LABELS = {
+    CUSTOM_YELLOW: "YELLOW",
+    CUSTOM_RED: "RED",
+    CUSTOM_BLUE: "BLUE",
+    CUSTOM_GREEN: "GREEN",
+    CUSTOM_CYAN: "CYAN",
+    CUSTOM_VIOLET: "VIOLET",
+    CUSTOM_WHITE: "WHITE",
+}
 
 ON_ICON = [
     [0, 0, 0, 0, 100],
@@ -80,9 +95,9 @@ while True:
             break
 
         detected = color_sensor.color()
-        if detected in VALID_COLORS:
+        if detected in COLOR_LABELS:
             motor.stop()
-            print(detected)  # web app picks this up and navigates
+            print(COLOR_LABELS[detected])  # web app picks this up and navigates
 
             if interruptible_wait(STOP_DURATION_MS):
                 turned_off = True
