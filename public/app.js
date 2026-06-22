@@ -2495,18 +2495,21 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
       // ── Pio & Gelo Research Photo Journal — fullscreen crossfade carousel ──
       var RESEARCH_IMAGES = [
-        { src: "assets/research/research-1.jpg",  caption: "Pio and Gelo at the Olongapo City Hall archives, gathering early historical records." },
-        { src: "assets/research/research-2.jpg",  caption: "Reviewing heritage materials and references at the Gordon College library." },
-        { src: "assets/research/research-3.jpg",  caption: "Interview session with a local elder about Aeta traditions and practices." },
-        { src: "assets/research/research-4.jpg",  caption: "Documenting the Spanish Gate — the only surviving 19th-century landmark in Olongapo." },
-        { src: "assets/research/research-5.jpg",  caption: "Site visit to Subic Bay for the Livelihood and Trade station research." },
-        { src: "assets/research/research-6.jpg",  caption: "Meeting with community artists to study traditional music from the region." },
-        { src: "assets/research/research-7.jpg",  caption: "Photographing tools and artifacts at the Olongapo City Museum." },
-        { src: "assets/research/research-8.jpg",  caption: "Discussion with barangay leaders about core Filipino values in the community." },
-        { src: "assets/research/research-9.jpg",  caption: "Exploring the origins of Olongapo's earliest settlements along the shoreline." },
-        { src: "assets/research/research-10.jpg", caption: "Reviewing archival photographs of the city's founding anniversary in 1966." },
-        { src: "assets/research/research-11.jpg", caption: "Field notes and sketches from our heritage station site visits." },
-        { src: "assets/research/research-12.jpg", caption: "Final review session before development — organizing all gathered research materials." },
+        { src: "assets/research/research-1.jpg",  caption: "Pio and Gelo holding traditional bamboo tools with Tata Kasoy" },
+        { src: "assets/research/research-2.jpg",  caption: "Pio, Gelo, Eric, and Miss Janna posing in front of a tree with Tata Kasoy" },
+        { src: "assets/research/research-3.jpg",  caption: "Tata Kasoy teaching Pio and Gelo about local Aeta culture while Miss Janna is fascinated by the scenery" },
+        { src: "assets/research/research-4.jpg",  caption: "Pio and Gelo posing with Tata Kasoy in front of a rocky stream" },
+        { src: "assets/research/research-5.jpg",  caption: "Local Aeta folk demonstrating bamboo tools to Pio and Gelo" },
+        { src: "assets/research/research-6.jpg",  caption: "Gelo fiddling with a bamboo tool while Tata Kasoy watches" },
+        { src: "assets/research/research-7.jpg",  caption: "Pio and Gelo holding pieces of bamboo with Tata Kasoy" },
+        { src: "assets/research/research-8.jpg",  caption: "Tata Kasoy showing the kids a massive tree within the Pamulaklakin Trail" },
+        { src: "assets/research/research-9.jpg",  caption: "The Salin-Lahi rover with its jeepney body removed" },
+        { src: "assets/research/research-10.jpg", caption: "Side view of the Salin-Lahi rover with its jeepney body attached" },
+        { src: "assets/research/research-11.jpg", caption: "Pio and Gelo practicing their presentation of Salin-Lahi" },
+        { src: "assets/research/research-12.jpg", caption: "Pio showcasing the inside components of the rover." },
+        { src: "assets/research/research-13.jpg", caption: "Pio and Gelo showcased Salin Lahi Rover's overall structure and design to Councilor Barty Esteban committee of IP, Councilor Joshua Gardon, Councilor Barty Esteban committee of IP, and Councilor Tet Marzan during their courtesy call." },
+        { src: "assets/research/research-14.jpg", caption: "Pio and Gelo with their Salin-Lahi Rover with Mayor Secretary Ms. Shiela Padilla during their courtesy call" },
+        { src: "assets/research/research-15.jpg", caption: "Pio and Gelo with their Salin Lahi Rover with Councilor Barty Esteban committee of IP, Councilor Joshua Gardon, Councilor Barty Esteban of the Committee on Indigenous People, and Councilor Tet Marzan during their courtesy call." },
       ];
       var researchCur = 0;
       var researchImgs = [];
@@ -2542,7 +2545,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           researchCur = (researchCur + 1) % researchImgs.length;
           researchImgs[researchCur].classList.add("visible");
           _researchSetCaption(researchCur);
-        }, 5000);
+        }, 10000);
       }
 
       function stopResearchCycle() {
