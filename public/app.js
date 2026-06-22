@@ -2495,21 +2495,27 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
 
       // ── Pio & Gelo Research Photo Journal — fullscreen crossfade carousel ──
       var RESEARCH_IMAGES = [
-        "assets/research/research-1.jpg",
-        "assets/research/research-2.jpg",
-        "assets/research/research-3.jpg",
-        "assets/research/research-4.jpg",
-        "assets/research/research-5.jpg",
-        "assets/research/research-6.jpg",
-        "assets/research/research-7.jpg",
-        "assets/research/research-8.jpg",
-        "assets/research/research-9.jpg",
-        "assets/research/research-10.jpg",
-        "assets/research/research-11.jpg","assets/research/research-12.jpg"
+        { src: "assets/research/research-1.jpg",  caption: "Pio and Gelo at the Olongapo City Hall archives, gathering early historical records." },
+        { src: "assets/research/research-2.jpg",  caption: "Reviewing heritage materials and references at the Gordon College library." },
+        { src: "assets/research/research-3.jpg",  caption: "Interview session with a local elder about Aeta traditions and practices." },
+        { src: "assets/research/research-4.jpg",  caption: "Documenting the Spanish Gate — the only surviving 19th-century landmark in Olongapo." },
+        { src: "assets/research/research-5.jpg",  caption: "Site visit to Subic Bay for the Livelihood and Trade station research." },
+        { src: "assets/research/research-6.jpg",  caption: "Meeting with community artists to study traditional music from the region." },
+        { src: "assets/research/research-7.jpg",  caption: "Photographing tools and artifacts at the Olongapo City Museum." },
+        { src: "assets/research/research-8.jpg",  caption: "Discussion with barangay leaders about core Filipino values in the community." },
+        { src: "assets/research/research-9.jpg",  caption: "Exploring the origins of Olongapo's earliest settlements along the shoreline." },
+        { src: "assets/research/research-10.jpg", caption: "Reviewing archival photographs of the city's founding anniversary in 1966." },
+        { src: "assets/research/research-11.jpg", caption: "Field notes and sketches from our heritage station site visits." },
+        { src: "assets/research/research-12.jpg", caption: "Final review session before development — organizing all gathered research materials." },
       ];
       var researchCur = 0;
       var researchImgs = [];
       var researchInterval = null;
+
+      function _researchSetCaption(idx) {
+        var el = g("research-caption");
+        if (el) el.textContent = RESEARCH_IMAGES[idx] ? RESEARCH_IMAGES[idx].caption : "";
+      }
 
       function startResearchCycle() {
         var container = g("research-carousel");
@@ -2519,9 +2525,9 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         container.innerHTML = "";
         researchImgs = [];
         researchCur = 0;
-        RESEARCH_IMAGES.forEach(function (src, i) {
+        RESEARCH_IMAGES.forEach(function (item, i) {
           var img = document.createElement("img");
-          img.src = src;
+          img.src = item.src;
           img.alt = "";
           img.className = "research-slide";
           if (i === 0) img.classList.add("visible");
@@ -2529,12 +2535,14 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           container.appendChild(img);
           researchImgs.push(img);
         });
+        _researchSetCaption(0);
         if (researchInterval) clearInterval(researchInterval);
         researchInterval = setInterval(function () {
           researchImgs[researchCur].classList.remove("visible");
           researchCur = (researchCur + 1) % researchImgs.length;
           researchImgs[researchCur].classList.add("visible");
-        }, 3500);
+          _researchSetCaption(researchCur);
+        }, 5000);
       }
 
       function stopResearchCycle() {
