@@ -2656,6 +2656,11 @@
 
       /* ── Phone portrait (≤600px) ── */
       @media (max-width: 600px) {
+        /* Research carousel — show full landscape image with letterboxing on portrait mobile */
+        .research-slide {
+          object-fit: contain;
+          object-position: center center;
+        }
         /* Idle wordmark */
         .idle-wordmark {
           font-size: clamp(48px, 14vw, 80px);
@@ -3018,6 +3023,10 @@
         }
         .t-city {
           overflow: hidden !important;
+        }
+        /* Hide mono logo on mobile to prevent text overlap */
+        #btn-guide > img {
+          display: none !important;
         }
         .t-timeline {
           min-height: 170px !important;
