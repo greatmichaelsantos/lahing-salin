@@ -15,36 +15,49 @@ START_DISTANCE_MM = 100   # person/object must be closer than this (mm) to toggl
 TOGGLE_GRACE_MS = 2000    # ignore the sensor briefly after toggling, so the same
                           # person standing there doesn't immediately toggle it back
 
-# Calibrated from actual readings of each tile (via color_sensor.hsv()) rather
-# than Pybricks' generic default hues — measured tiles can land far enough from
-# the "textbook" hue that default matching picks the wrong color entirely
-# (e.g. our green tile measured closer to default cyan than to default green).
-CUSTOM_YELLOW = Color(64, 40, 68)
-CUSTOM_RED = Color(354, 75, 30)
-CUSTOM_BLUE = Color(230, 70, 31)
-CUSTOM_GREEN = Color(164, 71, 35)
-CUSTOM_CYAN = Color(207, 84, 74)
-CUSTOM_VIOLET = Color(340, 80, 40)
-CUSTOM_WHITE = Color(221, 36, 76)
+# Calibrated from actual readings of each tile (via color_sensor.hsv()), averaged
+# across multiple sample points per tile. We only use color_sensor.color() to
+# decide whether a tile is present at all (vs. plain floor) — picking *which*
+# color it is happens ourselves via classify_color() below, using the raw hsv()
+# reading. Pybricks' own nearest-color matching doesn't reliably wrap hue across
+# the 0/360 boundary, so a Red tile reading H=0 (sensor noise near H=354-356)
+# was getting matched to Violet (H=339) by raw linear distance instead of the
+# correct ~6-degree circular distance to Red.
+CALIBRATED_COLORS = (
+    ("YELLOW", 64, 40, 68),
+    ("BLUE", 230, 70, 31),
+    ("GREEN", 164, 71, 35),
+    ("CYAN", 207, 84, 74),
+    ("WHITE", 221, 36, 76),
+    ("RED", 355, 79, 33),
+    ("VIOLET", 339, 82, 37),
+)
 
 color_sensor.detectable_colors((
-    Color.BLACK,
-    CUSTOM_YELLOW, CUSTOM_RED, CUSTOM_BLUE,
-    CUSTOM_GREEN, CUSTOM_CYAN, CUSTOM_VIOLET, CUSTOM_WHITE,
+    Color.BLACK, Color.RED, Color.YELLOW, Color.GREEN,
+    Color.BLUE, Color.CYAN, Color.VIOLET, Color.WHITE,
 ))
 
-# color_sensor.color() now returns one of the calibrated objects above (not the
-# generic Color.GREEN etc.), so map each one to the text label the web app
-# matches on instead of relying on print()'s default representation.
-COLOR_LABELS = {
-    CUSTOM_YELLOW: "YELLOW",
-    CUSTOM_RED: "RED",
-    CUSTOM_BLUE: "BLUE",
-    CUSTOM_GREEN: "GREEN",
-    CUSTOM_CYAN: "CYAN",
-    CUSTOM_VIOLET: "VIOLET",
-    CUSTOM_WHITE: "WHITE",
-}
+
+def _hue_diff(a, b):
+    d = abs(a - b) % 360
+    return min(d, 360 - d)
+
+
+def classify_color(h, s, v):
+    best_label = None
+    best_dist = None
+    for label, ch, cs, cv in CALIBRATED_COLORS:
+        # RED and VIOLET sit only ~16 degrees apart in hue, close enough that
+        # sensor noise (including hue wrapping near 0/360) makes hue alone
+        # unreliable for telling them apart — weight brightness more heavily
+        # for just this pair, since it separates them more consistently.
+        v_weight = 2.0 if label in ("RED", "VIOLET") else 0.8
+        dist = _hue_diff(h, ch) ** 2 + (0.5 * (s - cs)) ** 2 + (v_weight * (v - cv)) ** 2
+        if best_dist is None or dist < best_dist:
+            best_dist = dist
+            best_label = label
+    return best_label
 
 ON_ICON = [
     [0, 0, 0, 0, 100],
@@ -66,19 +79,6 @@ OFF_ICON = [
 def _hue_diff(a, b):
     d = abs(a - b) % 360
     return min(d, 360 - d)
-
-
-def resolve_red_violet(detected):
-    """RED (h=354) and VIOLET (h=340) are only 14 degrees apart in hue, close
-    enough that sensor noise can flip the built-in match either way. Brightness
-    is the more reliable signal between these two specifically (RED measured
-    v=30, VIOLET measured v=40), so re-check with it before committing."""
-    if detected is not CUSTOM_RED and detected is not CUSTOM_VIOLET:
-        return COLOR_LABELS[detected]
-    raw = color_sensor.hsv()
-    dist_red = abs(raw.v - 30) * 2 + _hue_diff(raw.h, 354)
-    dist_violet = abs(raw.v - 40) * 2 + _hue_diff(raw.h, 340)
-    return "RED" if dist_red <= dist_violet else "VIOLET"
 
 
 def interruptible_wait(duration_ms):
@@ -113,9 +113,10 @@ while True:
             break
 
         detected = color_sensor.color()
-        if detected in COLOR_LABELS:
+        if detected is not Color.BLACK and detected is not Color.NONE:
+            raw = color_sensor.hsv()
             motor.stop()
-            print(resolve_red_violet(detected))  # web app picks this up and navigates
+            print(classify_color(raw.h, raw.s, raw.v))  # web app picks this up and navigates
 
             if interruptible_wait(STOP_DURATION_MS):
                 turned_off = True
