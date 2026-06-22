@@ -2505,7 +2505,7 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         "assets/research/research-8.jpg",
         "assets/research/research-9.jpg",
         "assets/research/research-10.jpg",
-        "assets/research/research-11.jpg","assets/research/research-12.jpg","assets/research/research-13.jpg","assets/research/research-14.jpg","assets/research/research-15.jpg",
+        "assets/research/research-11.jpg","assets/research/research-12.jpg"
       ];
       var researchCur = 0;
       var researchImgs = [];

@@ -6,4 +6,4 @@ color_sensor = ColorSensor(Port.D)
 
 while True:
     print(color_sensor.hsv())
-    wait(300)
+    wait(1000)
