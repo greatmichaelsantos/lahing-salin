@@ -203,4 +203,4 @@ This publishes the `public/` folder to Firebase Hosting and updates Firestore se
 
 Before running either command, make sure `public/config.js` exists with a valid Groq API key (copy `public/config.example.js` and fill it in).
 
-The live app is at: **https://saln-lhi-5de80.web.app**
+The live app is at: **https://salin-lahi-apsd.web.app**
