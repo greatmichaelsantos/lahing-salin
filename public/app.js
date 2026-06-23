@@ -303,7 +303,7 @@
 
       function resetIdle() {
         clearTimeout(idleTimer);
-        if (ttsActive || researchActive) return; // don't start countdown while audio is playing or the research slideshow is open
+        if (ttsActive || researchActive || _apState === "running") return; // don't start countdown while audio is playing, research slideshow is open, or autopresenter is active
         idleTimer = setTimeout(function () {
           document.querySelectorAll(".overlay.open").forEach(function (ov) {
             ov.classList.remove("open");
@@ -443,6 +443,7 @@
         if (!_apConfig) apLoadConfig();
         _apState = "running";
         _apStepIdx = 0;
+        if (researchActive) stopResearchCycle();
         document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
         stationAudioStop(); ttsStop();
         goTo(1, true);
@@ -501,6 +502,7 @@
           _apEndedHandler = null;
         }
         _apShowOverlay(false);
+        if (researchActive) stopResearchCycle();
         document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
         stationAudioStop();
         ttsStop();
@@ -537,6 +539,7 @@
         function advance() { _apRunStep(idx + 1); }
 
         if (step.type === "idle") {
+          if (researchActive) stopResearchCycle();
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           stationAudioStop(); ttsStop();
           goTo(0, true);
@@ -544,6 +547,7 @@
           _apTimer = setTimeout(advance, step.duration || 1000);
 
         } else if (step.type === "dashboard") {
+          if (researchActive) stopResearchCycle();
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           stationAudioStop(); ttsStop();
           goTo(1, true);
@@ -551,6 +555,7 @@
           _apTimer = setTimeout(advance, step.duration || 300);
 
         } else if (step.type === "guide") {
+          if (researchActive) stopResearchCycle();
           stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { if (ov.id !== "ov-guide") ov.classList.remove("open"); });
@@ -562,6 +567,7 @@
         } else if (step.type === "station") {
           var sectionId = step.id || _apGetStationId();
           if (!sectionId) { advance(); return; }
+          if (researchActive) stopResearchCycle();
           // Close ALL open overlays before navigating — prevents stale timeline/quiz/etc. bleeding through
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
           stationAudioStop(); ttsStop();
@@ -576,6 +582,7 @@
           }
 
         } else if (step.type === "timeline") {
+          if (researchActive) stopResearchCycle();
           stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
@@ -584,6 +591,7 @@
           _apTimer = setTimeout(advance, step.duration || 1000);
 
         } else if (step.type === "quiz") {
+          if (researchActive) stopResearchCycle();
           stationAudioStop(); ttsStop();
           goTo(1, true);
           document.querySelectorAll(".overlay.open").forEach(function (ov) { ov.classList.remove("open"); });
@@ -2416,46 +2424,6 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
             tlAudioToggle(index);
           }
         };
-        return;
-
-        var html = "";
-        TL_ITEMS.forEach(function (item) {
-          html += '<div class="tl-item">';
-          html +=
-            '<div class="tl-node" style="background:' +
-            item.color +
-            ";border-color:" +
-            item.color +
-            '"><span class="tl-node-icon">' +
-            item.icon +
-            "</span></div>";
-          html +=
-            '<div class="tl-card" style="border-left:4px solid ' +
-            item.color +
-            '">';
-          html +=
-            '<div class="tl-card-year" style="color:' +
-            item.color +
-            '">' +
-            item.year +
-            "</div>";
-          html += '<div class="tl-card-title">' + item.title + "</div>";
-          html += '<div class="tl-card-sub">' + item.sub + "</div>";
-          html += '<div class="tl-card-body">' + item.body + "</div>";
-          html +=
-            '<div class="tl-card-legend" style="border-color:' +
-            item.color +
-            "44;background:" +
-            item.color +
-            '0d">';
-          html +=
-            '<div class="tl-legend-label" style="color:' +
-            item.color +
-            '">📌 Did You Know?</div>';
-          html += '<div class="tl-legend-text">' + item.did + "</div></div>";
-          html += "</div></div>";
-        });
-        g("tl-events").innerHTML = html;
       }
 
       // ── Storage: replaced by Firebase Firestore (see firebase.js) ──
@@ -2520,17 +2488,24 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
         if (el) el.textContent = RESEARCH_IMAGES[idx] ? RESEARCH_IMAGES[idx].caption : "";
       }
 
+      function _researchLoad(idx) {
+        var img = researchImgs[idx];
+        if (!img || img.src) return; // already loaded
+        img.src = img.dataset.src;
+      }
+
       function startResearchCycle() {
         var container = g("research-carousel");
         if (!container) return;
         researchActive = true;
         clearTimeout(idleTimer);
+        researchImgs.forEach(function (img) { img.onerror = null; });
         container.innerHTML = "";
         researchImgs = [];
         researchCur = 0;
         RESEARCH_IMAGES.forEach(function (item, i) {
           var img = document.createElement("img");
-          img.src = item.src;
+          img.dataset.src = item.src; // store src — loaded lazily
           img.alt = "";
           img.className = "research-slide";
           if (i === 0) img.classList.add("visible");
@@ -2538,6 +2513,9 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           container.appendChild(img);
           researchImgs.push(img);
         });
+        // Load first photo immediately + preload second
+        _researchLoad(0);
+        _researchLoad(1);
         _researchSetCaption(0);
         if (researchInterval) clearInterval(researchInterval);
         researchInterval = setInterval(function () {
@@ -2545,6 +2523,8 @@ body: "The mayor is like the <strong>captain</strong> of the whole city! Mayor <
           researchCur = (researchCur + 1) % researchImgs.length;
           researchImgs[researchCur].classList.add("visible");
           _researchSetCaption(researchCur);
+          // Preload the one after next so it's ready in time
+          _researchLoad((researchCur + 1) % researchImgs.length);
         }, 10000);
       }
 
